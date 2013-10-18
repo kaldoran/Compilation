@@ -1,0 +1,24 @@
+[PRENOM]	|			[ TODO ]		|	[STATUS]
+-------------------------------------------------------------------------------------
+Florian		| Représentation des types			|
+		| Entete de sous programme 			|
+		|						|
+		|						|
+Ronan		| Exemples fonctionnels				|
+		|						|
+		|						|
+		|						|
+Nicolas		| Ajout yyparse - yytext etc dans lex.l		|
+		| Modification syntaxe_tree ajout des #define	|
+		|  	Manquant				|
+		| Ajout dans l'affichage de l'arbre		|
+		|  	Afficher la vrai valeur pas juste le    |
+		|       chiffre					|
+		| Exemples fonctionnels				|
+		|						|
+-------------------------------------------------------------------------------------
+Flo + nico 	| Pile des regions				|
+-------------------------------------------------------------------------------------
+Restant 	: Modification yacc
+
+
