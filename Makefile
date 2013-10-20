@@ -9,7 +9,11 @@ INC_DIR = INC
 OBJ_DIR = OBJ
 BIN_DIR = BIN
 
-# Yacc & lex
+# Yacc & lex commandes
+CMD_YACC = bison
+CMD_LEX = flex
+
+# Yacc & lex .c et .h
 YACC = yacc
 LEX = lex
 OUT_YACC_LEX = $(SRC_DIR)/$(YACC).c $(SRC_DIR)/$(LEX).c
@@ -46,9 +50,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
 
 parse:
-	yacc -d $(SRC_DIR)/$(YACC).y -o $(SRC_DIR)/$(YACC).c
+	$(CMD_YACC) -d $(SRC_DIR)/$(YACC).y -o $(SRC_DIR)/$(YACC).c
 	mv $(SRC_DIR)/$(YACC).h $(INC_DIR)
-	lex -t $(SRC_DIR)/$(LEX).l > $(SRC_DIR)/$(LEX).c
+	$(CMD_LEX) -t $(SRC_DIR)/$(LEX).l > $(SRC_DIR)/$(LEX).c
 
 clean:
 	@rm -f $(OBJ)
