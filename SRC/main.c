@@ -5,13 +5,9 @@
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
 
-#include <stdio.h>
-#include <stdlib.h>
-#define USE_BASIC_TYPE 0 /* basic_type_* Inutiles dans le main */
-#include "lexeme_table.h"
-#include "regions_table.h"
-#include "private_tree.h"
-#include "error.h"
+#define USE_BASIC_TYPE 0 /* basic_type_* inutile dans le main. */
+#include "kernel.h"
+#include "yacc.h"
 
 void exemple(Hashtable *h)
 {
@@ -31,6 +27,7 @@ void exemple(Hashtable *h)
   /* Ajouts de champs. */
   symbol_table_add(h, soif, 10, 15, NULL, 12);
   symbol_table_add(h, soif, 38, 54, (void *)0x12, 21);
+  symbol_table_add(h, desmots, 0, 0, (void *)0, 0);
  
   ref = hashtable_get_key(h, "tete");
   symbol_table_add(h, ref, 128, 12, (void *)0x5416, 47);
@@ -53,7 +50,7 @@ int main(void)
   lexeme_table_init(hashtable);
   
   /* Execution */
-  exemple(hashtable);
+  yyparse();
 
   /* Libération */
   symbol_table_free();

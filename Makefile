@@ -17,7 +17,7 @@ OUT_YACC_LEX = $(SRC_DIR)/$(YACC).c $(SRC_DIR)/$(LEX).c
 # Compilation flags
 
 CXX = gcc
-CXXFLAGS = -Wextra -Wall -pedantic -ansi
+CXXFLAGS = -Wall -pedantic -ansi
 LDFLAGS = -ly -lfl
 
 ifeq ($(DEBUG), yes)
@@ -28,7 +28,7 @@ endif
 
 # Sources & Headers & Bin
 
-SRC = $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.c)) 
+SRC = $(filter-out $(SRC_DIR)/$(YACC).c $(SRC_DIR)/$(LEX).c, $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.c)))
 OBJ = $(addsuffix .o, $(basename $(subst ${SRC_DIR}, ${OBJ_DIR}, ${SRC})))
 BIN = prog
 
@@ -39,19 +39,21 @@ BIN = prog
 
 all: $(BIN)
 
-$(BIN): $(OBJ) #parse
-	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -o ${BIN_DIR}/${BIN} $(OBJ) $(LDFLAGS)
+$(BIN): parse $(OBJ)
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -o ${BIN_DIR}/${BIN} $(OBJ) $(OUT_YACC_LEX) $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
 
 parse:
 	yacc -d $(SRC_DIR)/$(YACC).y -o $(SRC_DIR)/$(YACC).c
+	mv $(SRC_DIR)/$(YACC).h $(INC_DIR)
 	lex -t $(SRC_DIR)/$(LEX).l > $(SRC_DIR)/$(LEX).c
 
 clean:
 	@rm -f $(OBJ)
 	@rm -f $(SRC_DIR)/$(YACC).c $(SRC_DIR)/$(LEX).c
+	@rm -f $(INC_DIR)/$(YACC).h
 	@rm -f $(OBJ_DIR)/$(YACC).o $(OBJ_DIR)/$(LEX).o
 	@rm -rf $(SRC_DIR)/*~ $(SRC_DIR)/*# $(INC_DIR)/*~ $(INC_DIR)/*# *~ *#
 

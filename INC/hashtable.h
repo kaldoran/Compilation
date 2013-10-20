@@ -100,7 +100,7 @@ bool hashtable_set_value_by_key(Hashtable *h, Hashkey hkey, void *value);
 /** Teste l'existence d'une chaine (id) dans une table. */
 /* %param h : Hashtable où doit être effectué le test. */
 /* %param id : La chaine (id). */
-/* %return : Une Hashkey ou NULL. */
+/* %return : Une Hashkey ou NULL en cas d'erreur. */
 Hashkey hashtable_exists_id(Hashtable *h, const char *id);
 
 /** Ajoute une chaine dans une table de Hachage. */
