@@ -20,8 +20,16 @@ typedef Hashtable Lexeme_table;
 void lexeme_table_init(Lexeme_table *table);
 
 /** Ajoute un lexème dans la table. */
-/* %return : Retourne NULL en cas d'erreur ou la clef du lexème sinon. */
+/* %param TABLE : Table des lexèmes. */
+/* %param LEXEME : Lexème à ajouter. */
+/* %return : Retourne NULL en cas d'erreur ou la clef du lexème sinon. (Hashkey) */
 #define lexeme_table_add(TABLE, LEXEME) hashtable_add_value(TABLE, LEXEME, NULL)
+
+/** Récupère un lexème dans la table. */
+/* %param TABLE : Table contenant le lexème. */
+/* %param HASHKEY : Clef du lexème. */
+/* %return : NULL en cas d'erreur ou le lexème sinon. */
+#define lexeme_table_get(TABLE, HASHKEY) hashtable_get_id(TABLE, HASHKEY)
 
 /** Affiche la table des lexèmes. */
 /* %param TABLE : Table à afficher. */

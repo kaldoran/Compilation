@@ -12,6 +12,7 @@ BIN_DIR = BIN
 # Yacc & lex
 YACC = yacc
 LEX = lex
+OUT_YACC_LEX = $(SRC_DIR)/$(YACC).c $(SRC_DIR)/$(LEX).c
 
 # Compilation flags
 
@@ -27,7 +28,7 @@ endif
 
 # Sources & Headers & Bin
 
-SRC = $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.c))
+SRC = $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.c)) 
 OBJ = $(addsuffix .o, $(basename $(subst ${SRC_DIR}, ${OBJ_DIR}, ${SRC})))
 BIN = prog
 
@@ -39,7 +40,7 @@ BIN = prog
 all: $(BIN)
 
 $(BIN): $(OBJ) #parse
-	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -o ${BIN_DIR}/${BIN} $(OBJ) $(OUT_YACC) $(OUT_LEX) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -o ${BIN_DIR}/${BIN} $(OBJ) $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
