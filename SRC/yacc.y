@@ -3,7 +3,9 @@
   #include "kernel.h"
 
   extern int yylex(void);
-  extern void yyerror(char *txt);
+  extern void yyerror(const char *txt);
+  
+  Hashtable *hashtable;
 %}
 
 /* -----------------------------------------------------*/
@@ -88,8 +90,8 @@
 programme: PROG corps
          ;
           
-corps: liste_declarations START liste_instructions
-     | START liste_instructions
+corps: liste_declarations START liste_instructions {$$ = $3;}
+     | START liste_instructions                    {$$ = $2;}
      ;
 
 /* -----------------------------------------------------*/
@@ -175,8 +177,8 @@ un_param: IDF DEUX_POINTS nom_type
 /* Déclarations  : TYPES                                */
 /* -----------------------------------------------------*/
 
-nom_type: type_simple
-        | IDF
+nom_type: type_simple {$$ = $1;}
+        | IDF         {$$ = $1;}
         ;
           
 type_simple: ENTIER
@@ -190,11 +192,11 @@ type_simple: ENTIER
 /* Instructions                                         */
 /* -----------------------------------------------------*/
 
-liste_instructions: ACC_DEBUT suite_liste_inst ACC_FIN
+liste_instructions: ACC_DEBUT suite_liste_inst ACC_FIN {$$ = $2;}
                   ;
           
-suite_liste_inst: instruction
-                | suite_liste_inst instruction
+suite_liste_inst: instruction                  {$$ = $1;}
+                | suite_liste_inst instruction 
                 ;
                                                              
 instruction: POINT_VIRGULE
@@ -306,7 +308,7 @@ suite_switch: suite_switch CASE expression DEUX_POINTS liste_instructions
             ;
 
 default: DEFAULT DEUX_POINTS liste_instructions
-       | DEFAULT DEUX_POINTS instruction
+       | DEFAULT DEUX_POINTS instruction 
        |
        ;
 

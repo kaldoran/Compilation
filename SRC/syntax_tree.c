@@ -23,12 +23,21 @@ void syntax_node_free(void *node)
 void syntax_tree_print_node(Syntax_tree *node)
 {
   int i, depth = tree_node_get_depth(node);
+  Syntax_node *snode;
 
   for(i = 0; i < depth; i++)
     printf("   ");
 
   /* Contenu adresse */
-  printf("%p\n", tree_node_get_value(node));
+  snode = tree_node_get_value(node);
+  
+  switch(snode->type)
+  {
+
+    default:
+      fprintf(stderr, "Unknown node !\n");
+      break;
+  }
 
   return;
 }

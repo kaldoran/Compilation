@@ -42,7 +42,7 @@
 /** Structure d'un arbre abstrait. */
 typedef Tree Syntax_tree;
 
-/** Valeur d'un noeud d'un arbre abstrait. */
+/** Valeur d'un Syntax_node. */
 typedef union Value_syntax_node
 {
   int i;   /* Entier. */
@@ -51,7 +51,7 @@ typedef union Value_syntax_node
   char *s; /* Chaîne. */
 } Value_syntax_node;
 
-/** Structure d'un noeud d'un arbre abstrait. */
+/** Structure de la valeur d'un noeud d'un arbre abstrait. */
 typedef struct Syntax_node 
 { 
   unsigned char type;       /* Type du noeud. */

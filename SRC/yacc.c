@@ -68,9 +68,11 @@
   #include "kernel.h"
 
   extern int yylex(void);
-  extern void yyerror(char *txt);
+  extern void yyerror(const char *txt);
+  
+  Hashtable *hashtable;
 
-#line 74 "SRC/yacc.c" /* yacc.c:339  */
+#line 76 "SRC/yacc.c" /* yacc.c:339  */
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -267,7 +269,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 271 "SRC/yacc.c" /* yacc.c:358  */
+#line 273 "SRC/yacc.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -552,21 +554,21 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    88,    88,    91,    92,    99,   100,   103,   104,   105,
-     106,   109,   112,   113,   120,   123,   124,   127,   134,   135,
-     138,   145,   148,   149,   156,   159,   162,   163,   164,   167,
-     168,   171,   178,   179,   182,   183,   184,   185,   186,   193,
-     196,   197,   200,   201,   202,   203,   204,   205,   206,   207,
-     208,   209,   210,   213,   214,   215,   222,   223,   226,   227,
-     228,   231,   232,   235,   236,   239,   240,   241,   242,   243,
-     246,   249,   250,   251,   258,   259,   260,   267,   270,   271,
-     274,   277,   278,   281,   282,   285,   292,   299,   302,   303,
-     304,   305,   308,   309,   310,   317,   320,   321,   324,   325,
-     328,   335,   338,   339,   346,   347,   354,   355,   358,   359,
-     360,   361,   362,   365,   366,   367,   368,   369,   372,   373,
-     374,   375,   376,   377,   378,   379,   380,   381,   382,   383,
-     384,   385,   386,   387,   390,   393,   394,   395,   396,   397,
-     398
+       0,    90,    90,    93,    94,   101,   102,   105,   106,   107,
+     108,   111,   114,   115,   122,   125,   126,   129,   136,   137,
+     140,   147,   150,   151,   158,   161,   164,   165,   166,   169,
+     170,   173,   180,   181,   184,   185,   186,   187,   188,   195,
+     198,   199,   202,   203,   204,   205,   206,   207,   208,   209,
+     210,   211,   212,   215,   216,   217,   224,   225,   228,   229,
+     230,   233,   234,   237,   238,   241,   242,   243,   244,   245,
+     248,   251,   252,   253,   260,   261,   262,   269,   272,   273,
+     276,   279,   280,   283,   284,   287,   294,   301,   304,   305,
+     306,   307,   310,   311,   312,   319,   322,   323,   326,   327,
+     330,   337,   340,   341,   348,   349,   356,   357,   360,   361,
+     362,   363,   364,   367,   368,   369,   370,   371,   374,   375,
+     376,   377,   378,   379,   380,   381,   382,   383,   384,   385,
+     386,   387,   388,   389,   392,   395,   396,   397,   398,   399,
+     400
 };
 #endif
 
@@ -1573,8 +1575,44 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
-#line 1578 "SRC/yacc.c" /* yacc.c:1646  */
+        case 3:
+#line 93 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval) = (yyvsp[0]);}
+#line 1582 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 4:
+#line 94 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval) = (yyvsp[0]);}
+#line 1588 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 32:
+#line 180 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval) = (yyvsp[0]);}
+#line 1594 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 33:
+#line 181 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval) = (yyvsp[0]);}
+#line 1600 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 39:
+#line 195 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval) = (yyvsp[-1]);}
+#line 1606 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 40:
+#line 198 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval) = (yyvsp[0]);}
+#line 1612 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+
+#line 1616 "SRC/yacc.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1802,5 +1840,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 401 "SRC/yacc.y" /* yacc.c:1906  */
+#line 403 "SRC/yacc.y" /* yacc.c:1906  */
 

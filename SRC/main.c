@@ -1,20 +1,24 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: main.c                                                       */
 /* Author: ABHAMON Ronan                                                  */
-/* Date: 2013-09-09 - 19:17:51                                            */
+/* Date: 2013-10-21 - 17:25:41                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
 
-#define USE_BASIC_TYPE 0 /* basic_type_* inutile dans le main. */
+#define USE_BASIC_TYPE 0
 #include "kernel.h"
 #include "yacc.h"
 
 extern int yyparse(void);
 
+/* Table de Hachage. (Lexemes, déclarations...)
+   Table déclarée dans yacc.y */
+extern Hashtable *hashtable;
+
 int main(void)
 {
   /* Initialisation */
-  Hashtable *hashtable = hashtable_new();
+  hashtable = hashtable_new();
   
   if(!symbol_table_init())
     fatal_error("Unable to init symbol table");
