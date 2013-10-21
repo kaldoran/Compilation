@@ -20,24 +20,45 @@
 #define AT_OP_DIV   4
 #define AT_OP_MOD   5
 
+/** Opérateurs récurcif */
+#define AT_OPR_PE   6
+#define AT_OPR_ME   7
+#define AT_OPR_ME   8
+#define AT_OPR_DE   9
+#define AT_OPR_ME   10
+
+/** Opérateurs binaire */
+#define AT_OB_INC   11
+#define AT_OB_DEC   12
+
 /** Comparaisons. */
-#define AT_CMP_E  6
-#define AT_CMP_G  7
-#define AT_CMP_GE 8
-#define AT_CMP_L  9
-#define AT_CMP_LE 10
+#define AT_CMP_E  13
+#define AT_CMP_G  14
+#define AT_CMP_GE 15
+#define AT_CMP_L  16
+#define AT_CMP_LE 17
+#define AT_CMP_DF 18
 
 /** Conditions. */
-#define AT_CND_AND 11
-#define AT_CND_OR  12
-#define AT_CND_NOT 13
+#define AT_CND_AND 19
+#define AT_CND_OR  20
+#define AT_CND_NOT 21
 
 /** Fonctions prédéfinies. */
-#define AT_FUN_READ  14
-#define AT_FUN_WRITE 15
+#define AT_FUN_READ  22
+#define AT_FUN_WRITE 23
+#define AT_FUN_RAND  24
 
 /** Constantes. */
-#define AT_CST_STRING 16
+#define AT_CST_STRING 25
+#define AT_CST_REEL   26
+#define AT_CST_BOOL   27
+#define AT_CST_CHAR   28
+#define AT_CST_INT    29
+
+/** Contrôleurs */
+#define AT_CTL_BREAK    30
+#define AT_CTL_CONTINUE 31
 
 /** Structure d'un arbre abstrait. */
 typedef Tree Syntax_tree;
