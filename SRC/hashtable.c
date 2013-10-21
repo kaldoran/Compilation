@@ -310,7 +310,7 @@ void hashtable_print(Hashtable *h, void (*fun)(void *value))
   /* Parcours de la liste des hvalues */
   for(ln = h->hvalues->start; ln != NULL; ln = ln->next)
   {
-    printf("Key: \"%s\" (%lu)", HNVALUE(ln)->id, HNVALUE(ln)->len);
+    printf("Key: \"%s\" (%lu)", HNVALUE(ln)->id, (long unsigned int)HNVALUE(ln)->len);
     fun == NULL ? (void)printf("\n") : fun(HNVALUE(ln)->value);
   }
 

@@ -40,6 +40,7 @@ Hashtable *hashtable_new_with_size(size_t size);
 /* %return : NULL en cas d'erreur d'allocation ou la table de Hachage en cas de réussite. */
 #define hashtable_new(void) hashtable_new_with_size(HASHTABLE_SIZE)
 
+/* A OPTIMISER. */
 /** Libère complètement une table de Hachage. */
 /* %param h: La Hachtable à libérer. */
 /* %param fun : Agit sur la valeur contenue dans chaque case de la table. 
@@ -47,6 +48,7 @@ Hashtable *hashtable_new_with_size(size_t size);
    Note : Le paramètre peut être NULL. */
 void hashtable_free(Hashtable *h, void (*fun)(void *value));
 
+/* NE PAS UTILISER : EN TRAVAUX. */
 /** Redimensionne une table de Hachage. */
 /* %param h : La Hachtable à redimensionner. */
 /* %param size : La taille de la nouvelle table. */

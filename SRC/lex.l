@@ -106,3 +106,8 @@ or  {return(OU);}
 
 %%
 
+int yyerror(const char *s)
+{                                                     
+  printf("Error %s\n", s);
+  return 0;
+}

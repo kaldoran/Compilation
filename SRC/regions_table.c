@@ -70,7 +70,8 @@ void regions_table_print(void)
   printf("Order by: ID, size, level, tree\n");
 
   for(i = 0; i < depth; i++)
-    printf("%04d: (%lu, %u, %p)\n", i, table[i]->size, table[i]->level, (void *)table[i]->tree);
+    printf("%04d: (%lu, %u, %p)\n", i, (long unsigned int)table[i]->size, table[i]->level, 
+	   (void *)table[i]->tree);
 
   return;
 }

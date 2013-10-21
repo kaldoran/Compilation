@@ -36,7 +36,8 @@ static void symbol_print(void *symbol)
   Symbol *s = symbol;
   
   for(; s != NULL; s = s->next) 
-      printf("\n    (Type=%d, Region=%d, Index=%p, Size=%lu)", s->type, s->region, s->index, s->exec);
+    printf("\n    (Type=%d, Region=%d, Index=%p, Size=%lu)", s->type, s->region, 
+	   s->index, (long unsigned int)s->exec);
 
     printf("\n");
 
