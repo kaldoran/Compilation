@@ -39,32 +39,47 @@
 /** Constantes. */
 #define AT_CST_STRING 16
 
+#define AT_CST_EMPTY 255
+
 /** Structure d'un arbre abstrait. */
 typedef Tree Syntax_tree;
 
-/** Valeur d'un Syntax_node. */
-typedef union Value_syntax_node
+/** Valeur d'un noeud d'un arbre abstrait. */
+typedef union Syntax_node_value
 {
   int i;   /* Entier. */
   float f; /* Flottant. */
   char c;  /* Caractère */
   char *s; /* Chaîne. */
-} Value_syntax_node;
+} Syntax_node_value;
 
-/** Structure de la valeur d'un noeud d'un arbre abstrait. */
-typedef struct Syntax_node 
+/** Structure du contenu d'un noeud d'un arbre. */
+typedef struct Syntax_node_content
 { 
   unsigned char type;       /* Type du noeud. */
-  Value_syntax_node value;  /* Valeur du noeud. */
-} Syntax_node;
+  Syntax_node_value value;  /* Valeur du noeud. */
+} Syntax_node_content;
 
-/** Libération d'un noeud d'un arbre abstrait. */
-/* %param : Noeud à supprimer. */
-void syntax_node_free(void *node);
+/** Crée un nouveau noeud d'un arbre abstrait. */
+/* %param type : Type du noeud à ajouter. */
+/* %return : Le nouveau noeud. 
+   Appelle fatal_error en cas d'erreur d'allocation. */
+Syntax_tree *syntax_tree_node_new(unsigned char type);
+
+/** Libération de la valeur d'un noeud d'un arbre abstrait. */
+/* %param : Valeur du noeud à supprimer. */
+void syntax_node_free(void *value);
 
 /** Libération d'un arbre abstrait. */
 /* %param TREE : Arbre à libérer. */
 #define syntax_tree_free(TREE) tree_free(TREE, syntax_node_free)
+
+/** Ajoute un frère à un noeud. */
+/* %param origin : Noeud d'origine. */
+/* %param brother : Frère à ajouter. */
+/* %return : Le noeud d'origine ou NULL si l'origine est la racine.
+   Appelle fatal_error en cas d'erreur d'allocation. */
+Syntax_tree *syntax_tree_add_brother(Syntax_tree *origin, Syntax_tree *brother);
 
 /** Affiche un noeud d'un arbre abstrait. */
 /* %param node : Noeud à afficher. */

@@ -40,7 +40,7 @@ void tree_foreach_node(Tree *t, void (*fun)(Tree *node));
 #define tree_calc_depth(TREE) tree_foreach_node(TREE, NULL)
 
 /** Rechercher la racine de l'arbre. */
-/* %param t : L'arbre contenant la racine recherché. */
+/* %param t : L'arbre contenant la racine recherchée. */
 /* %return : La racine de l'arbre. */
 Tree *tree_get_root(Tree *t);
 
@@ -63,6 +63,11 @@ void *tree_node_get_value(Tree *node);
 /* %param node : Le noeud contenant la profondeur à récupérer. */
 /* %return : La profondeur du noeud. */
 int tree_node_get_depth(Tree *node);
+
+/** Obtenir le père d'un noeud. */
+/* %param t : Noeud fils. */
+/* %return : NULL si le noeud t est la racine. */
+Tree *tree_node_get_father(Tree *t);
 
 /** Insère n noeuds en dessous d'un noeud père à la fin des fils. */
 /* %param parent : Noeud père. */

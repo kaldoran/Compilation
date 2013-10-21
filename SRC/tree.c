@@ -118,6 +118,11 @@ int tree_node_get_depth(Tree *node)
   return node->depth;
 }
 
+Tree *tree_node_get_father(Tree *t)
+{
+  return t->father;
+}
+
 bool tree_add_nodes(Tree *parent, ...)
 {
   va_list pa;

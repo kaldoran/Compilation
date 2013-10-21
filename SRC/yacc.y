@@ -8,6 +8,10 @@
   Hashtable *hashtable;
 %}
 
+/*
+%union{float fval; int ival; char *sval; char cval; Syntax_tree *node;}
+*/
+
 /* -----------------------------------------------------*/
 /* TOKENS                                               */
 /* -----------------------------------------------------*/
@@ -92,6 +96,7 @@ programme: PROG corps
           
 corps: liste_declarations START liste_instructions {$$ = $3;}
      | START liste_instructions                    {$$ = $2;}
+     |                                             {$$ = syntax_tree_node_new(AT_CST_EMPTY);}
      ;
 
 /* -----------------------------------------------------*/
