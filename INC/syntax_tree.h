@@ -75,11 +75,16 @@ void syntax_node_free(void *value);
 #define syntax_tree_free(TREE) tree_free(TREE, syntax_node_free)
 
 /** Ajoute un frère à un noeud. */
-/* %param origin : Noeud d'origine. */
-/* %param brother : Frère à ajouter. */
-/* %return : Le noeud d'origine ou NULL si l'origine est la racine.
-   Appelle fatal_error en cas d'erreur d'allocation. */
-Syntax_tree *syntax_tree_add_brother(Syntax_tree *origin, Syntax_tree *brother);
+/* %param ORIGIN : Noeud d'origine. */
+/* %param BROTHER : Frère à ajouter. */
+/* %return : Le noeud d'origine ou NULL en cas d'erreur. */
+#define syntax_tree_add_brother(ORIGIN, BROTHER) tree_add_brother(ORIGIN, BROTHER)
+
+/** Ajoute un fils à un noeud. */
+/* %param PARENT : Noeud père du fils à ajouter. */
+/* %param NODE : Fils à ajouter. */
+/* %return : Le noeud inseré. */
+#define syntax_tree_add_son(PARENT, NODE) tree_node_append(PARENT, NODE)
 
 /** Affiche un noeud d'un arbre abstrait. */
 /* %param node : Noeud à afficher. */

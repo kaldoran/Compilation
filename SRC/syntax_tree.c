@@ -33,17 +33,6 @@ void syntax_node_free(void *value)
   return;
 }
 
-Syntax_tree *syntax_tree_add_brother(Syntax_tree *origin, Syntax_tree *brother)
-{
-  if(tree_node_is_root(origin))
-    return NULL; /* Racine. */
-
-  if(tree_node_append(tree_node_get_father(origin), brother) == NULL)
-    fatal_error("syntax_tree_add_brother");
-
-  return origin;
-}
-
 void syntax_tree_print_node(Syntax_tree *node)
 {
   int i, depth = tree_node_get_depth(node);

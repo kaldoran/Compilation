@@ -15,11 +15,12 @@
 /** Structure d'un arbre. */
 struct Tree
 {
-  void *value;          /* Valeur d'un noeud. */
-  unsigned char size_s; /* Nombre de fils du noeud. */
-  struct Tree *father;  /* Père du noeud. */
-  struct Tree **sons;   /* Tableau de fils. */
-  unsigned char depth;  /* Profondeur du noeud. */
+  void *value;           /* Valeur d'un noeud. */
+  struct Tree *next;     /* Noeud frère suivant. */
+  struct Tree *prev;     /* Noeud frère précédent. */
+  struct Tree *children; /* Premier noeud fils. */
+  struct Tree *father;   /* Père du noeud. */
+  unsigned int depth;    /* Profondeur du noeud. */
 };
 
 /* ---------------------------------------------------------------------- */

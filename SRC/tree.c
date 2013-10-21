@@ -14,6 +14,20 @@
 #include "list.h"
 #include "error.h"
 
+/** Définit le dernier frère d'un noeud. (G -> D) */
+#define LAST_BROTHER(NODE) for(; NODE->next != NULL; NODE = NODE->next)
+
+/** Racine d'un arbre. */
+#define ROOT(NODE) for(; NODE->father != NULL; NODE = NODE->father)
+
+/** Teste si un noeud est orphelin. */
+#define ORPHAN_TEST(NODE)                                               \
+  if(NODE->father == NULL && NODE->prev == NULL && NODE->next == NULL)  \
+  {                                                                     \
+    fprintf(stderr, "Exception : This node is not an orphan node !\n"); \
+    return NULL;                                                        \
+  }
+
 Tree *tree_node_new(void *value)
 {
   Tree *t;
@@ -32,32 +46,31 @@ void tree_free(Tree *t, void (*fun)(void *value))
      il est préférable d'utiliser une structure de pile ici */
 
   List *stack;
+  Tree *tmp;
 
   if(t == NULL)
     return;
 
   /* On remonte jusqu'au noeud père */
-  for(; t->father != NULL; t = t->father);
+  ROOT(t);
 
   if((stack = list_new()) == NULL || list_add_node(stack, t) == NULL)
     fatal_error("tree_free");
   
+  /* Tant qu'il reste un noeud */
   while((t = list_shift_node(stack)) != NULL)
-    if(t->size_s != 0)
-    {
-      if(list_add_node(stack, t) == NULL || list_add_node(stack, t->sons[--t->size_s]) == NULL)
-	 fatal_error("tree_free");
+    for(tmp = t; tmp != NULL; free(t))
+    {    
+      if(t->children != NULL && list_add_node(stack, t->children) == NULL)
+	fatal_error("tree_free");
+      
+       if(fun != NULL)
+	 fun(t->value);
+       
+       tmp = t->next; 
     }
-    else
-    {
-      if(fun != NULL)
-	free(t->value);
-      free(t->sons);
-      free(t);
-    }
-  
+
   list_free(stack, NULL);
-  free(t);
 
   return;
 }
@@ -65,27 +78,23 @@ void tree_free(Tree *t, void (*fun)(void *value))
 void tree_foreach_node(Tree *t, void (*fun)(Tree *node))
 {
   List *stack;
-  int i;
 
+  ROOT(t);
+  
   if((stack = list_new()) == NULL || list_add_node(stack, t) == NULL)
-    fatal_error("tree_free");
-
-  t->depth = 0;
-
+    fatal_error("tree_foreach_node");
+  
   while((t = list_shift_node(stack)) != NULL)
-  { 
-    /* Appel de la fonction */
-    if(fun != NULL) fun(t);
+    for(; t != NULL; t = t->next)
+    {    
+      if(fun != NULL) 
+	fun(t);
 
-    /* Ajout des fils */
-    for(i = t->size_s - 1; i >= 0; i--)
-    {
-      t->sons[i]->depth = t->depth + 1;
-
-      if(list_add_node(stack, t->sons[i]) == NULL)
+      t->depth = t->father == NULL ? 0 : t->father->depth;
+     
+      if(t->children != NULL && list_add_node(stack, t->children) == NULL)
 	fatal_error("tree_foreach_node");
     }
-  }
 
   list_free(stack, NULL);
 
@@ -94,7 +103,7 @@ void tree_foreach_node(Tree *t, void (*fun)(Tree *node))
 
 Tree *tree_get_root(Tree *t)
 {
-  for(; t->father != NULL; t = t->father);
+  ROOT(t);
   return t;
 }
 
@@ -105,7 +114,7 @@ bool tree_node_is_root(Tree *node)
 
 bool tree_node_is_leaf(Tree *node)
 {
-  return node->size_s == 0;
+  return node->children == NULL;
 }
 
 void *tree_node_get_value(Tree *node)
@@ -123,50 +132,119 @@ Tree *tree_node_get_father(Tree *t)
   return t->father;
 }
 
-bool tree_add_nodes(Tree *parent, ...)
+Tree *tree_add_nodes(Tree *parent, ...)
 {
   va_list pa;
-  int i;
-  Tree *node, **new_sons;
+  Tree *node, *brother;
 
-  /* Vérification des arguments */
+  /* Parcours des nouveaux fils. */
   va_start(pa, parent);
-  for(i = 0; va_arg(pa, Tree*) != NULL; i++)
+
+  /* Aucun fils à ajouter. */
+  if((node = va_arg(pa, Tree*)) == NULL)
+  {
+    va_end(pa);
+    return NULL;
+  }
+
+  ORPHAN_TEST(node);
+
+  /* Si parent n'a aucun fils. */
+  if(parent->children == NULL)
+  {
+    parent->children = node;
+    node->father = parent;
+    brother = node;
+  }
+  /* Sinon on ajoute le premier nouveau fils à la fin des fils. */
+  else
+  {
+    brother = parent->children;
+    LAST_BROTHER(brother);
+    brother->next = node;
+    node->prev = brother;
+    node->father = parent;
+  }
+
+  /* Ajout des autres fils. */
+  while((node = va_arg(pa, Tree*)) != NULL)
+  {
+    ORPHAN_TEST(node);
+    LAST_BROTHER(brother);
+    brother->next = node;
+    node->prev = brother;
+    node->father = parent;
+  }
+
   va_end(pa);
 
-  if(i == 0 || (new_sons = realloc(parent->sons, (parent->size_s + i) * sizeof *parent->sons)) == NULL)
-    return false; /* Bad alloc */
-
-  /* Application des noeuds */
-  parent->sons = new_sons;
-  va_start(pa, parent);
-  for(; (node = va_arg(pa, Tree*)) != NULL;  parent->sons[parent->size_s++] = node, node->father = parent);
-  va_end(pa);
-
-  return true;
+  return parent;
 }
 
 Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
 {
-  Tree **new_sons;
-
+  Tree *children = parent->children;
+  int i;
+  
   if(node == NULL)
     return NULL; /* Noeud vide... */
 
-  if((new_sons = realloc(parent->sons, (parent->size_s + 1) * sizeof *parent->sons)) == NULL)
-    return NULL; /* Bad alloc */
+  ORPHAN_TEST(node);
 
-  parent->sons = new_sons;
+  /* Définition du père du noeud. */
   node->father = parent;
+  
+  /* Aucun fils. */
+  if(children == NULL)
+    parent->children = node;
+  
+  /* Fin. */
+  else if(pos < 0)
+  {
+    LAST_BROTHER(children);
+    children->next = node;
+    node->prev = children;
+  }
 
-  if(pos < 0 || (unsigned int)pos > parent->size_s)
-    parent->sons[pos = parent->size_s++] = node;
+  /* Recherche d'un emplacement. */
   else
   {
-    memmove(parent->sons + pos + 1, parent->sons + pos, 
-	    (parent->size_s++ - pos) * sizeof *parent->sons);
-    parent->sons[pos] = node;
+    for(i = 0; i < pos && children->next != NULL; i++);
+  
+    /* Début. */
+    if(children->prev == NULL)
+    {
+      parent->children = node;
+      node->next = children;
+      children->prev = node;
+    }
+
+    /* Autre. */
+    else
+    {
+      node->next = children;
+      node->prev = children->prev;
+
+      if(children->prev != NULL)
+	children->prev->next = node;
+
+      children->prev = node;
+    }
   }
 
   return node;
+}
+
+Tree *tree_add_brother(Tree *origin, Tree *brother)
+{
+  ORPHAN_TEST(brother);
+  brother->prev = origin->prev;
+  brother->next = origin;
+
+  if(origin->prev != NULL)
+    origin->prev->next = brother;
+
+  origin->prev = brother;
+
+  return brother;
 }

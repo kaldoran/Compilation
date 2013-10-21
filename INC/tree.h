@@ -8,7 +8,6 @@
 #ifndef _TREE_
 #define _TREE_
 
-#include <limits.h>
 #include "ptypes.h"
 
 /** Structure d'un arbre. */
@@ -72,27 +71,27 @@ Tree *tree_node_get_father(Tree *t);
 /** Insère n noeuds en dessous d'un noeud père à la fin des fils. */
 /* %param parent : Noeud père. */
 /* %param ... : Noeuds à ajouter, le dernier argument doit être NULL. */
-/* %return : true en cas de réussite, false sinon. */
-bool tree_add_nodes(Tree *parent,  ...);
+/* %return : NULL en cas d'erreur ou le parent en cas de réussite. */
+Tree *tree_add_nodes(Tree *parent,  ...);
 
 /** Insère un noeud en dessous d'un noeud père. */
 /* %param parent : Noeud père. */
 /* %param pos : Position où doit se trouver le noeud. 
    Si pos < 0, le noeud est ajouté à la fin des fils du noeud père. */
 /* %param node : Noeud à ajouter, ne peut être NULL. */
-/* %return : Le noeud inseré ou NULL en cas d'erreur d'allocation. */
+/* %return : Le noeud inseré. */
 Tree *tree_node_insert(Tree *parent, int pos, Tree *node);
 
 /** Insère un noeud en dernière position de la liste des fils d'un père. */
 /* %param PARENT : Noeud père. */
 /* %param NODE : Noeud à ajouter, ne peut être NULL. */
-/* %return : Le noeud inseré ou NULL en cas d'erreur d'allocation. */
-#define tree_node_append(PARENT, NODE) tree_node_insert(PARENT, INT_MAX, NODE)
+/* %return : Le noeud inseré. */
+#define tree_node_append(PARENT, NODE) tree_node_insert(PARENT, -1, NODE)
 
 /** Insère un noeud en première position de la liste des fils d'un père. */
 /* %param PARENT : Noeud père. */
 /* %param NODE : Noeud à ajouter, ne peut être NULL. */
-/* %return : Le noeud inseré ou NULL en cas d'erreur d'allocation. */
+/* %return : Le noeud inseré. */
 #define tree_node_prepend(PARENT, NODE) tree_node_insert(PARENT, 0, NODE)
 
 /** Insére un nouveau noeud en dessous d'un noeud père. */
@@ -109,7 +108,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node);
 /* %param VALUE : Valeur du noeud à ajouter. */
 /* %return : Le noeud inseré ou NULL en cas d'erreur d'allocation. */
 #define tree_node_append_value(PARENT, VALUE) \
-  tree_node_insert(PARENT, UINT_MAX, tree_node_new(VALUE))
+  tree_node_insert(PARENT, -1, tree_node_new(VALUE))
  
 /* Insère un nouveau noeud en première position de la liste des fils d'un père. */
 /* %param PARENT : Noeud père. */
@@ -117,5 +116,11 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node);
 /* %return : Le noeud inseré ou NULL en cas d'erreur d'allocation. */
 #define tree_node_prepend_value(PARENT, VALUE) \
   tree_node_insert(PARENT, 0, tree_node_new(VALUE))
+
+/* Ajoute un noeud frère à un arbre. */
+/* %param origin : Frère d'origine du noeud. */
+/* %param brother : Frère à ajouter. */
+/* %return : NULL en cas d'erreur ou le frère ajouté en cas de réussite. */
+Tree *tree_add_brother(Tree *origin, Tree *brother);
 
 #endif /* _TREE_ INCLUDED */
