@@ -20,7 +20,7 @@ void syntax_node_free(void *node)
   return;
 }
 
-void syntax_tree_print_node(Syntax_tree *node)
+void syntax_tree_print_node(void *node)
 {
   int i, depth = tree_node_get_depth(node);
   Syntax_node *snode;

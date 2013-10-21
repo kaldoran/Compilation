@@ -68,7 +68,7 @@ void syntax_node_free(void *node);
 
 /** Affiche un noeud d'un arbre abstrait. */
 /* %param node : Noeud à afficher. */
-void syntax_tree_print_node(Syntax_tree *node);
+void syntax_tree_print_node(void *node);
 
 /** Affiche un arbre abstrait. */
 /* %param TREE : Arbre à afficher. */
