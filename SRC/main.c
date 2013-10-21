@@ -9,35 +9,7 @@
 #include "kernel.h"
 #include "yacc.h"
 
-void exemple(Hashtable *h)
-{
-  Hashkey soif, desmots, ref;
-
-  /* Ajout de lexèmes. */
-  lexeme_table_add(h, "bonjour");
-  desmots = lexeme_table_add(h, "desmots");
-  lexeme_table_add(h, "demo");
-  soif = lexeme_table_add(h, "soif");
-  lexeme_table_add(h, "tete");
-
-  /* Affichage des lexèmes. */
-  printf("Lexeme table:\n");
-  lexeme_table_print(h);
-
-  /* Ajouts de champs. */
-  symbol_table_add(h, soif, 10, 15, NULL, 12);
-  symbol_table_add(h, soif, 38, 54, (void *)0x12, 21);
-  symbol_table_add(h, desmots, 0, 0, (void *)0, 0);
- 
-  ref = hashtable_get_key(h, "tete");
-  symbol_table_add(h, ref, 128, 12, (void *)0x5416, 47);
-
-  /* Affichage des champs de déclarations. */
-  printf("\nSymbol table:\n");
-  symbol_table_print(h);
-
-  return;
-}
+extern int yyparse(void);
 
 int main(void)
 {
