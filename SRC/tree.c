@@ -209,7 +209,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
   /* Recherche d'un emplacement. */
   else
   {
-    for(pos-- > 0 && children->next != NULL; children = children->next);
+    for(;pos-- > 0 && children->next != NULL; children = children->next);
   
     /* Début. */
     if(children->prev == NULL)

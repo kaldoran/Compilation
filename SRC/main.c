@@ -14,14 +14,22 @@ extern int yyparse(void);
    Table déclarée dans yacc.y */
 extern Hashtable *hashtable;
 
+void test(void)
+{
+
+
+}
+
 int main(void)
 {
   /* Initialisation */
   hashtable = hashtable_new();
-  symbol_table_init();
+  symbol_table_init(hashtable);
    
   /* Execution */
-  yyparse();
+  /* yyparse(); */
+
+  test();
 
   /* Libération */
   hashtable_free(hashtable, symbol_table_free);

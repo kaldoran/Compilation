@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "lexeme_table.h"
 #include "regions_table.h"
-#include "private_tree.h"
+#include "mystring.h"
 #include "error.h"
 
 #endif /* _KERNEL_ INCLUDED */

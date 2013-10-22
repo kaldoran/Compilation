@@ -96,7 +96,7 @@ bool symbol_table_add(Symbol_table *table, Hashkey hkey, unsigned char type,
   Symbol *origin;
 
   if(sym == NULL)
-    return false; /* Bad alloc */
+    return false; /* Bad alloc. */
   
   sym->type = type;
   sym->region = region;
@@ -104,13 +104,13 @@ bool symbol_table_add(Symbol_table *table, Hashkey hkey, unsigned char type,
   sym->next = NULL;
   sym->exec = exec;
     
-  /* Si le champ est déjà pris */
+  /* Si le champ est déjà pris. */
   if((origin = hashtable_get_value_by_key(table, hkey)) != NULL)
   {
     sym->next = origin;
     hashtable_set_value_by_key(table, hkey, sym);
   }
-  /* Ajout du symbole si aucune déclaration identique */
+  /* Ajout du symbole si aucune déclaration identique. */
   else if(!hashtable_set_value_by_key(table, hkey, sym))
   {
     free(sym);
@@ -118,6 +118,17 @@ bool symbol_table_add(Symbol_table *table, Hashkey hkey, unsigned char type,
   }
 
   return true;
+}
+
+Symbol *symbol_table_get(Hashtable *table, Hashkey hkey, int region)
+{
+  Symbol *origin = hashtable_get_value_by_key(table, hkey);
+
+  for(; origin != NULL; origin = origin->next)
+    if(origin->region == region)
+      return origin; /* Trouvé ! */
+
+  return NULL; /* Non trouvé. */
 }
 
 void symbol_table_print(Symbol_table *table)

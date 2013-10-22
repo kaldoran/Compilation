@@ -15,6 +15,7 @@
   char val_c; 
   char val_b;
   char *val_s; 
+  Hashkey hkey;
   Syntax_tree *node;
 }
 
@@ -93,8 +94,9 @@
 %token <val_s> CSTE_CHAINE
 
 /* IDF */
-%token <hkey> IDF
+%token <hkey> IDF 
 
+%type <hkey> nom_type type_simple
 %type <node> corps liste_instructions suite_liste_inst instruction
 
 

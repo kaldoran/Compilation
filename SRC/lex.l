@@ -1,7 +1,7 @@
 %{
   #include "kernel.h"
   #include "yacc.h"
-  
+
   #ifdef YY_NEED_STRLEN
     #undef YY_NEED_STRLEN
   #endif
@@ -41,7 +41,7 @@
 \./[a-zA-Z_][a-zA-Z0-9_]* {return(POINT);}
 
 \"(\\.|[^\"])*\" {
-                   if((yylval.val_s = strdup(yytext)) == NULL)
+                   if((yylval.val_s = mystrdup(yytext)) == NULL)
                      yyerror("Bad alloc: String");
                    return(CSTE_CHAINE);
                  }
@@ -52,22 +52,22 @@
         }
 
 '\\' {
-       yylval.cal_c = '\\'; 
+       yylval.val_c = '\\'; 
        return(CSTE_CARACTERE);
      }
 
 '\t' {
-       yylval.cal_c = '\t'; 
+       yylval.val_c = '\t'; 
        return(CSTE_CARACTERE);
      }
 
 '\n' {
-       yylval.cal_c = '\n'; 
+       yylval.val_c = '\n'; 
        return(CSTE_CARACTERE);
      }
 
 '\r' {
-       yylval.cal_c = '\r'; 
+       yylval.val_c = '\r'; 
        return(CSTE_CARACTERE);
      }
 
@@ -77,7 +77,7 @@
                 }
 
 (0|[1-9][0-9]*)?\.[0-9]+ {
-                           yyval.val_f = atof(yytext);
+                           yylval.val_f = atof(yytext);
                            return(CSTE_REELLE);
                          }
 

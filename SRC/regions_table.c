@@ -39,7 +39,7 @@ int regions_table_add(size_t size, size_t level, Syntax_tree *tree)
   Region **new_table;
 
   if(region == NULL)
-    return BAD_REGION; /* Bad alloc */
+    return BAD_REGION; /* Région non allouée ! */
 
   /* Reallocation de la table */
   if(depth % REGIONS_TABLE_SIZE_MIN == 0)
@@ -47,7 +47,7 @@ int regions_table_add(size_t size, size_t level, Syntax_tree *tree)
     if((new_table = realloc(table, (depth + REGIONS_TABLE_SIZE_MIN) * sizeof *new_table)) == NULL)
     {
       free(region);
-      return BAD_REGION; /* Bad alloc */
+      return BAD_REGION; /* Bad alloc. */
     }
 
     table = new_table;
