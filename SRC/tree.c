@@ -238,13 +238,12 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
 Tree *tree_add_brother(Tree *origin, Tree *brother)
 {
   ORPHAN_TEST(brother);
-  brother->prev = origin->prev;
-  brother->next = origin;
+  LAST_BROTHER(origin);
+  
+  origin->next = brother;
+  brother->prev = origin;
 
-  if(origin->prev != NULL)
-    origin->prev->next = brother;
-
-  origin->prev = brother;
+  brother->father = origin->father;
 
   return brother;
 }

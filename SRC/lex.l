@@ -1,12 +1,21 @@
-%{
+ire%{
+  #define USE_BASIC_TYPE 0
+  #include "kernel.h"
   #include "yacc.h"
- 
+  
   #ifdef YY_NEED_STRLEN
     #undef YY_NEED_STRLEN
   #endif
 
-  /* ansi */
+  /* ansi. */
   extern int fileno(FILE *stream);
+  int yyerror(const char *s);
+
+  /* Numéro de ligne. */
+  static int line_num = 1;
+
+  /* Table. */
+  extern Hashtable *hashtable;
 %}
 
 %option nounput
@@ -32,11 +41,51 @@
 
 \./[a-zA-Z_][a-zA-Z0-9_]* {return(POINT);}
 
-\"(\\.|[^\"])*\"         {return(CSTE_CHAINE);}
-'([^']|\\t|\\n|\\r|\\')' {return(CSTE_CARACTERE);}
-(0|[1-9][0-9]*)          {return(CSTE_ENTIERE);}
-(0|[1-9][0-9]*)?\.[0-9]+ {return(CSTE_REELLE);}
-"true"|"false"           {return(CSTE_BOOLEENNE);}
+\"(\\.|[^\"])*\" {
+                   if((yylval.val_s = strdup(yytext)) == NULL)
+                     yyerror("Bad alloc: String");
+                   return(CSTE_CHAINE);
+                 }
+
+'[^'\\]' {
+          yylval.val_c = *yytext; 
+          return(CSTE_CARACTERE);
+        }
+
+'\\' {
+       yylval.cal_c = '\\'; 
+       return(CSTE_CARACTERE);
+     }
+
+'\t' {
+       yylval.cal_c = '\t'; 
+       return(CSTE_CARACTERE);
+     }
+
+'\n' {
+       yylval.cal_c = '\n'; 
+       return(CSTE_CARACTERE);
+     }
+
+'\r' {
+       yylval.cal_c = '\r'; 
+       return(CSTE_CARACTERE);
+     }
+
+(0|[1-9][0-9]*) {
+                  yylval.val_i = atoi(yytext);
+                  return(CSTE_ENTIERE);
+                }
+
+(0|[1-9][0-9]*)?\.[0-9]+ {
+                           yyval.val_f = atof(yytext);
+                           return(CSTE_REELLE);
+                         }
+
+"true"|"false" {
+                 yylval.val_b = yyleng == 4;
+                 return(CSTE_BOOLEENNE);
+               }
 
 rand  {return(RAND);}
 write {return(ECRIRE);}
@@ -100,14 +149,20 @@ string {return(CHAINE);}
 and {return(ET);}
 or  {return(OU);}
 
-[a-zA-Z_][a-zA-Z0-9_]* {return(IDF);}
+[a-zA-Z_][a-zA-Z0-9_]* {
+                         if((yylval.hkey = lexeme_table_add(hashtable, yytext)) == NULL)
+                           yyerror("Bad alloc: Lexeme");
+                         return(IDF);
+                       }
 
-" "|\n|\t ;
+" "|\t ;
+
+\n {++line_num;}
 
 %%
 
 int yyerror(const char *s)
 {                                                     
-  printf("Error %s\n", s);
+  printf("Line %d - Error: %s\n", line_num, s);
   return 0;
 }

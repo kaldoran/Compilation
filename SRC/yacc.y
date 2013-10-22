@@ -8,9 +8,15 @@
   Hashtable *hashtable;
 %}
 
-/*
-%union{float fval; int ival; char *sval; char cval; Syntax_tree *node;}
-*/
+%union
+{
+  int val_i; 
+  float val_f; 
+  char val_c; 
+  char val_b;
+  char *val_s; 
+  Syntax_tree *node;
+}
 
 /* -----------------------------------------------------*/
 /* TOKENS                                               */
@@ -30,18 +36,8 @@
 %token POINT_ET_POINT
 %token INTERROGATION
 
-/* Constantes */
-%token CSTE_ENTIERE
-%token CSTE_REELLE
-%token CSTE_BOOLEENNE
-%token CSTE_CARACTERE
-%token CSTE_CHAINE
-
 /* Affectation */
 %token OPAFF
-
-/* Variables */
-%token IDF
 
 /* Mots clefs */
 %token PROG ACC_DEBUT ACC_FIN
@@ -84,6 +80,23 @@
 %token BREAK
 
 %token START
+
+/* -----------------------------------------------------*/
+/* VALEURS TOKENS                                       */
+/* -----------------------------------------------------*/
+
+/* Constantes */
+%token <val_i> CSTE_ENTIERE
+%token <val_f> CSTE_REELLE
+%token <val_c> CSTE_CARACTERE
+%token <val_b> CSTE_BOOLEENNE
+%token <val_s> CSTE_CHAINE
+
+/* IDF */
+%token <hkey> IDF
+
+%type <node> corps liste_instructions suite_liste_inst instruction
+
 
 %%
 
