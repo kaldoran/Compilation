@@ -43,7 +43,7 @@ BIN = prog
 
 all: $(BIN)
 
-$(BIN): parse $(OBJ)
+$(BIN):  $(OBJ)
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -o ${BIN_DIR}/${BIN} $(OBJ) $(OUT_YACC_LEX) $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c

@@ -32,25 +32,17 @@ typedef struct Symbol
   size_t exec;         /* Taille à l'execution. */
 } Symbol;
 
-/** Types de base. */
-/* Définir la constante USE_BASIC_TYPE à 0 pour ne pas les utiliser dans un fichier. */
-#if (! defined USE_BASIC_TYPE) || (USE_BASIC_TYPE)
-  static Symbol *basic_type_int   = NULL; /* 1 */
-  static Symbol *basic_type_float = NULL; /* 2 */
-  static Symbol *basic_type_bool  = NULL; /* 3 */
-  static Symbol *basic_type_char  = NULL; /* 4 */
-#endif
-
 /** Structure d'une table des déclarations. */
 typedef Hashtable Symbol_table;
 
 /** Initialise la table des déclarations. */
-/* Définit les types de base. */
-/* %return : false en cas d'erreur mémoire ou true en cas de réussite. */
-bool symbol_table_init(void);
+/* Définit les types de base + Init des lexèmes de base. */
+/* %param table : Table des déclarations. */
+void symbol_table_init(Symbol_table *table);
 
-/** Libère les types de base. */
-void symbol_table_free(void);
+/** Libère une liste de symboles. */
+/* %param sym : Premier symbole d'une liste. */
+void symbol_table_free(void *sym);
 
 /** Ajouter une déclaration dans la table. */
 /* %param table : Table des déclarations. */

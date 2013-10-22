@@ -22,7 +22,7 @@
 
 /** Teste si un noeud est orphelin. */
 #define ORPHAN_TEST(NODE)                                               \
-  if(NODE->father == NULL && NODE->prev == NULL && NODE->next == NULL)  \
+  if(NODE->father != NULL || NODE->prev != NULL || NODE->next != NULL)  \
   {                                                                     \
     fprintf(stderr, "Exception : This node is not an orphan node !\n"); \
     return NULL;                                                        \
@@ -59,15 +59,16 @@ void tree_free(Tree *t, void (*fun)(void *value))
   
   /* Tant qu'il reste un noeud */
   while((t = list_shift_node(stack)) != NULL)
-    for(tmp = t; tmp != NULL; free(t))
-    {    
+    for(; t != NULL; t = tmp)
+    {   
       if(t->children != NULL && list_add_node(stack, t->children) == NULL)
 	fatal_error("tree_free");
       
        if(fun != NULL)
 	 fun(t->value);
-       
-       tmp = t->next; 
+ 
+       tmp = t->next;
+       free(t);
     }
 
   list_free(stack, NULL);
@@ -90,7 +91,7 @@ void tree_foreach_node(Tree *t, void (*fun)(Tree *node))
       if(fun != NULL) 
 	fun(t);
 
-      t->depth = t->father == NULL ? 0 : t->father->depth;
+      t->depth = t->father == NULL ? 0 : t->father->depth + 1;
      
       if(t->children != NULL && list_add_node(stack, t->children) == NULL)
 	fatal_error("tree_foreach_node");
@@ -184,7 +185,6 @@ Tree *tree_add_nodes(Tree *parent, ...)
 Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
 {
   Tree *children = parent->children;
-  int i;
   
   if(node == NULL)
     return NULL; /* Noeud vide... */
@@ -209,7 +209,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
   /* Recherche d'un emplacement. */
   else
   {
-    for(i = 0; i < pos && children->next != NULL; i++);
+    for(pos-- > 0 && children->next != NULL; children = children->next);
   
     /* Début. */
     if(children->prev == NULL)

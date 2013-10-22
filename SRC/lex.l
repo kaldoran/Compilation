@@ -1,5 +1,4 @@
-ire%{
-  #define USE_BASIC_TYPE 0
+%{
   #include "kernel.h"
   #include "yacc.h"
   

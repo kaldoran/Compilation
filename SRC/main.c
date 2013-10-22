@@ -5,7 +5,6 @@
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
 
-#define USE_BASIC_TYPE 0
 #include "kernel.h"
 #include "yacc.h"
 
@@ -19,18 +18,13 @@ int main(void)
 {
   /* Initialisation */
   hashtable = hashtable_new();
-  
-  if(!symbol_table_init())
-    fatal_error("Unable to init symbol table");
- 
-  lexeme_table_init(hashtable);
-  
+  symbol_table_init();
+   
   /* Execution */
   yyparse();
 
   /* Libération */
-  symbol_table_free();
-  hashtable_free(hashtable, free);
+  hashtable_free(hashtable, symbol_table_free);
   regions_table_free();
   
   exit(EXIT_SUCCESS);

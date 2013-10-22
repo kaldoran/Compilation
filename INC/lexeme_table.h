@@ -13,19 +13,13 @@
 /** Structure d'une table de lexèmes. */
 typedef Hashtable Lexeme_table;
 
-/** Initialise la table des lexèmes. */
-/* Définit les types de base. Suppose donc que les basic_type_* du fichier
-   "symbol_table.h" sont initialisés. En cas d'erreur, le programme est
-   directement quitté avec affichage du type de l'erreur. */
-void lexeme_table_init(Lexeme_table *table);
-
 /** Ajoute un lexème dans la table. */
 /* %param TABLE : Table des lexèmes. */
 /* %param LEXEME : Lexème à ajouter. */
 /* %return : Retourne NULL en cas d'erreur ou la clef du lexème sinon. (Hashkey) */
 #define lexeme_table_add(TABLE, LEXEME) hashtable_add_value(TABLE, LEXEME, NULL)
 
-/** Récupère un lexème dans la table. */
+/** Récupère un nom de lexème dans la table. */
 /* %param TABLE : Table contenant le lexème. */
 /* %param HASHKEY : Clef du lexème. */
 /* %return : NULL en cas d'erreur ou le lexème sinon. */

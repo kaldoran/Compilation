@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "symbol_table.h"
 #include "list.h"
+#include "error.h"
 
 /** Définition du contenu des types de base */
 #define SET_BASIC_TYPE(BASIC_TYPE, TYPE) \
@@ -46,31 +47,44 @@ static void symbol_print(void *symbol)
 
 /* ---------------------------------------------------------------------- */
 
-bool symbol_table_init(void)
+void symbol_table_init(Symbol_table *table)
 {
+  Symbol *basic_type_int   = NULL; /* 1 */
+  Symbol *basic_type_float = NULL; /* 2 */
+  Symbol *basic_type_bool  = NULL; /* 3 */
+  Symbol *basic_type_char  = NULL; /* 4 */
+
   if((basic_type_int   = malloc(sizeof(Symbol))) == NULL ||
      (basic_type_float = malloc(sizeof(Symbol))) == NULL ||
      (basic_type_bool  = malloc(sizeof(Symbol))) == NULL ||
      (basic_type_char  = malloc(sizeof(Symbol))) == NULL)
-  {
-    symbol_table_free();
-    return false; /* Bad alloc */
-  }
+    fatal_error("symbol_table_init");
 
+  /* Définition des bases. */
   SET_BASIC_TYPE(basic_type_int, int);
   SET_BASIC_TYPE(basic_type_float, float);
   SET_BASIC_TYPE(basic_type_bool, bool);
   SET_BASIC_TYPE(basic_type_char, char);
     
-  return true;
+  /* Ajout des types de base. */
+  if(hashtable_add_value(table, "int", basic_type_int)     == NULL ||
+     hashtable_add_value(table, "float", basic_type_float) == NULL ||
+     hashtable_add_value(table, "bool", basic_type_bool)   == NULL ||
+     hashtable_add_value(table, "char", basic_type_char)   == NULL)
+    fatal_error("lexeme_table_init");
+
+  return;  
 }
 
-void symbol_table_free(void)
+void symbol_table_free(void *sym)
 {
-  free(basic_type_int); 
-  free(basic_type_float);
-  free(basic_type_bool);
-  free(basic_type_char);
+  Symbol *s_base = sym, *s_next;
+
+  for(s_next = s_base; s_next != NULL; s_base = s_next)
+  {
+    s_next = s_base->next;
+    free(s_base);
+  }
 
   return;
 }
