@@ -11,16 +11,15 @@
 #include "list.h"
 #include "error.h"
 
-/** Définition du contenu des types de base */
-#define SET_BASIC_TYPE(BASIC_TYPE, TYPE) \
-  if(1)                                  \
-  {                                      \
-    BASIC_TYPE->type = SYMBOL_TYPE_BASE; \
-    BASIC_TYPE->exec = sizeof(TYPE);     \
-    BASIC_TYPE->next = NULL;             \
-    BASIC_TYPE->index = NULL;            \
-    BASIC_TYPE->region = 0;              \
-  }
+/* Nombre de types de bases. (int, float, char, bool) */
+#define SYMBOL_BASIC_MAX 4
+
+/* ---------------------------------------------------------------------- */
+/* Données internes (privées)                                             */
+/* ---------------------------------------------------------------------- */
+
+/** Déclarations des types de bases. */
+static Symbol *symbol_basic[4];
 
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
@@ -49,29 +48,26 @@ static void symbol_print(void *symbol)
 
 void symbol_table_init(Symbol_table *table)
 {
-  Symbol *basic_type_int   = NULL; /* 1 */
-  Symbol *basic_type_float = NULL; /* 2 */
-  Symbol *basic_type_bool  = NULL; /* 3 */
-  Symbol *basic_type_char  = NULL; /* 4 */
+  Symbol *sym;
+  char *type[] = {"int", "float", "bool", "char"};
+  int i;
+  
+  for(i = 0; i < 3; i++)
+  {
+    if((sym = malloc(sizeof *sym)) == NULL)
+      fatal_error("symbol_table_init");
 
-  if((basic_type_int   = malloc(sizeof(Symbol))) == NULL ||
-     (basic_type_float = malloc(sizeof(Symbol))) == NULL ||
-     (basic_type_bool  = malloc(sizeof(Symbol))) == NULL ||
-     (basic_type_char  = malloc(sizeof(Symbol))) == NULL)
-    fatal_error("symbol_table_init");
+    sym->type = SYMBOL_TYPE_BASE;
+    sym->exec = 1;
+    sym->next = NULL;
+    sym->index = NULL;
+    sym->region = 0;
 
-  /* Définition des bases. */
-  SET_BASIC_TYPE(basic_type_int, int);
-  SET_BASIC_TYPE(basic_type_float, float);
-  SET_BASIC_TYPE(basic_type_bool, bool);
-  SET_BASIC_TYPE(basic_type_char, char);
-    
-  /* Ajout des types de base. */
-  if(hashtable_add_value(table, "int", basic_type_int)     == NULL ||
-     hashtable_add_value(table, "float", basic_type_float) == NULL ||
-     hashtable_add_value(table, "bool", basic_type_bool)   == NULL ||
-     hashtable_add_value(table, "char", basic_type_char)   == NULL)
-    fatal_error("lexeme_table_init");
+    symbol_basic[i] = sym;
+
+    if(hashtable_add_value(table, type[i], sym) == NULL)
+      fatal_error("lexeme_table_init");
+  }
 
   return;  
 }
@@ -89,7 +85,7 @@ void symbol_table_free(void *sym)
   return;
 }
 
-bool symbol_table_add(Symbol_table *table, Hashkey hkey, unsigned char type, 
+bool symbol_table_add(Symbol_table *table, Hashkey hkey, Type type, 
 		      int region, Index_t index, size_t exec)
 {
   Symbol *sym = malloc(sizeof *sym);
@@ -129,6 +125,13 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey, int region)
       return origin; /* Trouvé ! */
 
   return NULL; /* Non trouvé. */
+}
+
+Index_t symbol_table_get_basic(int basic_num)
+{
+  if(basic_num <= 0 || basic_num > SYMBOL_BASIC_MAX)
+    return NULL;
+  return symbol_basic[basic_num];
 }
 
 void symbol_table_print(Symbol_table *table)

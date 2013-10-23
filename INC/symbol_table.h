@@ -19,6 +19,12 @@
 #define SYMBOL_TYPE_PROCEDURE 5
 #define SYMBOL_TYPE_FUNCTION  6
 
+/** Types de bases. */
+#define SYMBOL_BASIC_INT   1
+#define SYMBOL_BASIC_FLOAT 2
+#define SYMBOL_BASIC_BOOL  3
+#define STMBOL_BASIC_CHAR  4
+
 /** Index sur table */
 typedef void* Index_t;
 
@@ -34,6 +40,9 @@ typedef struct Symbol
 
 /** Structure d'une table des déclarations. */
 typedef Hashtable Symbol_table;
+
+/** Type d'une déclaration. */
+typedef unsigned char Type;
 
 /** Initialise la table des déclarations. */
 /* Définit les types de base + Init des lexèmes de base. */
@@ -52,7 +61,7 @@ void symbol_table_free(void *sym);
 /* %param index : Index sur table. */
 /* %param exec : Taille à l'execution. */
 /* %return : false en cas d'erreur mémoire ou true en cas de réussite. */
-bool symbol_table_add(Symbol_table *table, Hashkey key, unsigned char type, 
+bool symbol_table_add(Symbol_table *table, Hashkey key, Type type, 
 		      int region, Index_t index, size_t exec);
  
 /** Obtenir un champ de déclaration de la table. */
@@ -62,6 +71,16 @@ bool symbol_table_add(Symbol_table *table, Hashkey key, unsigned char type,
 /* %param region : Numéro de la région contenant la déclaration. */
 /* %return : Le champ de déclaration correspondant ou NULL si non trouvé. */
 Symbol *symbol_table_get(Symbol_table *table, Hashkey hkey, int region);
+
+/** Retourne l'index d'un type de Base dans la table. */
+/* %param : Numéro du Type de base à récupérer. */
+/* %return : Retourne un index sur le champ correspondant ou NULL si basic_num n'est pas bon. */
+Index_t symbol_table_get_basic(int basic_num);
+
+#define SBASIC_INT   symbol_table_get_basic(SYMBOL_BASIC_INT)   /* Type 1 */
+#define SBASIC_FLOAT symbol_table_get_basic(SYMBOL_BASIC_FLOAT) /* Type 2 */
+#define SBASIC_BOOL  symbol_table_get_basic(SYMBOL_BASIC_BOOL)  /* Type 3 */
+#define SBASIC_CHAR  symbol_table_get_basic(SYMBOL_BASIC_CHAR)  /* Type 4 */
 
 /** Affiche la table des déclarations. */
 /* %param table : Table des déclarations. */
