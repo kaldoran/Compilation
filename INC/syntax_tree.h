@@ -14,30 +14,65 @@
 #define AT_UNKNOWN 0
 
 /** Opérateurs. */
-#define AT_OP_PLUS  1
-#define AT_OP_MINUS 2
-#define AT_OP_MULT  3
-#define AT_OP_DIV   4
-#define AT_OP_MOD   5
+#define AT_OP_PLUS      1
+#define AT_OP_MINUS     2
+#define AT_OP_MULT      3
+#define AT_OP_DIV       4
+#define AT_OP_MOD       5
+
+/** Opérateurs récurcif */
+#define AT_OPR_PLUSE    6	//plus equal
+#define AT_OPR_MINE     7	//minus equal
+#define AT_OPR_MULTE    8	//Mult equal
+#define AT_OPR_DIVE     9	//div equal
+#define AT_OPR_MODE     10	//mod equal
+
+/** Opérateurs binaire */
+#define AT_OB_INC       11	//increment
+#define AT_OB_DEC       12	//decrement
 
 /** Comparaisons. */
-#define AT_CMP_E  6
-#define AT_CMP_G  7
-#define AT_CMP_GE 8
-#define AT_CMP_L  9
-#define AT_CMP_LE 10
+#define AT_CMP_E  	    13	//equal
+#define AT_CMP_G        14	//greater	than
+#define AT_CMP_GE       15	//greater or equal
+#define AT_CMP_L        16 	//lower than
+#define AT_CMP_LE       17	//lower or equal
+#define AT_CMP_DF       18	// different
 
 /** Conditions. */
-#define AT_CND_AND 11
-#define AT_CND_OR  12
-#define AT_CND_NOT 13
+#define AT_CND_AND      19	//and
+#define AT_CND_OR       20	//or
+#define AT_CND_NOT	    21	//not	
 
 /** Fonctions prédéfinies. */
-#define AT_FUN_READ  14
-#define AT_FUN_WRITE 15
+#define AT_FUN_READ     22	//read
+#define AT_FUN_WRITE    23	//write
+#define AT_FUN_RAND     24	//random
+
+/** Contrôleurs */
+#define AT_CTL_IF	    25	//if
+#define AT_CTL_ELSE     26	//else
+#define AT_CTL_WHILE    27	//while
+#define AT_CTL_ARRAY    28	//array
+#define AT_CTL_STRUCT   29 	//structure
+#define AT_CTL_PROC	    30	//procedure
+#define AT_CTL_FUN      31	//function
+#define AT_CTL_RETURN   32	//return
+#define AT_CTL_SWITCH   33	//switch
+#define AT_CTL_CASE     34	//case
+#define AT_CTL_DEFAULT  35	//default
+#define AT_CTL_BREAK    36	//break
+#define AT_CTL_CONTINUE 37	//continue
+#define AT_CTL_TERNAIRE 38    //ternaire
 
 /** Constantes. */
-#define AT_CST_STRING 16
+#define AT_CST_STRING   39	//string
+#define AT_CST_REEL     40	//real
+#define AT_CST_BOOL     41	//boolean
+#define AT_CST_CHAR     42	//char
+#define AT_CST_INT      43	//integer
+#define AT_CST_EMPTY    44	//enmpty node
+
 
 #define AT_CST_EMPTY 255
 
