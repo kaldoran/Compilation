@@ -10,8 +10,8 @@ OBJ_DIR = OBJ
 BIN_DIR = BIN
 
 # Yacc & lex commandes
-CMD_YACC = yacc
-CMD_LEX = lex
+CMD_YACC = bison
+CMD_LEX = flex
 
 # Yacc & lex .c et .h
 YACC = yacc

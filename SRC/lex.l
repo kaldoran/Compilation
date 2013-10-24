@@ -56,17 +56,17 @@
        return(CSTE_CARACTERE);
      }
 
-'\t' {
+'\\t' {
        yylval.val_c = '\t'; 
        return(CSTE_CARACTERE);
      }
 
-'\n' {
+'\\n' {
        yylval.val_c = '\n'; 
        return(CSTE_CARACTERE);
      }
 
-'\r' {
+'\\r' {
        yylval.val_c = '\r'; 
        return(CSTE_CARACTERE);
      }
