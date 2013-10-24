@@ -1,6 +1,6 @@
 #!/bin/perl
      
-open(FILE,"<syntax_tree.h") or die "POTATOES !";
+open(FILE,"<./INC/syntax_tree.h") or die "POTATOES !";
 print "char *node_name[] = {";
 while (<FILE>) {
 	chomp $_;
