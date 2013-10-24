@@ -14,18 +14,18 @@
 #define AT_UNKNOWN 0
 
 /** Opérateurs. */
-#define AT_OP_PLUS      1	//plus
-#define AT_OP_MINUS     2	//minus
-#define AT_OP_MULT      3	//mult
-#define AT_OP_DIV       4	//div
-#define AT_OP_MOD       5	//mod
+#define AT_OP_PLUS   1 /* plus */
+#define AT_OP_MINUS  2 /* minus */
+#define AT_OP_MULT   3 /* mult */
+#define AT_OP_DIV    4 /* div */
+#define AT_OP_MOD    5 /* mod */
 
-/** Opérateurs récurcif */
-#define AT_OPR_PLUSE    6	//plus equal
-#define AT_OPR_MINE     7	//minus equal
-#define AT_OPR_MULTE    8	//Mult equal
-#define AT_OPR_DIVE     9	//div equal
-#define AT_OPR_MODE     10	//mod equal
+/** Opérateurs d'affectations */
+#define AT_OPR_PLUSE  6	/* plus equal */
+#define AT_OPR_MINE   7	/* minus equal */
+#define AT_OPR_MULTE  8	/* mult equal */
+#define AT_OPR_DIVE   9	/* div equal */
+#define AT_OPR_MODE  10	/* mod equal */
 
 /** Opérateurs binaire */
 #define AT_OB_INC       11	//increment
@@ -66,13 +66,12 @@
 #define AT_CTL_TERNAIRE 38    //ternaire
 
 /** Constantes. */
-#define AT_CST_STRING   39	//string
+#define AT_CST_STRING   39	/* string */
 #define AT_CST_REEL     40	//real
 #define AT_CST_BOOL     41	//boolean
 #define AT_CST_CHAR     42	//char
 #define AT_CST_INT      43	//integer
-#define AT_CST_EMPTY    44	//empty node
-
+#define AT_CST_EMPTY    44	/* empty node */
 
 /** Structure d'un arbre abstrait. */
 typedef Tree Syntax_tree;
