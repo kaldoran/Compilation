@@ -68,11 +68,19 @@ typedef struct Procedure
 /* %return : La structure allouée ou NULL en cas d'échec. */
 Structure *structure_new(unsigned int field_number, Hashkey hkey);
 
+/** Libère une structure. */
+/* %param *s : Pointeur sur la structure à libérer. */
+void structure_free(Structure *s);
+
 /** Alloue un tableau avec un nombre de dimensions et un type spécifiés. */
 /* %param dimension_number : Nombre de dimension du tableau à créer. */
 /* %param type : Type du tableau à créer. */
 /* %return : Le tableau alloué ou NULL en cas d'échec. */
 Array *array_new(unsigned int dimension_number, Index_t type);
+
+/* Libère un tableau. */
+/* %param *a : Tableau à libérer. */
+void array_free(Array *a);
 
 /** Alloue une fonction avec un type à retourner et le nombre de paramètres spécifiés. */
 /* %param return_type : Type de retour de la fonction. */
@@ -80,9 +88,17 @@ Array *array_new(unsigned int dimension_number, Index_t type);
 /* %return : La fonction allouée ou NULL en cas d'échec. */
 Function *function_new(Index_t return_type, unsigned int param_number);
 
+/** Libère une fonction. */
+/* %param *f : Fonction à libérer. */
+void function_free(Function *f);
+
 /** Alloue une procédure avec le nombre de paramètres spécifiés. */
 /* %param param_number : Nombre de paramètres que la procédure prend. */
 /* %return : La procédure allouée ou NULL en cas d'échec. */
 Procedure *procedure_new(unsigned int param_number);
+
+/** Libère une procédure. */
+/* %param *p : Procédure à libérer. */
+void procedure_free(Procedure *p);
 
 #endif /* _DESCRIPTION_TABLE_ INCLUDED */

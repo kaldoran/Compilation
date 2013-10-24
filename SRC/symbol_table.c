@@ -83,7 +83,7 @@ void symbol_table_free(void *sym)
 
     /* Libération description. */
     switch(s_base->type)
-    {/*
+    {
       case SYMBOL_TYPE_STRUCT:
         procedure_free(s_base->index); 
         break;
@@ -97,7 +97,7 @@ void symbol_table_free(void *sym)
         function_free(s_base->index); 
         break;
 
-      default: break; */
+      default: break;
     }
 
     /* Libération déclaration courante. */
