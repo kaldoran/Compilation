@@ -113,7 +113,10 @@
 
 /* Opérateurs/Affectations/Comparaisons. */
 %type <val_i> op_rac test_comp
-%type <node> incr_bin affectation affectation_base
+%type <node> incr_bin affectation affectation_base ternaire
+
+ /* Fonctions préféfinies. */
+%type <node> instr_pre
 
 %%
 
@@ -260,7 +263,7 @@ affectation: affectation_base {$$ = $1;}
            | incr_bin         {$$ = $1;}
            ; 
 
-affectation_base: variable OPAFF expression  {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother($1, $3 ));}
+affectation_base: variable OPAFF expression  {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother($1, $3));}
                 | variable OPAFF ternaire    /* ???????? */
                 | variable op_rac expression {$$ = syntax_tree_add_son(syntax_tree_node_new($2), syntax_tree_add_brother($1, $3));}
                 ;
@@ -413,20 +416,21 @@ expression2: expression2 MULTIPLICATION expression3 {$$ = syntax_tree_add_son(sy
            ; 
 
 expression3: PARENTHESE_OUVRANTE expression PARENTHESE_FERMANTE
-           | CSTE_ENTIERE                                             {$$ = syntax_tree_node_int_new($1);}
-           | CSTE_REELLE                                              {$$ = syntax_tree_node_float_new($1);}
-           | CSTE_CARACTERE                                           {$$ = syntax_tree_node_char_new($1);}
-           | CSTE_BOOLEENNE                                           {$$ = syntax_tree_node_bool_new($1);}
-           | CSTE_CHAINE                                              {$$ = syntax_tree_node_string_new($1);}
-           | MOINS CSTE_ENTIERE                                       {$$ = syntax_tree_node_int_new(-$2);}
-           | MOINS CSTE_REELLE                                        {$$ = syntax_tree_node_float_new(-$2);}
-           | appel                                                    {$$ = $1;}
-           | instr_pre                                                /* ???????? */
-           | incr_bin                                                 /* ???????? */ 
-           | variable                                                 {$$ = $1;}
-           | MOINS variable                                           /* ???????? */
-           | PARENTHESE_OUVRANTE affectation_base PARENTHESE_FERMANTE /* ???????? */
-           | PARENTHESE_OUVRANTE ternaire PARENTHESE_FERMANTE         /* ???????? */
+           | CSTE_ENTIERE        {$$ = syntax_tree_node_int_new($1);}
+           | CSTE_REELLE         {$$ = syntax_tree_node_float_new($1);}
+           | CSTE_CARACTERE      {$$ = syntax_tree_node_char_new($1);}
+           | CSTE_BOOLEENNE      {$$ = syntax_tree_node_bool_new($1);}
+           | CSTE_CHAINE         {$$ = syntax_tree_node_string_new($1);}
+           | MOINS CSTE_ENTIERE  {$$ = syntax_tree_node_int_new(-$2);}
+           | MOINS CSTE_REELLE   {$$ = syntax_tree_node_float_new(-$2);}
+           | appel               {$$ = $1;}
+           | instr_pre           {$$ = $1;}
+           | incr_bin            {$$ = $1;}
+           | variable            {$$ = $1;}
+           | MOINS variable      {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MINUS), 
+				  	                   syntax_tree_add_brother(syntax_tree_node_int_new(0), $2));}
+           | PARENTHESE_OUVRANTE affectation_base PARENTHESE_FERMANTE {$$ = $2;}
+           | PARENTHESE_OUVRANTE ternaire PARENTHESE_FERMANTE         {$$ = $2;}
            | NEGATION expression3                                     {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_NOT), $2);}
            ;   
 

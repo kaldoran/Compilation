@@ -133,7 +133,7 @@ int main(void)
   symbol_table_init(hashtable);
    
   /* Execution */
-  /* yyparse(); */
+  yyparse();
   test();
   test2();
   test3();

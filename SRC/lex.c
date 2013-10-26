@@ -1320,7 +1320,7 @@ case 80:
 /* rule 80 can match eol */
 YY_RULE_SETUP
 #line 159 "SRC/lex.l"
-{++line_num;}
+{++line_num; printf("%d\n", line_num);}
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
@@ -2290,7 +2290,7 @@ void yyfree (void * ptr )
 
 int yyerror(const char *s)
 {                                                     
-  printf("Line %d - Error: %s\n", line_num, s);
+  fprintf(stderr, "Line %d - Error: %s\n", line_num, s);
   return 0;
 }
 
