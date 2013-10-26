@@ -96,7 +96,7 @@
 %token <hkey> IDF 
 
 %type <hkey> nom_type type_simple
-%type <node> corps liste_instructions suite_liste_inst instruction appel
+%type <node> corps liste_instructions suite_liste_inst instruction
 
 %type <hkey> variable
 
@@ -105,8 +105,12 @@
 /* Expressions. */
 %type <node> test expression expression2 expression3
 
-/* Boucles. */
-%type <node> tant_que pour_cont pour_a pour_e
+/* Boucles et conditions. */
+%type <node> tant_que pour pour_cont pour_a pour_e faire_tant_que
+%type <node> condition
+
+/* Switch. */
+%type <node> switch suite_switch default
 
 /* Retour. */
 %type <node> resultat_retourne
@@ -115,8 +119,11 @@
 %type <val_i> op_rac test_comp
 %type <node> incr_bin affectation affectation_base ternaire
 
- /* Fonctions préféfinies. */
+/* Fonctions préféfinies. */
 %type <node> instr_pre
+
+/* Appel. */
+%type <node> appel liste_arguments liste_args un_arg
 
 %%
 
@@ -234,20 +241,20 @@ liste_instructions: ACC_DEBUT suite_liste_inst ACC_FIN {$$ = $2;}
                   ;
           
 suite_liste_inst: instruction                  {$$ = $1;}
-                | suite_liste_inst instruction 
+                | suite_liste_inst instruction {$$ = syntax_tree_add_brother($1, $2);}
                 ;
                                                              
-instruction: POINT_VIRGULE
-           | affectation POINT_VIRGULE
-           | condition
-           | tant_que
-           | pour
-           | faire_tant_que
-           | switch
-           | appel POINT_VIRGULE
-           | VIDE
-           | RETOURNE resultat_retourne POINT_VIRGULE
-           | instr_pre POINT_VIRGULE
+instruction: POINT_VIRGULE                            {$$ = syntax_tree_node_new(AT_EMPTY);}
+           | affectation POINT_VIRGULE                {$$ = $1;}
+           | condition                                {$$ = $1;}
+           | tant_que                                 {$$ = $1;}
+           | pour                                     {$$ = $1;}
+           | faire_tant_que                           {$$ = $1;}
+           | switch                                   {$$ = $1;}
+           | appel POINT_VIRGULE                      {$$ = $1;}
+           | VIDE                                     {$$ = syntax_tree_node_new(AT_EMPTY);}
+           | RETOURNE resultat_retourne POINT_VIRGULE {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_RETURN), $2);}
+           | instr_pre POINT_VIRGULE                  /* ??????? */
            ;
      
 instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE 
@@ -264,7 +271,7 @@ affectation: affectation_base {$$ = $1;}
            ; 
 
 affectation_base: variable OPAFF expression  {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother($1, $3));}
-                | variable OPAFF ternaire    /* ???????? */
+                | variable OPAFF ternaire    {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother($1, $3));} 
                 | variable op_rac expression {$$ = syntax_tree_add_son(syntax_tree_node_new($2), syntax_tree_add_brother($1, $3));}
                 ;
  
@@ -281,7 +288,7 @@ op_rac: PLUS_EGAL   {$$ = AT_OPR_PLUSE;}
       | MODULO_EGAL {$$ = AT_OPR_MODE;}
       ;
 
-variable: IDF suite_variable
+variable: IDF suite_variable 
         ;
 
 suite_variable: suite_variable CROCHET_OUVRANT expression CROCHET_FERMANT
@@ -293,9 +300,12 @@ suite_variable: suite_variable CROCHET_OUVRANT expression CROCHET_FERMANT
 /* Condition                                            */
 /* -----------------------------------------------------*/
   
-condition: SI expression ALORS liste_instructions
-         | SI expression ALORS liste_instructions SINON liste_instructions
-	 | SI expression ALORS liste_instructions SINON condition
+condition: SI expression ALORS liste_instructions                          {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF),
+												     syntax_tree_add_brother($2, $4));}
+         | SI expression ALORS liste_instructions SINON liste_instructions {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF),
+										 syntax_tree_add_brother(syntax_tree_add_brother($2, $4), $6));}
+	 | SI expression ALORS liste_instructions SINON condition          {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF),
+										 syntax_tree_add_brother(syntax_tree_add_brother($2, $4), $6));}
          ;
 
 /* -----------------------------------------------------*/
@@ -306,8 +316,10 @@ tant_que: TANT_QUE expression FAIRE liste_instructions {$$ = syntax_tree_add_son
 										 syntax_tree_add_brother($2, $4));}
         ;
     
-pour: POUR pour_cont FAIRE liste_instructions
-    | POUR PARENTHESE_OUVRANTE pour_cont PARENTHESE_FERMANTE FAIRE liste_instructions
+pour: POUR pour_cont FAIRE liste_instructions                                        {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR),
+						                                           syntax_tree_add_brother($2, $4));}
+    | POUR PARENTHESE_OUVRANTE pour_cont PARENTHESE_FERMANTE FAIRE liste_instructions{$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR),
+											   syntax_tree_add_brother($3, $6));}
     ;
 
 pour_cont: pour_a POINT_VIRGULE pour_e POINT_VIRGULE pour_a {$$ = syntax_tree_add_brother(syntax_tree_add_brother($1, $3), $5);}
@@ -321,50 +333,59 @@ pour_e: expression {$$ = $1;}
       |            {$$ = syntax_tree_node_new(AT_EMPTY);}
       ;
 
-faire_tant_que: FAIRE liste_instructions TANT_QUE expression POINT_VIRGULE
+faire_tant_que: FAIRE liste_instructions TANT_QUE expression POINT_VIRGULE {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DO_WHILE),
+												     syntax_tree_add_brother($2, $4));}
               ;
 
 /* -----------------------------------------------------*/
 /* Ternaire                                             */
 /* -----------------------------------------------------*/
 
-ternaire: expression INTERROGATION expression DEUX_POINTS expression
+ternaire: expression INTERROGATION expression DEUX_POINTS expression {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_TERNAIRE),
+									   syntax_tree_add_brother(syntax_tree_add_brother($1, $3), $5));}
         ;
 
 /* -----------------------------------------------------*/
 /* Switch                                               */
 /* -----------------------------------------------------*/
 
-switch: SWITCH expression ACC_DEBUT suite_switch default ACC_FIN
+switch: SWITCH expression ACC_DEBUT suite_switch default ACC_FIN {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_SWITCH),
+					      	                       syntax_tree_add_brother(syntax_tree_add_brother($2, $4), $5));}
       ;
 
-suite_switch: suite_switch CASE expression DEUX_POINTS liste_instructions
-            | suite_switch CASE expression DEUX_POINTS instruction
-            | CASE expression DEUX_POINTS liste_instructions
-            | CASE expression DEUX_POINTS instruction
+suite_switch: suite_switch CASE expression DEUX_POINTS liste_instructions {$$ = syntax_tree_add_brother($1, 
+								        	syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
+												    syntax_tree_add_brother($3, $5)));}
+            | suite_switch CASE expression DEUX_POINTS instruction        {$$ = syntax_tree_add_brother($1, 
+								        	syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
+												    syntax_tree_add_brother($3, $5)));}
+            | CASE expression DEUX_POINTS liste_instructions              {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE), 
+												    syntax_tree_add_brother($2, $4));}
+            | CASE expression DEUX_POINTS instruction                     {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE), 
+												    syntax_tree_add_brother($2, $4));}
             ;
 
-default: DEFAULT DEUX_POINTS liste_instructions
-       | DEFAULT DEUX_POINTS instruction 
-       |
+default: DEFAULT DEUX_POINTS liste_instructions {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DEFAULT), $3);}
+       | DEFAULT DEUX_POINTS instruction        {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DEFAULT), $3);}
+       |                                        {$$ = syntax_tree_node_new(AT_EMPTY);}
        ;
 
 /* -----------------------------------------------------*/
 /* Appel                                                */
 /* -----------------------------------------------------*/
 
-appel: IDF liste_arguments
+appel: IDF liste_arguments {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CALL), $2);}
      ;
           
-liste_arguments: PARENTHESE_OUVRANTE PARENTHESE_FERMANTE
-               | PARENTHESE_OUVRANTE liste_args PARENTHESE_FERMANTE
+liste_arguments: PARENTHESE_OUVRANTE PARENTHESE_FERMANTE            {$$ = syntax_tree_node_new(AT_EMPTY);}
+               | PARENTHESE_OUVRANTE liste_args PARENTHESE_FERMANTE {$$ = $2;}
                ;
 
-liste_args: un_arg
-          | liste_args VIRGULE un_arg
+liste_args: un_arg                    {$$ = $1;}
+          | liste_args VIRGULE un_arg {syntax_tree_add_brother($1, $3);}
           ;
           
-un_arg: expression
+un_arg: expression {$$ = $1;}
       ;
 
 /* -----------------------------------------------------*/

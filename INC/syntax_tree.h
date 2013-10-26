@@ -56,33 +56,35 @@
 
 /** Contrôleurs. */
 #define AT_CTL_IF       27 /* if */
-#define AT_CTL_ELSE     28 /* else */
+#define AT_CTL_IF_ELSE  28 /* else */
 #define AT_CTL_WHILE    29 /* while */
-#define AT_CTL_FOR      30 /* for */
-#define AT_CTL_ARRAY    31 /* array */
-#define AT_CTL_STRUCT   32 /* structure */
-#define AT_CTL_PROC     33 /* procedure */
-#define AT_CTL_FUN      34 /* function */
-#define AT_CTL_RETURN   35 /* return */
-#define AT_CTL_SWITCH   36 /* switch */
-#define AT_CTL_CASE     37 /* case */
-#define AT_CTL_DEFAULT  38 /* default */
-#define AT_CTL_BREAK    39 /* break */
-#define AT_CTL_CONTINUE 40 /* continue */
-#define AT_CTL_TERNAIRE 41 /* ternaire */
+#define AT_CTL_DO_WHILE 30 /* do while */
+#define AT_CTL_FOR      31 /* for */
+#define AT_CTL_ARRAY    32 /* array */
+#define AT_CTL_STRUCT   33 /* structure */
+#define AT_CTL_PROC     34 /* procedure */
+#define AT_CTL_FUN      35 /* function */
+#define AT_CTL_RETURN   36 /* return */
+#define AT_CTL_SWITCH   37 /* switch */
+#define AT_CTL_CASE     38 /* case */
+#define AT_CTL_DEFAULT  39 /* default */
+#define AT_CTL_BREAK    40 /* break */
+#define AT_CTL_CONTINUE 41 /* continue */
+#define AT_CTL_TERNAIRE 42 /* ternaire */
+#define AT_CTL_CALL     43 /* appel */
 
 /** Constantes. */
-#define AT_CST_STRING 42 /* string */
-#define AT_CST_FLOAT  43 /* real */
-#define AT_CST_BOOL   44 /* boolean */
-#define AT_CST_CHAR   45 /* char */
-#define AT_CST_INT    46 /* integer */
+#define AT_CST_STRING 44 /* string */
+#define AT_CST_FLOAT  45 /* real */
+#define AT_CST_BOOL   46 /* boolean */
+#define AT_CST_CHAR   47 /* char */
+#define AT_CST_INT    48 /* integer */
 
 /* Affectation. */
-#define AT_EQUAL 47 /* egal */
+#define AT_EQUAL 49 /* egal */
 
 /** Vide. */
-#define AT_EMPTY 48 /* empty node */
+#define AT_EMPTY 50 /* empty node */
 
 /** Structure d'un arbre abstrait. */
 typedef Tree Syntax_tree;
