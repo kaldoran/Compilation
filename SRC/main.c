@@ -9,6 +9,7 @@
 #include "yacc.h"
 
 extern int yyparse(void);
+extern int yylex_destroy(void);
 
 /* Table de Hachage. (Lexemes, déclarations...)
    Table déclarée dans yacc.y */
@@ -17,14 +18,7 @@ extern Hashtable *hashtable;
 void test(void)
 {
   Hashkey a, b;
-  int i;
 
-  Structure *s;
-  Array *ar;
-  Function *f;
-  Procedure *p;
-  
-  
   lexeme_table_add(hashtable, "bonjour");
   a = lexeme_table_add(hashtable, "manger");
   lexeme_table_add(hashtable, "dormir");
@@ -32,9 +26,60 @@ void test(void)
   b = lexeme_table_add(hashtable, "roupiller");
   lexeme_table_add(hashtable, "coucou");
   lexeme_table_add(hashtable, "ahah");
-  
-  
-  /*s = structure_new(10, a);*/
+
+  symbol_table_add(hashtable, a, 0, 0, 0, 0);
+  symbol_table_add(hashtable, a, 1, 0, 0, 0);
+  symbol_table_add(hashtable, a, 2, 0, 0, 0);
+
+  symbol_table_add(hashtable, b, 3, 0, 0, 0);
+  symbol_table_add(hashtable, b, 4, 0, 0, 0);
+  symbol_table_add(hashtable, b, 5, 0, 0, 0);
+
+  a = hashtable_get_key(hashtable, "coucou");
+  symbol_table_add(hashtable, a, 6, 0, 0, 0);
+
+  fprintf(stdout, "LEXEMES:\n");
+  lexeme_table_print(hashtable);
+
+  fprintf(stdout, "\n\nDECLARATIONS:\n");
+  symbol_table_print(hashtable);
+}
+
+#include "private_tree.h"
+
+void test2(void)
+{
+  /* Racine */
+  Syntax_tree *tree = syntax_tree_node_new(AT_OPR_PLUSE);
+  Syntax_tree *tree2, *tree3, *tree4, *tree5, *tree6;
+
+  printf("\n\nARBRE:\n");
+
+  syntax_tree_add_son(tree, syntax_tree_node_new(AT_OB_INC));
+  syntax_tree_add_son(tree, tree2 = syntax_tree_node_new(AT_OB_DEC));
+  syntax_tree_add_son(tree2, tree3 = syntax_tree_node_new(AT_CND_NOT));
+  syntax_tree_add_son(tree, tree6 = syntax_tree_node_new(AT_FUN_WRITE));
+
+  syntax_tree_add_brother(tree, syntax_tree_node_new(AT_OPR_MODE));
+  syntax_tree_add_brother(tree3, tree5 = syntax_tree_node_new(AT_CTL_SWITCH));
+  syntax_tree_add_brother(tree, syntax_tree_node_new(AT_FUN_WRITE));
+  syntax_tree_add_brother(tree2, tree4 = syntax_tree_node_new(AT_FUN_WRITE));
+  syntax_tree_add_son(tree4, syntax_tree_node_new(AT_FUN_WRITE));
+  syntax_tree_add_son(tree5, tree4 = syntax_tree_node_new(AT_FUN_READ));
+  syntax_tree_add_son(tree4, tree5 = syntax_tree_node_new(AT_FUN_READ));
+  syntax_tree_add_son(tree5, syntax_tree_node_new(AT_OB_INC));
+  syntax_tree_add_son(tree6, syntax_tree_node_new(AT_OP_MULT));
+  syntax_tree_add_brother(tree4, syntax_tree_node_new(AT_CTL_PROC));
+
+  syntax_tree_print(tree);
+  syntax_tree_free(tree);
+  printf("\n");
+
+}
+
+void test3()
+{
+ /*s = structure_new(10, a);*/
   /*ar = array_new(10, 0);*/
   /*f = function_new(0, 10);*/
   /*p = procedure_new(10);*/
@@ -75,26 +120,6 @@ void test(void)
   /*function_free(f);*/
   /*procedure_free(p);*/
 
-
-
-  symbol_table_add(hashtable, a, 0, 0, s, 0);
-  symbol_table_add(hashtable, a, 1, 0, a, 0);
-  symbol_table_add(hashtable, a, 2, 0, f, 0);
-
-  symbol_table_add(hashtable, b, 3, 0, p, 0);
-  symbol_table_add(hashtable, b, 4, 0, 0, 0);
-  symbol_table_add(hashtable, b, 5, 0, 0, 0);
-
-  a = hashtable_get_key(hashtable, "coucou");
-  symbol_table_add(hashtable, a, 6, 0, 0, 0);
-
-  fprintf(stdout, "LEXEMES:\n");
-  lexeme_table_print(hashtable);
-
-  fprintf(stdout, "\n\nDECLARATIONS:\n");
-  symbol_table_print(hashtable);
-
-
 }
 
 int main(void)
@@ -105,10 +130,12 @@ int main(void)
    
   /* Execution */
   /* yyparse(); */
-
   test();
-
+  test2();
+  test3();
+ 
   /* Libération */
+  yylex_destroy();
   hashtable_free(hashtable, symbol_table_free);
   regions_table_free();
   
