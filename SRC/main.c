@@ -79,46 +79,50 @@ void test2(void)
 
 void test3()
 {
- /*s = structure_new(10, a);*/
-  /*ar = array_new(10, 0);*/
-  /*f = function_new(0, 10);*/
-  /*p = procedure_new(10);*/
+  Field fi;
+  Dimension di;
+  Parameter pa;
+  Hashkey a = NULL;
 
-  /*f->return_type = 0;*/
+  Structure *s = structure_new(10, a);
+  Array *ar = array_new(10, 0);
+  Function *f = function_new(0, 10);
+  Procedure *p = procedure_new(10);
 
-  /*for(i=0; i<10; i++){*/
-      /*Field fi;*/
-      /*Dimension di;*/
-      /*Parameter pa;*/
+  int i;
 
-      /*fi.hkey = a;*/
-      /*fi.type = 0;*/
+  f->return_type = 0;
 
-      /*di.bound_lower = 1;*/
-      /*di.bound_upper = 11;*/
+  for(i=0; i<10; i++){
+  
+      fi.hkey = a;
+      fi.type = 0;
 
-      /*pa.hkey = a;*/
-      /*pa.type = 0;*/
+      di.bound_lower = 1;
+      di.bound_upper = 11;
 
-      /*s->field[i] = fi;*/
-      /*ar->dimension[i] = di;*/
-      /*f->params[i] = pa;*/
-      /*p->params[i] = pa;*/
-  /*}*/
+      pa.hkey = a;
+      pa.type = 0;
+
+      s->field[i] = fi;
+      ar->dimension[i] = di;
+      f->params[i] = pa;
+      p->params[i] = pa;
+  }
      
 
-  /*printf("borne inf : %d\n", ar->dimension[9].bound_lower);*/
-  /*printf("borne sup : %d\n", ar->dimension[9].bound_upper);*/
-  /*printf("type : %d\n", (int)(s->field[9].type));*/
-  /*printf("type : %d\n", (int)f->params[9].type);*/
-  /*printf("type : %d\n", (int)p->params[9].type);*/
-  /*printf("return type : %d\n", (int)p->return_type);*/
+  printf("borne inf : %d\n", ar->dimension[9].bound_lower);
+  printf("borne sup : %d\n", ar->dimension[9].bound_upper);
+  printf("type : %p\n", s->field[9].type);
+  printf("type : %p\n", f->params[9].type);
+  printf("type : %p\n", p->params[9].type);
+  printf("return type : %p\n", f->return_type);
 
 
-  /*structure_free(s);*/
-  /*array_free(ar);*/
-  /*function_free(f);*/
-  /*procedure_free(p);*/
+  structure_free(s);
+  array_free(ar);
+  function_free(f);
+  procedure_free(p);
 
 }
 

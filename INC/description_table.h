@@ -34,32 +34,32 @@ typedef struct Dimension
 typedef struct Structure
 {
   unsigned int field_number; /* Nombre de champs de la structure. */
-  Hashkey hkey; /* Nom lexicographique. */
-  Field *field; /* Tableau de structure des champs (donc des variables) de la structure. */
-  size_t exec;  /* Taille à l'execution. */
+  Hashkey hkey;              /* Nom lexicographique. */
+  Field *field;              /* Tableau de structure des champs (donc des variables) de la structure. */
+  size_t exec;               /* Taille à l'execution. */
 } Structure;
 
 /** Structure d'un tableau. */
 typedef struct Array
 {
   unsigned int dimension_number; /* Nombre de dimensions du tableau. */
-  Index_t type; /* Type des éléments. */
-  Dimension *dimension; /* Tableau de structures de dimensions. */
+  Index_t type;                  /* Type des éléments. */
+  Dimension *dimension;          /* Tableau de structures de dimensions. */
 } Array;
 
 /** Structure d'une fonction. */
 typedef struct Function
 {
-  Index_t return_type; /* Type de la valeur de retour. */
+  Index_t return_type;       /* Type de la valeur de retour. */
   unsigned int param_number; /* Nombre de paramètres. */
-  Parameter *params; /* Tableau de structures de paramètres (qui sont donc des variables). */
+  Parameter *params;         /* Tableau de structures de paramètres (qui sont donc des variables). */
 } Function;
 
 /** Structure d'une procedure. */
 typedef struct Procedure
 {
   unsigned int param_number; /* Nombre de paramètres. */
-  Parameter *params; /* Tableau de structures de paramètres. */
+  Parameter *params;         /* Tableau de structures de paramètres. */
 } Procedure;
 
 /** Alloue une structure avec un nombre de champs et un hkey spécifiés. */
