@@ -16,11 +16,12 @@
 
 /** Tableau servant à l'affichage de l'arbre. */
 static char *node_name[] = {"unknown", "plus", "minus", "mult", "div", "mod", "plus equal", "minus equal", 
-			    "mult equal", "div equal", "mod equal", "increment", "decrement", "equal", 
-			    "greater than", "greater or equal", "lower than", "lower or equal", "different", 
-			    "and", "or", "not", "read", "write", "random", "if", "else", "while", "array", 
-			    "structure", "procedure", "function", "return", "switch", "case", "default", 
-			    "break", "continue", "ternaire", "string", "real", "boolean", "char", "integer", 
+			    "mult equal", "div equal", "mod equal", "increment", "decrement", "pincrement", 
+			    "pdecrement", "equal", "greater than", "greater or equal", "lower than", 
+			    "lower or equal", "different", "and", "or", "not", "read", "write", "random", 
+			    "if", "else", "while", "do while", "for", "array", "structure", "procedure", 
+			    "function", "return", "switch", "case", "default", "break", "continue", 
+			    "ternaire", "appel", "string", "real", "boolean", "char", "integer", "egal", 
 			    "empty node"};
 
 /** Tableau de marquage de profondeur pour l'affichage de l'arbre. */

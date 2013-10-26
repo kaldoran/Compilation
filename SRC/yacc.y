@@ -120,7 +120,7 @@
 %type <node> incr_bin affectation affectation_base ternaire
 
 /* Fonctions préféfinies. */
-%type <node> instr_pre
+%type <node> instr_pre format suite_ecriture liste_variables
 
 /* Appel. */
 %type <node> appel liste_arguments liste_args un_arg
@@ -254,13 +254,15 @@ instruction: POINT_VIRGULE                            {$$ = syntax_tree_node_new
            | appel POINT_VIRGULE                      {$$ = $1;}
            | VIDE                                     {$$ = syntax_tree_node_new(AT_EMPTY);}
            | RETOURNE resultat_retourne POINT_VIRGULE {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_RETURN), $2);}
-           | instr_pre POINT_VIRGULE                  /* ??????? */
+           | instr_pre POINT_VIRGULE                  {$$ = $1;}
            ;
      
-instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE 
-         | ECRIRE PARENTHESE_OUVRANTE format suite_ecriture PARENTHESE_FERMANTE 
-         | LIRE PARENTHESE_OUVRANTE liste_variables PARENTHESE_FERMANTE 
-	 ;
+instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE                         {$$ = syntax_tree_node_new(AT_FUN_READ);}
+         | ECRIRE PARENTHESE_OUVRANTE format suite_ecriture PARENTHESE_FERMANTE {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE), 
+													  syntax_tree_add_brother($3, $4));}
+         | LIRE PARENTHESE_OUVRANTE liste_variables PARENTHESE_FERMANTE         {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), 
+													  $3);}
+         ;
 
 /* -----------------------------------------------------*/
 /* Affectation                                          */
@@ -288,7 +290,7 @@ op_rac: PLUS_EGAL   {$$ = AT_OPR_PLUSE;}
       | MODULO_EGAL {$$ = AT_OPR_MODE;}
       ;
 
-variable: IDF suite_variable 
+variable: IDF suite_variable {$$ = syntax_tree_node_new(AT_EMPTY);} /* TEMPORAIRE */
         ;
 
 suite_variable: suite_variable CROCHET_OUVRANT expression CROCHET_FERMANT
@@ -301,11 +303,11 @@ suite_variable: suite_variable CROCHET_OUVRANT expression CROCHET_FERMANT
 /* -----------------------------------------------------*/
   
 condition: SI expression ALORS liste_instructions                          {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF),
-												     syntax_tree_add_brother($2, $4));}
-         | SI expression ALORS liste_instructions SINON liste_instructions {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF),
-										 syntax_tree_add_brother(syntax_tree_add_brother($2, $4), $6));}
-	 | SI expression ALORS liste_instructions SINON condition          {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF),
-										 syntax_tree_add_brother(syntax_tree_add_brother($2, $4), $6));}
+                                                                                 syntax_tree_add_brother($2, $4));}
+         | SI expression ALORS liste_instructions SINON liste_instructions {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF_ELSE),
+	     			       					         syntax_tree_add_brother($2, syntax_tree_add_brother($4, $6)));}
+         | SI expression ALORS liste_instructions SINON condition          {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF_ELSE),
+									         syntax_tree_add_brother($2, syntax_tree_add_brother($4, $6)));}
          ;
 
 /* -----------------------------------------------------*/
@@ -313,13 +315,13 @@ condition: SI expression ALORS liste_instructions                          {$$ =
 /* -----------------------------------------------------*/
 
 tant_que: TANT_QUE expression FAIRE liste_instructions {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_WHILE), 
-										 syntax_tree_add_brother($2, $4));}
+                                                                                 syntax_tree_add_brother($2, $4));}
         ;
     
 pour: POUR pour_cont FAIRE liste_instructions                                        {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR),
-						                                           syntax_tree_add_brother($2, $4));}
+                                                                                           syntax_tree_add_brother($2, $4));}
     | POUR PARENTHESE_OUVRANTE pour_cont PARENTHESE_FERMANTE FAIRE liste_instructions{$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR),
-											   syntax_tree_add_brother($3, $6));}
+                                                                                           syntax_tree_add_brother($3, $6));}
     ;
 
 pour_cont: pour_a POINT_VIRGULE pour_e POINT_VIRGULE pour_a {$$ = syntax_tree_add_brother(syntax_tree_add_brother($1, $3), $5);}
@@ -334,7 +336,7 @@ pour_e: expression {$$ = $1;}
       ;
 
 faire_tant_que: FAIRE liste_instructions TANT_QUE expression POINT_VIRGULE {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DO_WHILE),
-												     syntax_tree_add_brother($2, $4));}
+                                                                                                     syntax_tree_add_brother($2, $4));}
               ;
 
 /* -----------------------------------------------------*/
@@ -342,7 +344,7 @@ faire_tant_que: FAIRE liste_instructions TANT_QUE expression POINT_VIRGULE {$$ =
 /* -----------------------------------------------------*/
 
 ternaire: expression INTERROGATION expression DEUX_POINTS expression {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_TERNAIRE),
-									   syntax_tree_add_brother(syntax_tree_add_brother($1, $3), $5));}
+                                                                           syntax_tree_add_brother(syntax_tree_add_brother($1, $3), $5));}
         ;
 
 /* -----------------------------------------------------*/
@@ -350,19 +352,19 @@ ternaire: expression INTERROGATION expression DEUX_POINTS expression {$$ = synta
 /* -----------------------------------------------------*/
 
 switch: SWITCH expression ACC_DEBUT suite_switch default ACC_FIN {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_SWITCH),
-					      	                       syntax_tree_add_brother(syntax_tree_add_brother($2, $4), $5));}
+                                                                       syntax_tree_add_brother(syntax_tree_add_brother($2, $4), $5));}
       ;
 
 suite_switch: suite_switch CASE expression DEUX_POINTS liste_instructions {$$ = syntax_tree_add_brother($1, 
-								        	syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
-												    syntax_tree_add_brother($3, $5)));}
+                                                                                syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
+                                                                                                    syntax_tree_add_brother($3, $5)));}
             | suite_switch CASE expression DEUX_POINTS instruction        {$$ = syntax_tree_add_brother($1, 
-								        	syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
-												    syntax_tree_add_brother($3, $5)));}
+                                                                                syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
+                                                                                                    syntax_tree_add_brother($3, $5)));}
             | CASE expression DEUX_POINTS liste_instructions              {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE), 
-												    syntax_tree_add_brother($2, $4));}
+                                                                                                    syntax_tree_add_brother($2, $4));}
             | CASE expression DEUX_POINTS instruction                     {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE), 
-												    syntax_tree_add_brother($2, $4));}
+                                                                                                    syntax_tree_add_brother($2, $4));}
             ;
 
 default: DEFAULT DEUX_POINTS liste_instructions {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DEFAULT), $3);}
@@ -392,19 +394,19 @@ un_arg: expression {$$ = $1;}
 /* WRITE                                                */
 /* -----------------------------------------------------*/
 
-format: CSTE_CHAINE /* ???????? */
+format: CSTE_CHAINE {$$ = syntax_tree_node_string_new($1);}
       ;
  
-suite_ecriture: VIRGULE expression suite_ecriture /* ???????? */
-	      |                                   /* ???????? */
+suite_ecriture: VIRGULE expression suite_ecriture {$$ = syntax_tree_add_brother($2, $3);}
+              |                                   {$$ = syntax_tree_node_new(AT_EMPTY);}
               ;
 
 /* -----------------------------------------------------*/
 /* READ                                                 */
 /* -----------------------------------------------------*/
 
-liste_variables: liste_variables VIRGULE variable /* ???????? */
-               | variable                         /* ???????? */
+liste_variables: liste_variables VIRGULE variable {$$ = syntax_tree_add_brother($1, $3);}
+               | variable                         {$$ = $1;}
                ;
   
 /* -----------------------------------------------------*/
@@ -416,27 +418,27 @@ resultat_retourne:            {syntax_tree_node_new(AT_EMPTY);}
                  ;
              
 expression: expression PLUS expression2  {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_PLUS), 
-								   syntax_tree_add_brother($1, $3));}
+                                                                   syntax_tree_add_brother($1, $3));}
           | expression MOINS expression2 {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MINUS), 
-								   syntax_tree_add_brother($1, $3));}
+                                                                   syntax_tree_add_brother($1, $3));}
           | expression OU expression2    {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_OR), 
-								   syntax_tree_add_brother($1, $3));}
+                                                                   syntax_tree_add_brother($1, $3));}
           | expression2                  {$$ = $1;}
           | test                         {$$ = $1;}
           ;
           
 expression2: expression2 MULTIPLICATION expression3 {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MULT), 
-									      syntax_tree_add_brother($1, $3));}
+                                                                              syntax_tree_add_brother($1, $3));}
            | expression2 DIVISION expression3       {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_DIV), 
-									      syntax_tree_add_brother($1, $3));}
-	   | expression2 MODULO expression3         {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MOD), 
-									      syntax_tree_add_brother($1, $3));}
+                                                                              syntax_tree_add_brother($1, $3));}
+           | expression2 MODULO expression3         {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MOD), 
+                                                                              syntax_tree_add_brother($1, $3));}
            | expression2 ET expression3             {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_AND), 
-									      syntax_tree_add_brother($1, $3));}
+                                                                              syntax_tree_add_brother($1, $3));}
            | expression3                            {$$ = $1;}
            ; 
 
-expression3: PARENTHESE_OUVRANTE expression PARENTHESE_FERMANTE
+expression3: PARENTHESE_OUVRANTE expression PARENTHESE_FERMANTE {$$ = $2;}
            | CSTE_ENTIERE        {$$ = syntax_tree_node_int_new($1);}
            | CSTE_REELLE         {$$ = syntax_tree_node_float_new($1);}
            | CSTE_CARACTERE      {$$ = syntax_tree_node_char_new($1);}
@@ -449,7 +451,7 @@ expression3: PARENTHESE_OUVRANTE expression PARENTHESE_FERMANTE
            | incr_bin            {$$ = $1;}
            | variable            {$$ = $1;}
            | MOINS variable      {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MINUS), 
-				  	                   syntax_tree_add_brother(syntax_tree_node_int_new(0), $2));}
+                                                           syntax_tree_add_brother(syntax_tree_node_int_new(0), $2));}
            | PARENTHESE_OUVRANTE affectation_base PARENTHESE_FERMANTE {$$ = $2;}
            | PARENTHESE_OUVRANTE ternaire PARENTHESE_FERMANTE         {$$ = $2;}
            | NEGATION expression3                                     {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_NOT), $2);}

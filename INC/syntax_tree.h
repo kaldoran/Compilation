@@ -33,8 +33,8 @@
 /** Opérateurs d'affectations binaires. */
 #define AT_OB_INC 11 /* increment */
 #define AT_OB_DEC 12 /* decrement */
-#define AT_OB_PINC 13 /* p_increment */
-#define AT_OB_PDEC 14 /* p_decrement */
+#define AT_OB_PINC 13 /* pincrement */
+#define AT_OB_PDEC 14 /* pdecrement */
 
 /** Comparaisons. */
 #define AT_CMP_E  15 /* equal */
@@ -81,7 +81,7 @@
 #define AT_CST_INT    48 /* integer */
 
 /* Affectation. */
-#define AT_EQUAL 49 /* egal */
+#define AT_EQUAL 49 /* set */
 
 /** Vide. */
 #define AT_EMPTY 50 /* empty node */

@@ -73,10 +73,10 @@ void tree_free(Tree *t, void (*fun)(void *value))
     for(; t != NULL; t = tmp)
     {   
       if(t->children != NULL && list_add_node(stack, t->children) == NULL)
-	fatal_error("tree_free");
+        fatal_error("tree_free");
       
        if(fun != NULL)
-	 fun(t->value);
+         fun(t->value);
  
        tmp = t->next;
        free(t);
@@ -102,10 +102,10 @@ void tree_foreach_node(Tree *t, void (*fun)(Tree *node))
       t->depth = t->father == NULL ? 0 : t->father->depth + 1;
 
       if(t->next != NULL && list_add_node(stack, t->next) == NULL)
-	fatal_error("tree_foreach_node");
+        fatal_error("tree_foreach_node");
 
       if(fun != NULL) 
-	fun(t);
+        fun(t);
     }
 
   list_free(stack, NULL);
@@ -196,7 +196,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
     }
   }
 
-  return node;
+  return parent;
 }
 
 Tree *tree_add_brother(Tree *origin, Tree *brother)
