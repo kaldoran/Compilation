@@ -68,12 +68,6 @@ int tree_node_get_depth(Tree *node);
 /* %return : NULL si le noeud t est la racine. */
 Tree *tree_node_get_father(Tree *t);
 
-/** Insère n noeuds en dessous d'un noeud père à la fin des fils. */
-/* %param parent : Noeud père. */
-/* %param ... : Noeuds à ajouter, le dernier argument doit être NULL. */
-/* %return : NULL en cas d'erreur ou le parent en cas de réussite. */
-Tree *tree_add_nodes(Tree *parent,  ...);
-
 /** Insère un noeud en dessous d'un noeud père. */
 /* %param parent : Noeud père. */
 /* %param pos : Position où doit se trouver le noeud. 

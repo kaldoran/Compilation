@@ -82,7 +82,7 @@
                          }
 
 "true"|"false" {
-                 yylval.val_b = yyleng == 4;
+                 yylval.val_c = yyleng == 4;
                  return(CSTE_BOOLEENNE);
                }
 
@@ -156,12 +156,12 @@ or  {return(OU);}
 
 " "|\t ;
 
-\n {++line_num;}
+\n {++line_num; printf("%d\n", line_num);}
 
 %%
 
 int yyerror(const char *s)
 {                                                     
-  printf("Line %d - Error: %s\n", line_num, s);
+  fprintf(stderr, "Line %d - Error: %s\n", line_num, s);
   return 0;
 }

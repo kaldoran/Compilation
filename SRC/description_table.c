@@ -28,9 +28,15 @@ Structure *structure_new(unsigned int field_number, Hashkey hkey)
   return s;
 }
 
-void structure_free(Structure *s){
-    free(s->field);
-    free(s);
+void structure_free(Structure *s)
+{
+  if(s == NULL)
+    return;
+
+  free(s->field);
+  free(s);
+
+  return;
 }
 
 Array *array_new(unsigned int dimension_number, Index_t type)
@@ -52,9 +58,15 @@ Array *array_new(unsigned int dimension_number, Index_t type)
   return a;
 }
 
-void array_free(Array *a){
-    free(a->dimension);
-    free(a);
+void array_free(Array *a)
+{
+  if(a == NULL)
+    return;
+
+  free(a->dimension);
+  free(a);
+
+  return;
 }
 
 Function *function_new(Index_t return_type, unsigned int param_number)
@@ -76,9 +88,15 @@ Function *function_new(Index_t return_type, unsigned int param_number)
   return f;
 }
 
-void function_free(Function *f){
-    free(f->params);
-    free(f);
+void function_free(Function *f)
+{
+  if(f == NULL)
+    return;
+
+  free(f->params);
+  free(f);
+
+  return;
 }
 
 Procedure *procedure_new(unsigned int param_number)
@@ -99,8 +117,14 @@ Procedure *procedure_new(unsigned int param_number)
   return p;
 }
 
-void procedure_free(Procedure *p){
-    free(p->params);
-    free(p);
+void procedure_free(Procedure *p)
+{
+  if(p == NULL)
+    return;
+
+  free(p->params);
+  free(p);
+
+  return;
 }
 

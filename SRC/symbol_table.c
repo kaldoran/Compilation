@@ -20,7 +20,7 @@
 /* ---------------------------------------------------------------------- */
 
 /** Déclarations des types de bases. */
-static Symbol *symbol_basic[4];
+static Symbol *symbol_basic[SYMBOL_BASIC_MAX];
 
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
@@ -53,7 +53,7 @@ void symbol_table_init(Symbol_table *table)
   char *type[] = {"int", "float", "bool", "char"};
   int i;
   
-  for(i = 0; i < 3; i++)
+  for(i = 0; i < SYMBOL_BASIC_MAX - 1; i++)
   {
     if((sym = malloc(sizeof *sym)) == NULL)
       fatal_error("symbol_table_init");
@@ -153,7 +153,7 @@ Index_t symbol_table_get_basic(int basic_num)
 {
   if(basic_num <= 0 || basic_num > SYMBOL_BASIC_MAX)
     return NULL;
-  return symbol_basic[basic_num];
+  return symbol_basic[basic_num - 1];
 }
 
 void symbol_table_print(Symbol_table *table)
