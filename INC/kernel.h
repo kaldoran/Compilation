@@ -13,6 +13,7 @@
 #include "lexeme_table.h"
 #include "regions_table.h"
 #include "description_table.h"
+#include "variables_buffer.h"
 #include "mystring.h"
 #include "error.h"
 

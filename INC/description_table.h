@@ -17,10 +17,10 @@ typedef struct Variable
   Index_t type; /* Type de la variable. */
 } Variable;
 
-/** Structure d'un paramètre qui n'est autre qu'une variable. */
+/** Structure d'un paramètre. */
 typedef Variable Parameter;
 
-/** Structure d'un champ d'une structure qui n'est autre qu'une variable. */
+/** Structure d'un champ d'une variable. */
 typedef Variable Field;
 
 /** Structure d'une dimension. (Pour un tableau) */
