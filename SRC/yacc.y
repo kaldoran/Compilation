@@ -12,7 +12,6 @@
   int val_i; 
   float val_f; 
   char val_c; 
-  char val_b;
   char *val_s; 
   Hashkey hkey;
   Syntax_tree *node;
@@ -89,7 +88,7 @@
 %token <val_i> CSTE_ENTIERE
 %token <val_f> CSTE_REELLE
 %token <val_c> CSTE_CARACTERE
-%token <val_b> CSTE_BOOLEENNE
+%token <val_c> CSTE_BOOLEENNE
 %token <val_s> CSTE_CHAINE
 
 /* IDF */
@@ -97,8 +96,6 @@
 
 %type <hkey> nom_type type_simple
 %type <node> corps liste_instructions suite_liste_inst instruction
-
-%type <hkey> variable
 
 /* ------------------- */
 
@@ -125,13 +122,16 @@
 /* Appel. */
 %type <node> appel liste_arguments liste_args un_arg
 
+/* Variable. */
+%type <node> variable suite_variable
+
 %%
 
 /* -----------------------------------------------------*/
 /* Programme général                                    */
 /* -----------------------------------------------------*/
 
-programme: PROG corps
+programme: PROG corps {if(regions_table_add(0, 0, $2) == BAD_REGION) fatal_error("regions_table");}
          ;
           
 corps: liste_declarations START liste_instructions {$$ = $3;}
@@ -290,12 +290,13 @@ op_rac: PLUS_EGAL   {$$ = AT_OPR_PLUSE;}
       | MODULO_EGAL {$$ = AT_OPR_MODE;}
       ;
 
-variable: IDF suite_variable {$$ = syntax_tree_node_new(AT_EMPTY);} /* TEMPORAIRE */
+variable: IDF suite_variable {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_VAR), $2);}
         ;
 
-suite_variable: suite_variable CROCHET_OUVRANT expression CROCHET_FERMANT
-              | suite_variable POINT IDF 
-              |
+suite_variable: CROCHET_OUVRANT expression CROCHET_FERMANT suite_variable {$$ = syntax_tree_add_brother(syntax_tree_add_son(
+									        syntax_tree_node_new(AT_ARRAY_INDEX), $2), $4);}
+              | POINT IDF suite_variable                                  {$$ = syntax_tree_add_brother(syntax_tree_node_hkey_new($2), $3);}
+              |                                                           {$$ = syntax_tree_node_new(AT_EMPTY);}
               ;
 
 /* -----------------------------------------------------*/

@@ -74,6 +74,13 @@ Syntax_tree *syntax_tree_node_string_new(const char *value)
   return tree;
 }
 
+Syntax_tree *syntax_tree_node_hkey_new(Hashkey value)
+{
+  Syntax_tree *tree = syntax_tree_node_new(AT_HKEY_INDEX);
+  ((Syntax_node_content *)tree->value)->value.hkey = value;
+  return tree;
+}
+
 void syntax_node_free(void *value)
 {
   Syntax_node_content *n = value;

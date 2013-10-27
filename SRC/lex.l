@@ -82,7 +82,7 @@
                          }
 
 "true"|"false" {
-                 yylval.val_b = yyleng == 4;
+                 yylval.val_c = yyleng == 4;
                  return(CSTE_BOOLEENNE);
                }
 

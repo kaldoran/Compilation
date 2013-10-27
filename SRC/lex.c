@@ -1028,7 +1028,7 @@ case 23:
 YY_RULE_SETUP
 #line 84 "SRC/lex.l"
 {
-                 yylval.val_b = yyleng == 4;
+                 yylval.val_c = yyleng == 4;
                  return(CSTE_BOOLEENNE);
                }
 	YY_BREAK

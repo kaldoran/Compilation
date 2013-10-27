@@ -9,6 +9,7 @@
 #define _SYNTAX_TREE_
 
 #include "tree.h"
+#include "hashtable.h"
 
 /** Nombre de types de noeuds. */
 #define AT_SIZE AT_EMPTY + 1
@@ -83,8 +84,13 @@
 /* Affectation. */
 #define AT_EQUAL 49 /* set */
 
+/* Variable et champs. */
+#define AT_VAR         50 /* variable */
+#define AT_ARRAY_INDEX 51 /* array index */
+#define AT_HKEY_INDEX  52 /* hkey index */
+
 /** Vide. */
-#define AT_EMPTY 50 /* empty node */
+#define AT_EMPTY 53 /* empty node */
 
 /** Structure d'un arbre abstrait. */
 typedef Tree Syntax_tree;
@@ -92,10 +98,11 @@ typedef Tree Syntax_tree;
 /** Valeur d'un noeud d'un arbre abstrait. */
 typedef union Syntax_node_value
 {
-  int i;   /* Entier. */
-  float f; /* Flottant. */
-  char c;  /* Caractère/Booléen. */
-  char *s; /* Chaîne. */
+  int i;        /* Entier. */
+  float f;      /* Flottant. */
+  char c;       /* Caractère/Booléen. */
+  char *s;      /* Chaîne. */
+  Hashkey hkey; /* Numéro lexicographique. */
 } Syntax_node_value;
 
 /** Structure du contenu d'un noeud d'un arbre. */
@@ -120,6 +127,7 @@ Syntax_tree *syntax_tree_node_float_new(float value);
 Syntax_tree *syntax_tree_node_char_new(char value);
 Syntax_tree *syntax_tree_node_bool_new(bool value);
 Syntax_tree *syntax_tree_node_string_new(const char *value);
+Syntax_tree *syntax_tree_node_hkey_new(Hashkey value);
 
 /** Libération de la valeur d'un noeud d'un arbre abstrait. */
 /* %param : Valeur du noeud à supprimer. */

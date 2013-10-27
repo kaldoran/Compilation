@@ -129,12 +129,11 @@ union YYSTYPE
   int val_i; 
   float val_f; 
   char val_c; 
-  char val_b;
   char *val_s; 
   Hashkey hkey;
   Syntax_tree *node;
 
-#line 138 "SRC/yacc.h" /* yacc.c:1909  */
+#line 137 "SRC/yacc.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
