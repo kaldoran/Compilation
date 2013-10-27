@@ -5,14 +5,14 @@
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
 
-
-
-#include <stdio.h>
 #include <stdlib.h>
 #include "stack.h"
 #include "ptypes.h"
 
+/** Taille de la pile */
 static unsigned int regions_stack_size = 0;
+
+/** Définition de la pile */
 static Stack_node *start = NULL;
 
 int stack_pop() {
