@@ -86,7 +86,7 @@ int regions_stack_top(void)
   return start->region;
 }
 
-unsigned int regions_statck_get_size(void)
+unsigned int regions_stack_get_size(void)
 {
   return regions_stack_size;
 }
