@@ -91,13 +91,12 @@
 %token <val_c> CSTE_BOOLEENNE
 %token <val_s> CSTE_CHAINE
 
-/* IDF */
-%token <hkey> IDF 
-
-%type <hkey> nom_type type_simple
+/* Prog. */
 %type <node> corps liste_instructions suite_liste_inst instruction
 
-/* ------------------- */
+/* IDF */
+%token <hkey> IDF 
+%type <hkey> nom_type type_simple
 
 /* Expressions. */
 %type <node> test expression expression2 expression3
@@ -211,11 +210,11 @@ liste_parametres:
                 | PARENTHESE_OUVRANTE liste_param PARENTHESE_FERMANTE
                 ;
           
-liste_param: un_param
+liste_param: un_param                     /* Aucune action ici. */
            | liste_param VIRGULE un_param
            ;
           
-un_param: IDF DEUX_POINTS nom_type
+un_param: IDF DEUX_POINTS nom_type 
         ;
 
 /* -----------------------------------------------------*/
@@ -226,11 +225,11 @@ nom_type: type_simple {$$ = $1;}
         | IDF         {$$ = $1;}
         ;
           
-type_simple: ENTIER
+type_simple: ENTIER /* ???????????????????????????????? */
            | REEL
            | BOOLEEN
            | CARACTERE
-           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT /* Chaîne constante */
+           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT
            ;
 
 /* -----------------------------------------------------*/

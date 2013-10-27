@@ -20,13 +20,8 @@ int stack_pop() {
 	Stack_node *node;
 	if(start == NULL) 
 		return -1;
-	regions_stack_size--;
 
-	if(start->previous == NULL) {
-		val = start->region;
-		free(start); start = NULL;
-		return val;
-	}
+	regions_stack_size--;
 	node = start;
 	start = node->previous;
 	val = node->region;
