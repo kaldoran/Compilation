@@ -36,5 +36,3 @@ bool stack_is_empty();
 /** Libère complètement une pile. */
 void stack_free();
 
-#endif /* _STACK_ INCLUDED */
-
