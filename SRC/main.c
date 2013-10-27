@@ -131,7 +131,8 @@ int main(void)
   /* Initialisation */
   hashtable = hashtable_new();
   symbol_table_init(hashtable);
-   
+  lexeme_table_init(hashtable);
+
   /* Execution */
   yyparse();
   test();

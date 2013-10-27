@@ -67,7 +67,7 @@
   #include "kernel.h"
 
   extern int yylex(void);
-  extern void yyerror(const char *txt);
+  extern void yyerror(const char *str);
   
   Hashtable *hashtable;
 
@@ -494,21 +494,21 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   133,   133,   136,   137,   138,   145,   146,   149,   150,
-     151,   152,   155,   158,   159,   166,   169,   170,   173,   180,
-     181,   184,   191,   194,   195,   202,   205,   208,   209,   210,
-     213,   214,   217,   224,   225,   228,   229,   230,   231,   232,
-     239,   242,   243,   246,   247,   248,   249,   250,   251,   252,
-     253,   254,   255,   256,   259,   260,   262,   270,   271,   274,
-     275,   276,   279,   280,   281,   282,   285,   286,   287,   288,
-     289,   292,   295,   297,   298,   305,   307,   309,   317,   321,
-     323,   327,   330,   331,   334,   335,   338,   346,   354,   358,
-     361,   364,   366,   370,   371,   372,   379,   382,   383,   386,
-     387,   390,   397,   400,   401,   408,   409,   416,   417,   420,
-     422,   424,   426,   427,   430,   432,   434,   436,   438,   441,
-     442,   443,   444,   445,   446,   447,   448,   449,   450,   451,
-     452,   453,   455,   456,   457,   460,   463,   464,   465,   466,
-     467,   468
+       0,   133,   133,   137,   138,   139,   146,   147,   150,   151,
+     152,   153,   156,   159,   160,   167,   170,   171,   174,   181,
+     182,   185,   192,   195,   199,   209,   212,   215,   216,   217,
+     220,   221,   224,   231,   232,   235,   236,   237,   238,   239,
+     246,   249,   250,   253,   254,   255,   256,   257,   258,   259,
+     260,   261,   262,   263,   266,   267,   269,   277,   278,   281,
+     282,   283,   286,   287,   288,   289,   292,   293,   294,   295,
+     296,   299,   302,   304,   305,   312,   314,   316,   324,   328,
+     330,   334,   337,   338,   341,   342,   345,   353,   361,   365,
+     368,   371,   373,   377,   378,   379,   386,   389,   390,   393,
+     394,   397,   404,   407,   408,   415,   416,   423,   424,   427,
+     429,   431,   433,   434,   437,   439,   441,   443,   445,   448,
+     449,   450,   451,   452,   453,   454,   455,   456,   457,   458,
+     459,   460,   462,   463,   464,   467,   470,   471,   472,   473,
+     474,   475
 };
 #endif
 
@@ -578,30 +578,30 @@ static const yytype_uint16 yytoknum[] =
 static const yytype_int16 yypact[] =
 {
        6,    10,    31,   -37,   -34,   -14,    -6,    69,  -155,    52,
-      81,  -155,  -155,  -155,  -155,  -155,    90,    86,    86,  -155,
-      19,   104,  -155,    69,   114,  -155,    28,     0,    10,   107,
-      66,   109,  -155,   129,   143,   146,  -155,   249,   249,    -1,
-      69,   249,   249,    95,    95,   126,    96,  -155,   160,   161,
-    -155,  -155,   401,  -155,  -155,  -155,  -155,  -155,   162,  -155,
-    -155,   100,   167,  -155,  -155,   170,    21,  -155,  -155,   123,
-    -155,  -155,  -155,  -155,  -155,   168,  -155,  -155,  -155,   173,
-     115,    95,   249,    74,   249,  -155,  -155,  -155,  -155,  -155,
+      81,  -155,  -155,  -155,  -155,  -155,    90,    86,    86,    19,
+    -155,   104,  -155,    69,   114,  -155,    28,     0,    10,   107,
+      -6,   109,  -155,   127,   129,   143,  -155,   249,   249,    -1,
+      69,   249,   249,    85,    85,   126,    96,  -155,   158,   160,
+    -155,  -155,   401,  -155,  -155,  -155,  -155,  -155,   161,  -155,
+    -155,    99,   166,  -155,  -155,   170,    21,  -155,  -155,   123,
+    -155,  -155,  -155,  -155,  -155,   167,  -155,  -155,  -155,   162,
+     115,    85,   249,    74,   249,  -155,  -155,  -155,  -155,  -155,
     -155,  -155,    63,  -155,   383,    17,  -155,  -155,   220,   -33,
-      35,  -155,   163,   178,   166,   181,   404,    -7,  -155,  -155,
+      35,  -155,   163,   176,   164,   180,   404,    -7,  -155,  -155,
      249,   122,   217,  -155,  -155,  -155,  -155,  -155,  -155,   249,
-    -155,  -155,  -155,  -155,  -155,  -155,  -155,   249,  -155,   183,
-      -2,   188,   249,   171,   109,   131,  -155,    10,   139,  -155,
-    -155,   199,  -155,    61,   196,   401,   197,   289,  -155,  -155,
+    -155,  -155,  -155,  -155,  -155,  -155,  -155,   249,  -155,   177,
+      -2,   187,   249,   171,   109,   125,  -155,    10,   136,  -155,
+    -155,   198,  -155,    61,   195,   401,   196,   289,  -155,  -155,
     -155,  -155,    69,   249,   249,  -155,  -155,  -155,  -155,  -155,
-    -155,   249,   249,   249,   249,   249,   249,    69,   202,    69,
-     249,   249,  -155,   189,   212,    35,  -155,   102,  -155,   404,
+    -155,   249,   249,   249,   249,   249,   249,    69,   197,    69,
+     249,   249,  -155,   178,   212,    35,  -155,   102,  -155,   404,
     -155,   372,   404,   109,  -155,   208,  -155,   118,  -155,   350,
-     109,  -155,  -155,  -155,   223,   249,   224,    95,  -155,  -155,
-    -155,  -155,   249,   218,    17,    17,    17,    17,  -155,  -155,
-    -155,  -155,  -155,   225,  -155,   240,   404,   281,   249,   119,
+     109,  -155,  -155,  -155,   218,   249,   224,    85,  -155,  -155,
+    -155,  -155,   249,   227,    17,    17,    17,    17,  -155,  -155,
+    -155,  -155,  -155,   205,  -155,   231,   404,   281,   249,   119,
       35,  -155,   249,  -155,  -155,  -155,  -155,   249,   249,  -155,
     -155,   251,  -155,  -155,   310,    84,    69,   -33,  -155,   318,
-     249,   244,   239,  -155,  -155,  -155,   404,  -155,   249,  -155,
+     249,   237,   238,  -155,  -155,  -155,   404,  -155,   249,  -155,
     -155,  -155,  -155,   175,   342,   175,  -155,   404,  -155,  -155,
      175,  -155,  -155,  -155,  -155
 };
@@ -612,13 +612,13 @@ static const yytype_int16 yypact[] =
 static const yytype_uint8 yydefact[] =
 {
        0,     5,     0,     0,     0,     0,     0,     0,     2,     0,
-       0,     8,     9,    10,    11,     1,     0,    27,    27,    23,
-       0,     0,     4,     0,     0,     6,     0,     0,     5,     0,
+       0,     8,     9,    10,    11,     1,     0,    27,    27,     0,
+      22,     0,     4,     0,     0,     6,     0,     0,     5,     0,
        0,     0,    51,     0,     0,     0,    43,     0,     0,    83,
        0,   107,     0,     0,     0,    74,     0,    41,     0,     0,
       57,    58,     0,    45,    46,    47,    48,    49,     0,     3,
        7,     0,     0,    12,    28,     0,     0,    30,    25,     0,
-      24,    35,    36,    37,    38,     0,    34,    22,    33,     0,
+      24,    35,    36,    37,    38,     0,    34,    23,    33,     0,
        0,     0,     0,     0,     0,   120,   121,   122,   123,   124,
      128,   129,   130,   127,     0,   112,   118,   113,     0,    83,
       74,    82,     0,     0,     0,     0,   108,     0,    64,    65,
@@ -643,11 +643,11 @@ static const yytype_uint8 yydefact[] =
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -155,  -155,   -19,  -155,   254,  -155,  -155,  -155,  -155,    48,
-    -155,   153,  -155,  -155,  -155,  -155,   274,  -155,   158,  -114,
-     228,    -8,  -155,   -41,   -17,   -31,   219,   -20,  -155,   -21,
-    -154,    68,  -155,  -155,   205,    70,  -155,  -155,   187,  -155,
-    -155,  -155,   -11,  -155,  -155,    92,  -155,    85,  -155,  -155,
+    -155,  -155,   -19,  -155,   250,  -155,  -155,  -155,  -155,    36,
+    -155,   145,  -155,   253,  -155,  -155,   274,  -155,   168,  -114,
+     228,    -8,  -155,   -41,   -17,   -31,   211,   -20,  -155,   -21,
+    -154,    66,  -155,  -155,   207,    67,  -155,  -155,   188,  -155,
+    -155,  -155,   -11,  -155,  -155,    92,  -155,    97,  -155,  -155,
      -35,   -72,   -70,  -155,  -155
 };
 
@@ -680,26 +680,26 @@ static const yytype_uint16 yytable[] =
       33,    34,    35,    21,    26,    37,    36,    32,    33,    34,
       35,   222,   120,   121,    36,   223,   115,    37,   193,    23,
       38,    39,    40,    41,    60,    37,   226,   227,    38,    39,
-      40,    41,    42,   110,    69,   216,   217,   111,   112,    70,
-      42,    79,   148,   149,   203,    43,    44,   100,    71,    72,
-      73,    74,    75,    43,    44,    80,   240,   241,    81,   212,
-     231,   214,    71,    72,    73,    74,    75,   234,   100,    45,
-     117,   118,   128,   129,   132,   138,   233,    45,    32,    33,
-      34,    35,    76,   239,   134,    36,   139,   140,   170,   169,
-     171,   172,   189,   246,    21,   175,    37,   183,   186,    38,
-      39,    40,    41,   190,    65,   254,   101,   194,   195,   199,
-     200,    42,   259,   257,   262,   213,    52,    51,   225,   264,
-     220,    33,    34,    35,    43,    44,   218,   249,   251,    82,
-     176,   230,    52,    51,    52,    51,    48,   232,    48,    52,
-      51,   235,    58,    48,    58,   258,   167,   261,    45,    58,
-     237,   236,   263,    33,    34,    35,   153,   154,   255,   256,
-     195,    82,    83,    24,   153,   154,    43,    44,    84,   155,
-     156,   157,   158,   159,   160,   245,   161,   155,   156,   157,
-     158,   159,   160,   185,   161,    85,    86,    87,    88,    89,
-      45,   238,    29,   192,    83,   153,   154,   137,    43,    44,
-      84,   144,   201,   250,   168,   202,   180,   252,   155,   156,
-     157,   158,   159,   160,   244,   161,   247,    85,    86,    87,
-      88,    89,    45,     0,   248,   153,   154,     0,     0,     0,
+      40,    41,    42,   110,    69,   216,   217,   111,   112,    79,
+      42,    80,   148,   149,   203,    43,    44,   100,    71,    72,
+      73,    74,    75,    43,    44,    81,   240,   241,   100,   212,
+     231,   214,    71,    72,    73,    74,    75,   234,   117,    45,
+     118,   128,   129,   132,   138,   139,   233,    45,    32,    33,
+      34,    35,    76,   239,   134,    36,   170,   140,   171,   169,
+     172,   183,   189,   246,    21,   175,    37,   186,    65,    38,
+      39,    40,    41,   190,   194,   254,   101,   195,   199,   200,
+     213,    42,   259,   257,   262,   218,    52,    51,   225,   264,
+     220,    33,    34,    35,    43,    44,   230,   249,   251,    82,
+     176,   236,    52,    51,    52,    51,    48,   232,    48,    52,
+      51,   237,    58,    48,    58,   258,   167,   261,    45,    58,
+     235,   255,   263,    33,    34,    35,   153,   154,   256,    24,
+     195,    82,    83,   245,   153,   154,    43,    44,    84,   155,
+     156,   157,   158,   159,   160,   185,   161,   155,   156,   157,
+     158,   159,   160,    70,   161,    85,    86,    87,    88,    89,
+      45,   238,    29,   144,    83,   153,   154,   137,    43,    44,
+      84,   250,   201,   192,   252,   202,   168,   180,   155,   156,
+     157,   158,   159,   160,   244,   161,     0,    85,    86,    87,
+      88,    89,    45,     0,   248,   153,   154,     0,   247,     0,
        0,     0,   253,   153,   154,     0,     0,     0,   155,   156,
      157,   158,   159,   160,     0,   161,   155,   156,   157,   158,
      159,   160,     0,   161,   153,   154,   260,     0,     0,     0,
@@ -731,26 +731,26 @@ static const yytype_int16 yycheck[] =
        4,     5,     6,    19,    14,    21,    10,     3,     4,     5,
        6,     9,    49,    50,    10,    13,    20,    21,   137,    67,
       24,    25,    26,    27,    10,    21,     8,     9,    24,    25,
-      26,    27,    36,     7,    27,   170,   171,    11,    12,    73,
+      26,    27,    36,     7,    27,   170,   171,    11,    12,    12,
       36,    12,    68,    69,   152,    49,    50,    73,    39,    40,
-      41,    42,    43,    49,    50,    12,    37,    38,    12,   167,
-     195,   169,    39,    40,    41,    42,    43,   202,    73,    73,
-      10,    10,    10,    73,     7,     7,   197,    73,     3,     4,
-       5,     6,    73,   218,    14,    10,    13,    72,    10,    26,
-      24,    10,   227,   228,    19,    73,    21,    14,    10,    24,
-      25,    26,    27,    32,    73,   240,   237,    68,     9,    13,
-      13,    36,   253,   248,   255,    13,   237,   237,    10,   260,
-       8,     4,     5,     6,    49,    50,    37,   235,   236,    12,
-      13,     8,   253,   253,   255,   255,   253,    13,   255,   260,
-     260,    23,   253,   260,   255,   253,    26,   255,    73,   260,
-      10,    26,   260,     4,     5,     6,    44,    45,    14,    20,
-       9,    12,    45,     9,    44,    45,    49,    50,    51,    57,
-      58,    59,    60,    61,    62,   227,    64,    57,    58,    59,
-      60,    61,    62,   130,    64,    68,    69,    70,    71,    72,
-      73,    10,    18,   135,    45,    44,    45,    69,    49,    50,
-      51,    82,    13,   235,    99,    16,   119,   237,    57,    58,
-      59,    60,    61,    62,   222,    64,   231,    68,    69,    70,
-      71,    72,    73,    -1,    14,    44,    45,    -1,    -1,    -1,
+      41,    42,    43,    49,    50,    12,    37,    38,    73,   167,
+     195,   169,    39,    40,    41,    42,    43,   202,    10,    73,
+      10,    10,    73,     7,     7,    13,   197,    73,     3,     4,
+       5,     6,    73,   218,    14,    10,    10,    72,    24,    26,
+      10,    14,   227,   228,    19,    73,    21,    10,    73,    24,
+      25,    26,    27,    32,    68,   240,   237,     9,    13,    13,
+      13,    36,   253,   248,   255,    37,   237,   237,    10,   260,
+       8,     4,     5,     6,    49,    50,     8,   235,   236,    12,
+      13,    26,   253,   253,   255,   255,   253,    13,   255,   260,
+     260,    10,   253,   260,   255,   253,    26,   255,    73,   260,
+      23,    14,   260,     4,     5,     6,    44,    45,    20,     9,
+       9,    12,    45,   227,    44,    45,    49,    50,    51,    57,
+      58,    59,    60,    61,    62,   130,    64,    57,    58,    59,
+      60,    61,    62,    30,    64,    68,    69,    70,    71,    72,
+      73,    10,    18,    82,    45,    44,    45,    69,    49,    50,
+      51,   235,    13,   135,   237,    16,    99,   119,    57,    58,
+      59,    60,    61,    62,   222,    64,    -1,    68,    69,    70,
+      71,    72,    73,    -1,    14,    44,    45,    -1,   231,    -1,
       -1,    -1,    14,    44,    45,    -1,    -1,    -1,    57,    58,
       59,    60,    61,    62,    -1,    64,    57,    58,    59,    60,
       61,    62,    -1,    64,    44,    45,    14,    -1,    -1,    -1,
@@ -778,7 +778,7 @@ static const yytype_uint8 yystos[] =
       26,    27,    36,    49,    50,    73,    96,    97,    98,    99,
      100,   101,   103,   105,   106,   107,   111,   113,   116,    95,
       10,    28,    30,    80,    13,    73,    91,    92,    76,    27,
-      73,    39,    40,    41,    42,    43,    73,    93,    94,    12,
+      87,    39,    40,    41,    42,    43,    73,    93,    94,    12,
       12,    12,    12,    45,    51,    68,    69,    70,    71,    72,
       98,   101,   103,   116,   124,   125,   126,   127,   124,    12,
       73,    99,   108,   109,    95,   123,   124,   124,   103,   103,
@@ -825,7 +825,7 @@ static const yytype_uint8 yyr2[] =
 {
        0,     2,     2,     3,     2,     0,     2,     3,     1,     1,
        1,     1,     4,     4,     3,     3,     1,     3,     3,     2,
-       3,     3,     4,     1,     3,     4,     6,     0,     2,     3,
+       3,     3,     2,     3,     3,     4,     6,     0,     2,     3,
        1,     3,     3,     1,     1,     1,     1,     1,     1,     4,
        3,     1,     2,     1,     2,     1,     1,     1,     1,     1,
        2,     1,     3,     2,     3,     5,     4,     1,     1,     3,
@@ -1515,680 +1515,735 @@ yyreduce:
     {
         case 2:
 #line 133 "SRC/yacc.y" /* yacc.c:1646  */
-    {if(regions_table_add(0, 0, (yyvsp[0].node)) == BAD_REGION) fatal_error("regions_table");}
-#line 1520 "SRC/yacc.c" /* yacc.c:1646  */
+    {if(regions_table_add(0, 0, (yyvsp[0].node)) == BAD_REGION) 
+		         fatal_error("regions_table");}
+#line 1521 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 136 "SRC/yacc.y" /* yacc.c:1646  */
+#line 137 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 1526 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1527 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 137 "SRC/yacc.y" /* yacc.c:1646  */
+#line 138 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 1532 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1533 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 138 "SRC/yacc.y" /* yacc.c:1646  */
+#line 139 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
-#line 1538 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1539 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 195 "SRC/yacc.y" /* yacc.c:1646  */
+    {if(!symbol_table_add(hashtable, (yyvsp[-2].hkey), SYMBOL_TYPE_VAR, 
+											 regions_stack_top(), (yyvsp[0].hkey), 0))
+                                                                      fatal_error("symbol_table_add");
+                                                                    (yyval.hkey) = (yyvsp[0].hkey);}
+#line 1548 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 199 "SRC/yacc.y" /* yacc.c:1646  */
+    {if(!symbol_table_add(hashtable, (yyvsp[-2].hkey), SYMBOL_TYPE_VAR, 
+											 regions_stack_top(), (yyvsp[0].hkey), 0))
+                                                                      fatal_error("symbol_table_add");
+                                                                    (yyval.hkey) = (yyvsp[0].hkey);}
+#line 1557 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 32:
+#line 224 "SRC/yacc.y" /* yacc.c:1646  */
+    {variables_buffer_push((yyvsp[-2].hkey), symbol_table_get(hashtable, (yyvsp[0].hkey), regions_stack_top()));}
+#line 1563 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 224 "SRC/yacc.y" /* yacc.c:1646  */
+#line 231 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.hkey) = (yyvsp[0].hkey);}
-#line 1544 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1569 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 225 "SRC/yacc.y" /* yacc.c:1646  */
+#line 232 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.hkey) = (yyvsp[0].hkey);}
-#line 1550 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1575 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 35:
+#line 235 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.hkey) = LBASIC_INT;}
+#line 1581 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 36:
+#line 236 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.hkey) = LBASIC_FLOAT;}
+#line 1587 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 37:
+#line 237 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.hkey) = LBASIC_BOOL;}
+#line 1593 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 38:
+#line 238 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.hkey) = LBASIC_CHAR;}
+#line 1599 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 39:
+#line 239 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.hkey) = LBASIC_CHAR;}
+#line 1605 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 239 "SRC/yacc.y" /* yacc.c:1646  */
+#line 246 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[-1].node);}
-#line 1556 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1611 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 242 "SRC/yacc.y" /* yacc.c:1646  */
+#line 249 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 1562 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1617 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 243 "SRC/yacc.y" /* yacc.c:1646  */
+#line 250 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_brother((yyvsp[-1].node), (yyvsp[0].node));}
-#line 1568 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1623 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 246 "SRC/yacc.y" /* yacc.c:1646  */
+#line 253 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
-#line 1574 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1629 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 247 "SRC/yacc.y" /* yacc.c:1646  */
+#line 254 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[-1].node);}
-#line 1580 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1635 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 248 "SRC/yacc.y" /* yacc.c:1646  */
+#line 255 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 1586 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1641 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 249 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1592 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 47:
-#line 250 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1598 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 48:
-#line 251 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1604 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 49:
-#line 252 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1610 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 50:
-#line 253 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[-1].node);}
-#line 1616 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 51:
-#line 254 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
-#line 1622 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 52:
-#line 255 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_RETURN), (yyvsp[-1].node));}
-#line 1628 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 53:
 #line 256 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[-1].node);}
-#line 1634 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 54:
-#line 259 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_new(AT_FUN_READ);}
-#line 1640 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 55:
-#line 260 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE), 
-													  syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[-1].node)));}
+    {(yyval.node) = (yyvsp[0].node);}
 #line 1647 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 56:
+  case 47:
+#line 257 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 1653 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 48:
+#line 258 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 1659 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 49:
+#line 259 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 1665 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 50:
+#line 260 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[-1].node);}
+#line 1671 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 51:
+#line 261 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+#line 1677 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 52:
 #line 262 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), 
-													  (yyvsp[-1].node));}
-#line 1654 "SRC/yacc.c" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_RETURN), (yyvsp[-1].node));}
+#line 1683 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 57:
-#line 270 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1660 "SRC/yacc.c" /* yacc.c:1646  */
+  case 53:
+#line 263 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[-1].node);}
+#line 1689 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 58:
-#line 271 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1666 "SRC/yacc.c" /* yacc.c:1646  */
+  case 54:
+#line 266 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_new(AT_FUN_READ);}
+#line 1695 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 59:
-#line 274 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 1672 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 60:
-#line 275 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 1678 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 61:
-#line 276 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new((yyvsp[-1].val_i)), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 1684 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 62:
-#line 279 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OB_INC), (yyvsp[-1].node));}
-#line 1690 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 63:
-#line 280 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OB_DEC), (yyvsp[-1].node));}
-#line 1696 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 64:
-#line 281 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OB_PINC), (yyvsp[0].node));}
+  case 55:
+#line 267 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE), 
+													  syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[-1].node)));}
 #line 1702 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 65:
+  case 56:
+#line 269 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), 
+													  (yyvsp[-1].node));}
+#line 1709 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 57:
+#line 277 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 1715 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 58:
+#line 278 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 1721 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 59:
+#line 281 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
+#line 1727 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 60:
 #line 282 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OB_PDEC), (yyvsp[0].node));}
-#line 1708 "SRC/yacc.c" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
+#line 1733 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 66:
-#line 285 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.val_i) = AT_OPR_PLUSE;}
-#line 1714 "SRC/yacc.c" /* yacc.c:1646  */
+  case 61:
+#line 283 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new((yyvsp[-1].val_i)), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
+#line 1739 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 67:
+  case 62:
 #line 286 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.val_i) = AT_OPR_MINE;}
-#line 1720 "SRC/yacc.c" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OB_INC), (yyvsp[-1].node));}
+#line 1745 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 68:
+  case 63:
 #line 287 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.val_i) = AT_OPR_MULTE;}
-#line 1726 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 69:
-#line 288 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.val_i) = AT_OPR_DIVE;}
-#line 1732 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 70:
-#line 289 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.val_i) = AT_OPR_MODE;}
-#line 1738 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 71:
-#line 292 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_VAR), (yyvsp[0].node));}
-#line 1744 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 72:
-#line 295 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_brother(syntax_tree_add_son(
-									        syntax_tree_node_new(AT_ARRAY_INDEX), (yyvsp[-2].node)), (yyvsp[0].node));}
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OB_DEC), (yyvsp[-1].node));}
 #line 1751 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 73:
-#line 297 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_brother(syntax_tree_node_hkey_new((yyvsp[-1].hkey)), (yyvsp[0].node));}
+  case 64:
+#line 288 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OB_PINC), (yyvsp[0].node));}
 #line 1757 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 74:
-#line 298 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+  case 65:
+#line 289 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OB_PDEC), (yyvsp[0].node));}
 #line 1763 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 75:
+  case 66:
+#line 292 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.val_i) = AT_OPR_PLUSE;}
+#line 1769 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 67:
+#line 293 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.val_i) = AT_OPR_MINE;}
+#line 1775 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 68:
+#line 294 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.val_i) = AT_OPR_MULTE;}
+#line 1781 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 69:
+#line 295 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.val_i) = AT_OPR_DIVE;}
+#line 1787 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 70:
+#line 296 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.val_i) = AT_OPR_MODE;}
+#line 1793 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 71:
+#line 299 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_VAR), (yyvsp[0].node));}
+#line 1799 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 72:
+#line 302 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_brother(syntax_tree_add_son(
+									        syntax_tree_node_new(AT_ARRAY_INDEX), (yyvsp[-2].node)), (yyvsp[0].node));}
+#line 1806 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 73:
+#line 304 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_brother(syntax_tree_node_hkey_new((yyvsp[-1].hkey)), (yyvsp[0].node));}
+#line 1812 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 74:
 #line 305 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+#line 1818 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 75:
+#line 312 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF),
                                                                                  syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 1770 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1825 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 307 "SRC/yacc.y" /* yacc.c:1646  */
+#line 314 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF_ELSE),
 	     			       					         syntax_tree_add_brother((yyvsp[-4].node), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node))));}
-#line 1777 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1832 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 309 "SRC/yacc.y" /* yacc.c:1646  */
+#line 316 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF_ELSE),
 									         syntax_tree_add_brother((yyvsp[-4].node), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node))));}
-#line 1784 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1839 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 317 "SRC/yacc.y" /* yacc.c:1646  */
+#line 324 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_WHILE), 
                                                                                  syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 1791 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1846 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 321 "SRC/yacc.y" /* yacc.c:1646  */
+#line 328 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR),
                                                                                            syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 1798 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1853 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 323 "SRC/yacc.y" /* yacc.c:1646  */
+#line 330 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR),
                                                                                            syntax_tree_add_brother((yyvsp[-3].node), (yyvsp[0].node)));}
-#line 1805 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1860 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 327 "SRC/yacc.y" /* yacc.c:1646  */
+#line 334 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_brother(syntax_tree_add_brother((yyvsp[-4].node), (yyvsp[-2].node)), (yyvsp[0].node));}
-#line 1811 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1866 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 330 "SRC/yacc.y" /* yacc.c:1646  */
+#line 337 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 1817 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 83:
-#line 331 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
-#line 1823 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 84:
-#line 334 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1829 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 85:
-#line 335 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
-#line 1835 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 86:
-#line 338 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DO_WHILE),
-                                                                                                     syntax_tree_add_brother((yyvsp[-3].node), (yyvsp[-1].node)));}
-#line 1842 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 87:
-#line 346 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_TERNAIRE),
-                                                                           syntax_tree_add_brother(syntax_tree_add_brother((yyvsp[-4].node), (yyvsp[-2].node)), (yyvsp[0].node)));}
-#line 1849 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 88:
-#line 354 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_SWITCH),
-                                                                       syntax_tree_add_brother(syntax_tree_add_brother((yyvsp[-4].node), (yyvsp[-2].node)), (yyvsp[-1].node)));}
-#line 1856 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 89:
-#line 358 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_brother((yyvsp[-4].node), 
-                                                                                syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
-                                                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node))));}
-#line 1864 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 90:
-#line 361 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_brother((yyvsp[-4].node), 
-                                                                                syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
-                                                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node))));}
 #line 1872 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 91:
-#line 364 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE), 
-                                                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 1879 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 92:
-#line 366 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE), 
-                                                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 1886 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 93:
-#line 370 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DEFAULT), (yyvsp[0].node));}
-#line 1892 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 94:
-#line 371 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DEFAULT), (yyvsp[0].node));}
-#line 1898 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 95:
-#line 372 "SRC/yacc.y" /* yacc.c:1646  */
+  case 83:
+#line 338 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+#line 1878 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 84:
+#line 341 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 1884 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 85:
+#line 342 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+#line 1890 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 86:
+#line 345 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DO_WHILE),
+                                                                                                     syntax_tree_add_brother((yyvsp[-3].node), (yyvsp[-1].node)));}
+#line 1897 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 87:
+#line 353 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_TERNAIRE),
+                                                                           syntax_tree_add_brother(syntax_tree_add_brother((yyvsp[-4].node), (yyvsp[-2].node)), (yyvsp[0].node)));}
 #line 1904 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 96:
-#line 379 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CALL), (yyvsp[0].node));}
-#line 1910 "SRC/yacc.c" /* yacc.c:1646  */
+  case 88:
+#line 361 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_SWITCH),
+                                                                       syntax_tree_add_brother(syntax_tree_add_brother((yyvsp[-4].node), (yyvsp[-2].node)), (yyvsp[-1].node)));}
+#line 1911 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 97:
-#line 382 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
-#line 1916 "SRC/yacc.c" /* yacc.c:1646  */
+  case 89:
+#line 365 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_brother((yyvsp[-4].node), 
+                                                                                syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
+                                                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node))));}
+#line 1919 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 98:
-#line 383 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[-1].node);}
-#line 1922 "SRC/yacc.c" /* yacc.c:1646  */
+  case 90:
+#line 368 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_brother((yyvsp[-4].node), 
+                                                                                syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE),
+                                                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node))));}
+#line 1927 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 99:
-#line 386 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1928 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 100:
-#line 387 "SRC/yacc.y" /* yacc.c:1646  */
-    {syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node));}
+  case 91:
+#line 371 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE), 
+                                                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
 #line 1934 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 101:
-#line 390 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1940 "SRC/yacc.c" /* yacc.c:1646  */
+  case 92:
+#line 373 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CASE), 
+                                                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
+#line 1941 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 102:
-#line 397 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_string_new((yyvsp[0].val_s));}
-#line 1946 "SRC/yacc.c" /* yacc.c:1646  */
+  case 93:
+#line 377 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DEFAULT), (yyvsp[0].node));}
+#line 1947 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 103:
-#line 400 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_brother((yyvsp[-1].node), (yyvsp[0].node));}
-#line 1952 "SRC/yacc.c" /* yacc.c:1646  */
+  case 94:
+#line 378 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_DEFAULT), (yyvsp[0].node));}
+#line 1953 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 104:
-#line 401 "SRC/yacc.y" /* yacc.c:1646  */
+  case 95:
+#line 379 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
-#line 1958 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1959 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 105:
-#line 408 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node));}
-#line 1964 "SRC/yacc.c" /* yacc.c:1646  */
+  case 96:
+#line 386 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CALL), (yyvsp[0].node));}
+#line 1965 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 106:
-#line 409 "SRC/yacc.y" /* yacc.c:1646  */
+  case 97:
+#line 389 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+#line 1971 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 98:
+#line 390 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[-1].node);}
+#line 1977 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 99:
+#line 393 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 1970 "SRC/yacc.c" /* yacc.c:1646  */
+#line 1983 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 107:
-#line 416 "SRC/yacc.y" /* yacc.c:1646  */
-    {syntax_tree_node_new(AT_EMPTY);}
-#line 1976 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 108:
-#line 417 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 1982 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 109:
-#line 420 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OP_PLUS), 
-                                                                   syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
+  case 100:
+#line 394 "SRC/yacc.y" /* yacc.c:1646  */
+    {syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node));}
 #line 1989 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
+  case 101:
+#line 397 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 1995 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 102:
+#line 404 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_string_new((yyvsp[0].val_s));}
+#line 2001 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 103:
+#line 407 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_brother((yyvsp[-1].node), (yyvsp[0].node));}
+#line 2007 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 104:
+#line 408 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+#line 2013 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 105:
+#line 415 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node));}
+#line 2019 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 106:
+#line 416 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 2025 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 107:
+#line 423 "SRC/yacc.y" /* yacc.c:1646  */
+    {syntax_tree_node_new(AT_EMPTY);}
+#line 2031 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 108:
+#line 424 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 2037 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 109:
+#line 427 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OP_PLUS), 
+                                                                   syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
+#line 2044 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
   case 110:
-#line 422 "SRC/yacc.y" /* yacc.c:1646  */
+#line 429 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MINUS), 
                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 1996 "SRC/yacc.c" /* yacc.c:1646  */
+#line 2051 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 111:
-#line 424 "SRC/yacc.y" /* yacc.c:1646  */
+#line 431 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CND_OR), 
                                                                    syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 2003 "SRC/yacc.c" /* yacc.c:1646  */
+#line 2058 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 426 "SRC/yacc.y" /* yacc.c:1646  */
+#line 433 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2009 "SRC/yacc.c" /* yacc.c:1646  */
+#line 2064 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 427 "SRC/yacc.y" /* yacc.c:1646  */
+#line 434 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2015 "SRC/yacc.c" /* yacc.c:1646  */
+#line 2070 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 114:
-#line 430 "SRC/yacc.y" /* yacc.c:1646  */
+#line 437 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MULT), 
                                                                               syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 2022 "SRC/yacc.c" /* yacc.c:1646  */
+#line 2077 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 115:
-#line 432 "SRC/yacc.y" /* yacc.c:1646  */
+#line 439 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OP_DIV), 
                                                                               syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 2029 "SRC/yacc.c" /* yacc.c:1646  */
+#line 2084 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 116:
-#line 434 "SRC/yacc.y" /* yacc.c:1646  */
+#line 441 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MOD), 
                                                                               syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 2036 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 117:
-#line 436 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CND_AND), 
-                                                                              syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
-#line 2043 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 118:
-#line 438 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 2049 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 119:
-#line 441 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[-1].node);}
-#line 2055 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 120:
-#line 442 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_int_new((yyvsp[0].val_i));}
-#line 2061 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 121:
-#line 443 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_float_new((yyvsp[0].val_f));}
-#line 2067 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 122:
-#line 444 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_char_new((yyvsp[0].val_c));}
-#line 2073 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 123:
-#line 445 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_bool_new((yyvsp[0].val_c));}
-#line 2079 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 124:
-#line 446 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_string_new((yyvsp[0].val_s));}
-#line 2085 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 125:
-#line 447 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_int_new(-(yyvsp[0].val_i));}
 #line 2091 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 126:
+  case 117:
+#line 443 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CND_AND), 
+                                                                              syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
+#line 2098 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 118:
+#line 445 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
+#line 2104 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 119:
 #line 448 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_float_new(-(yyvsp[0].val_f));}
-#line 2097 "SRC/yacc.c" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[-1].node);}
+#line 2110 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 127:
+  case 120:
 #line 449 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 2103 "SRC/yacc.c" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_int_new((yyvsp[0].val_i));}
+#line 2116 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 128:
+  case 121:
 #line 450 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 2109 "SRC/yacc.c" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_float_new((yyvsp[0].val_f));}
+#line 2122 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 129:
+  case 122:
 #line 451 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 2115 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 130:
-#line 452 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
-#line 2121 "SRC/yacc.c" /* yacc.c:1646  */
-    break;
-
-  case 131:
-#line 453 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MINUS), 
-                                                           syntax_tree_add_brother(syntax_tree_node_int_new(0), (yyvsp[0].node)));}
+    {(yyval.node) = syntax_tree_node_char_new((yyvsp[0].val_c));}
 #line 2128 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 132:
-#line 455 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[-1].node);}
+  case 123:
+#line 452 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_bool_new((yyvsp[0].val_c));}
 #line 2134 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 133:
-#line 456 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[-1].node);}
+  case 124:
+#line 453 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_string_new((yyvsp[0].val_s));}
 #line 2140 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 134:
-#line 457 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CND_NOT), (yyvsp[0].node));}
+  case 125:
+#line 454 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_int_new(-(yyvsp[0].val_i));}
 #line 2146 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 135:
-#line 460 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new((yyvsp[-1].val_i)), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
+  case 126:
+#line 455 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_node_float_new(-(yyvsp[0].val_f));}
 #line 2152 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 136:
-#line 463 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.val_i) = AT_CMP_L;}
+  case 127:
+#line 456 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
 #line 2158 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 137:
-#line 464 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.val_i) = AT_CMP_LE;}
+  case 128:
+#line 457 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
 #line 2164 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 138:
-#line 465 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.val_i) = AT_CMP_G;}
+  case 129:
+#line 458 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
 #line 2170 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 139:
-#line 466 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.val_i) = AT_CMP_GE;}
+  case 130:
+#line 459 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[0].node);}
 #line 2176 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
-  case 140:
+  case 131:
+#line 460 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MINUS), 
+                                                           syntax_tree_add_brother(syntax_tree_node_int_new(0), (yyvsp[0].node)));}
+#line 2183 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 132:
+#line 462 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[-1].node);}
+#line 2189 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 133:
+#line 463 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = (yyvsp[-1].node);}
+#line 2195 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 134:
+#line 464 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_CND_NOT), (yyvsp[0].node));}
+#line 2201 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 135:
 #line 467 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new((yyvsp[-1].val_i)), syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[0].node)));}
+#line 2207 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 136:
+#line 470 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.val_i) = AT_CMP_L;}
+#line 2213 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 137:
+#line 471 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.val_i) = AT_CMP_LE;}
+#line 2219 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 138:
+#line 472 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.val_i) = AT_CMP_G;}
+#line 2225 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 139:
+#line 473 "SRC/yacc.y" /* yacc.c:1646  */
+    {(yyval.val_i) = AT_CMP_GE;}
+#line 2231 "SRC/yacc.c" /* yacc.c:1646  */
+    break;
+
+  case 140:
+#line 474 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.val_i) = AT_CMP_E;}
-#line 2182 "SRC/yacc.c" /* yacc.c:1646  */
+#line 2237 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 141:
-#line 468 "SRC/yacc.y" /* yacc.c:1646  */
+#line 475 "SRC/yacc.y" /* yacc.c:1646  */
     {(yyval.val_i) = AT_CMP_NE;}
-#line 2188 "SRC/yacc.c" /* yacc.c:1646  */
+#line 2243 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
 
-#line 2192 "SRC/yacc.c" /* yacc.c:1646  */
+#line 2247 "SRC/yacc.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2416,5 +2471,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 471 "SRC/yacc.y" /* yacc.c:1906  */
+#line 478 "SRC/yacc.y" /* yacc.c:1906  */
 

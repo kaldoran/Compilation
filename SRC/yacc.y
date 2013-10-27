@@ -2,7 +2,7 @@
   #include "kernel.h"
 
   extern int yylex(void);
-  extern void yyerror(const char *txt);
+  extern void yyerror(const char *str);
   
   Hashtable *hashtable;
 %}
@@ -96,7 +96,7 @@
 
 /* IDF */
 %token <hkey> IDF 
-%type <hkey> nom_type type_simple
+%type <hkey> nom_type type_simple declaration_suite_variable
 
 /* Expressions. */
 %type <node> test expression expression2 expression3
@@ -130,7 +130,8 @@
 /* Programme général                                    */
 /* -----------------------------------------------------*/
 
-programme: PROG corps {if(regions_table_add(0, 0, $2) == BAD_REGION) fatal_error("regions_table");}
+programme: PROG corps {if(regions_table_add(0, 0, $2) == BAD_REGION) 
+		         fatal_error("regions_table");}
          ;
           
 corps: liste_declarations START liste_instructions {$$ = $3;}
@@ -188,11 +189,17 @@ un_champ: IDF DEUX_POINTS nom_type
 /* Déclarations : VARIABLES                            */
 /* -----------------------------------------------------*/     
 
-declaration_variable: VARIABLE declaration_suite_variable DEUX_POINTS nom_type
+declaration_variable: VARIABLE declaration_suite_variable 
                     ;
           
-declaration_suite_variable: IDF
-                          | declaration_suite_variable VIRGULE IDF
+declaration_suite_variable: IDF DEUX_POINTS nom_type               {if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, 
+											 regions_stack_top(), $3, 0))
+                                                                      fatal_error("symbol_table_add");
+                                                                    $$ = $3;}
+                          | IDF VIRGULE declaration_suite_variable  {if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, 
+											 regions_stack_top(), $3, 0))
+                                                                      fatal_error("symbol_table_add");
+                                                                    $$ = $3;}
                           ;
 
 /* -----------------------------------------------------*/
@@ -210,11 +217,11 @@ liste_parametres:
                 | PARENTHESE_OUVRANTE liste_param PARENTHESE_FERMANTE
                 ;
           
-liste_param: un_param                     /* Aucune action ici. */
+liste_param: un_param
            | liste_param VIRGULE un_param
            ;
           
-un_param: IDF DEUX_POINTS nom_type 
+un_param: IDF DEUX_POINTS nom_type {variables_buffer_push($1, symbol_table_get(hashtable, $3, regions_stack_top()));}
         ;
 
 /* -----------------------------------------------------*/
@@ -225,11 +232,11 @@ nom_type: type_simple {$$ = $1;}
         | IDF         {$$ = $1;}
         ;
           
-type_simple: ENTIER /* ???????????????????????????????? */
-           | REEL
-           | BOOLEEN
-           | CARACTERE
-           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT
+type_simple: ENTIER                                              {$$ = LBASIC_INT;}
+           | REEL                                                {$$ = LBASIC_FLOAT;}
+           | BOOLEEN                                             {$$ = LBASIC_BOOL;}
+           | CARACTERE                                           {$$ = LBASIC_CHAR;}
+           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = LBASIC_CHAR;}
            ;
 
 /* -----------------------------------------------------*/

@@ -15,7 +15,7 @@
 /* ---------------------------------------------------------------------- */
 
 /** Buffer de variables. */
-static Variable buffer[MAX_BUFFER_SIZE];
+static Variable buffer[MAX_VARIABLES_BUFFER_SIZE];
 
 /** Nombre d'éléments. */
 static int buffer_size = 0;
@@ -24,7 +24,7 @@ static int buffer_size = 0;
 
 int variables_buffer_push(Hashkey hkey, Index_t type)
 {
-  if(buffer_size == MAX_BUFFER_SIZE)
+  if(buffer_size == MAX_VARIABLES_BUFFER_SIZE)
     return -1; /* Buffer plein. */
 
   buffer[buffer_size].hkey = hkey;
