@@ -5,11 +5,10 @@
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include "description_table.h"
 
-Structure *structure_new(unsigned int field_number, Hashkey hkey)
+Structure *structure_new(unsigned int field_number)
 {
   Structure *s;
 
@@ -23,7 +22,6 @@ Structure *structure_new(unsigned int field_number, Hashkey hkey)
   }
 
   s->field_number = field_number;
-  s->hkey = hkey;
 
   return s;
 }

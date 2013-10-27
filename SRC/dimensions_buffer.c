@@ -1,50 +1,50 @@
 /* ---------------------------------------------------------------------- */
-/* Filename: variables_buffer.c                                           */
+/* Filename: dimensions_buffer.c                                          */
 /* Author: ABHAMON Ronan                                                  */
-/* Date: 2013-10-27 - 16:18:25                                            */
+/* Date: 2013-10-27 - 19:57:11                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
 
 #include <stdio.h>
 #include <string.h>
 #include "description_table.h"
-#include "variables_buffer.h"
+#include "dimensions_buffer.h"
 
 /* ---------------------------------------------------------------------- */
 /* Données internes (privées)                                             */
 /* ---------------------------------------------------------------------- */
 
-/** Buffer de variables. */
-static Variable buffer[MAX_VARIABLES_BUFFER_SIZE];
+/** Buffer de dimensions. */
+static Dimension buffer[MAX_DIMENSIONS_BUFFER_SIZE];
 
 /** Nombre d'éléments. */
 static int buffer_size = 0;
 
 /* ---------------------------------------------------------------------- */
 
-int variables_buffer_push(Hashkey hkey, Index_t type)
+int dimensions_buffer_push(unsigned int bound_lower, unsigned int bound_upper)
 {
-  if(buffer_size == MAX_VARIABLES_BUFFER_SIZE)
+  if(buffer_size == MAX_DIMENSIONS_BUFFER_SIZE)
     return -1; /* Buffer plein. */
 
-  buffer[buffer_size].hkey = hkey;
-  buffer[buffer_size++].type = type;
+  buffer[buffer_size].bound_lower = bound_lower;
+  buffer[buffer_size++].bound_upper = bound_upper;
   
   return 0;
 }
 
-void variables_buffer_reset(void)
+void dimensions_buffer_reset(void)
 {
   buffer_size = 0;
   return;
 }
 
-Variable *variables_buffer_copy(Variable *variables)
+Dimension *dimensions_buffer_copy(Dimension *dimensions)
 {
-  return memcpy(variables, buffer, buffer_size * sizeof *buffer);
+  return memcpy(dimensions, buffer, buffer_size * sizeof *buffer);
 }
 
-unsigned int variables_buffer_get_size(void)
+unsigned int dimensions_buffer_get_size(void)
 {
   return buffer_size;
 }

@@ -78,7 +78,7 @@ void test2(void)
 }
 
 void test3()
-{
+{/*
   Field fi;
   Dimension di;
   Parameter pa;
@@ -123,7 +123,7 @@ void test3()
   array_free(ar);
   function_free(f);
   procedure_free(p);
-
+ */
 }
 
 int main(void)
@@ -135,10 +135,14 @@ int main(void)
 
   /* Execution */
   yyparse();
-  test();
+
+  /* test();
   test2();
-  test3();
+  test3(); */
  
+  /* Affichage */
+  symbol_table_print(hashtable);
+
   /* Libération */
   yylex_destroy();
   hashtable_free(hashtable, symbol_table_free);

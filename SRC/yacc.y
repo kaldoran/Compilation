@@ -4,7 +4,13 @@
   extern int yylex(void);
   extern void yyerror(const char *str);
   
+  /* Table principale. */
   Hashtable *hashtable;
+
+  /* Données. */
+  Array *array;
+  Structure *structure;
+  
 %}
 
 %union
@@ -153,12 +159,23 @@ declaration: declaration_type
            | declaration_fonction
            ;
           
-declaration_type: TYPE IDF DEUX_POINTS suite_declaration_type
+declaration_type: TYPE IDF DEUX_POINTS TABLEAU dimension DE nom_type {if((array = array_new(dimensions_buffer_get_size(), $7)) == NULL)
+									fatal_error("array_new");
+								      dimensions_buffer_copy(array->dimension);
+					                              dimensions_buffer_reset();
+
+								      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, 0, array, 0))
+									fatal_error("symbol_table_add");
+                                                                     }
+                | TYPE IDF DEUX_POINTS STRUCT liste_champs FSTRUCT   {if((structure = structure_new(variables_buffer_get_size())) == NULL)
+		                                                        fatal_error("structure_new");
+                                                                      variables_buffer_copy(structure->field);
+								      variables_buffer_reset();
+
+								      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, 0, structure, 0))
+									fatal_error("symbol_table_add");
+                                                                     }
                 ;
-          
-suite_declaration_type: TABLEAU dimension DE nom_type
-                      | STRUCT liste_champs FSTRUCT
-                      ;
 
 /* -----------------------------------------------------*/
 /* Déclarations : TABLEAUX                              */
@@ -171,7 +188,13 @@ liste_dimensions: une_dimension
                 | liste_dimensions VIRGULE une_dimension
                 ;
                                                  
-une_dimension: expression POINT_ET_POINT expression
+une_dimension: CSTE_ENTIERE POINT_ET_POINT CSTE_ENTIERE {if(dimensions_buffer_push($1, $3) == -1)
+                                                         {
+							   fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
+								   MAX_DIMENSIONS_BUFFER_SIZE);
+							   exit(EXIT_FAILURE);
+							 }
+                                                        }
              ;
                 
 /* -----------------------------------------------------*/
@@ -182,7 +205,13 @@ liste_champs: un_champ POINT_VIRGULE
             | liste_champs un_champ POINT_VIRGULE
             ;
 
-un_champ: IDF DEUX_POINTS nom_type
+un_champ: IDF DEUX_POINTS nom_type {if(variables_buffer_push($1, $3) == -1)
+                                    {
+				      fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
+					      MAX_VARIABLES_BUFFER_SIZE);
+				      exit(EXIT_FAILURE);
+				    }
+                                   }
         ;
      
 /* -----------------------------------------------------*/
@@ -196,7 +225,7 @@ declaration_suite_variable: IDF DEUX_POINTS nom_type               {if(!symbol_t
 											 regions_stack_top(), $3, 0))
                                                                       fatal_error("symbol_table_add");
                                                                     $$ = $3;}
-                          | IDF VIRGULE declaration_suite_variable  {if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, 
+                          | IDF VIRGULE declaration_suite_variable {if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, 
 											 regions_stack_top(), $3, 0))
                                                                       fatal_error("symbol_table_add");
                                                                     $$ = $3;}

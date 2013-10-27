@@ -37,10 +37,24 @@ static void symbol_print(void *symbol)
   Symbol *s = symbol;
   
   for(; s != NULL; s = s->next) 
-    printf("\n    (Type=%d, Region=%d, Index=%p, Size=%lu)", s->type, s->region, 
-	   s->index, (long unsigned int)s->exec);
+  {
+    printf("\n    (Type=");
 
-    printf("\n");
+    switch(s->type)
+    {
+      case SYMBOL_TYPE_BASE:      printf("BASE");   break;
+      case SYMBOL_TYPE_STRUCT:    printf("STRUCT"); break;
+      case SYMBOL_TYPE_ARRAY:     printf("ARRAY");  break;
+      case SYMBOL_TYPE_VAR:       printf("VAR");    break;
+      case SYMBOL_TYPE_PROCEDURE: printf("PROC");   break;
+      case SYMBOL_TYPE_FUNCTION:  printf("FUNC");   break;
+      default: printf("UNKNOWN"); break;
+    }
+
+    printf(", Region=%d, Index=%p, Size=%lu)", s->region, s->index, (long unsigned int)s->exec);
+  }
+  
+  printf("\n");
 
   return;
 }
@@ -53,7 +67,7 @@ void symbol_table_init(Symbol_table *table)
   char *type[] = {"int", "float", "bool", "char"};
   int i;
   
-  for(i = 0; i < SYMBOL_BASIC_MAX - 1; i++)
+  for(i = 0; i < SYMBOL_BASIC_MAX; i++)
   {
     if((sym = malloc(sizeof *sym)) == NULL)
       fatal_error("symbol_table_init");
@@ -85,7 +99,7 @@ void symbol_table_free(void *sym)
     switch(s_base->type)
     {
       case SYMBOL_TYPE_STRUCT:
-        procedure_free(s_base->index); 
+        structure_free(s_base->index); 
         break;
       case SYMBOL_TYPE_ARRAY:
         array_free(s_base->index); 

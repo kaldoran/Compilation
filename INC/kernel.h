@@ -14,6 +14,7 @@
 #include "regions_table.h"
 #include "description_table.h"
 #include "variables_buffer.h"
+#include "dimensions_buffer.h"
 #include "regions_stack.h"
 #include "mystring.h"
 #include "error.h"

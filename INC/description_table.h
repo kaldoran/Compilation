@@ -62,11 +62,10 @@ typedef struct Procedure
   Parameter *params;         /* Tableau de paramètres. */
 } Procedure;
 
-/** Alloue une structure avec un nombre de champs et un hkey spécifiés. */
+/** Alloue une structure avec un certain nombre de champs. */
 /* %param field_number : Nombre des champs à créer dans la structure. */
-/* %param hkey : Clé de hashage de la structure. */
 /* %return : La structure allouée ou NULL en cas d'échec. */
-Structure *structure_new(unsigned int field_number, Hashkey hkey);
+Structure *structure_new(unsigned int field_number);
 
 /** Libère une structure. */
 /* %param *s : Pointeur sur la structure à libérer. */
