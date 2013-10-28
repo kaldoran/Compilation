@@ -383,7 +383,7 @@ variable: IDF suite_variable {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_V
 suite_variable: CROCHET_OUVRANT expression CROCHET_FERMANT suite_variable {$$ = syntax_tree_add_brother(syntax_tree_add_son(
 									        syntax_tree_node_new(AT_ARRAY_INDEX), $2), $4);}
               | POINT IDF suite_variable                                  {$$ = syntax_tree_add_brother(syntax_tree_node_hkey_new($2), $3);}
-              |                                                           {$$ = syntax_tree_node_new(AT_EMPTY);}
+              |                                                           {$$ = NULL;}
               ;
 
 /* -----------------------------------------------------*/
@@ -486,7 +486,7 @@ format: CSTE_CHAINE {$$ = syntax_tree_node_string_new($1);}
       ;
  
 suite_ecriture: VIRGULE expression suite_ecriture {$$ = syntax_tree_add_brother($2, $3);}
-              |                                   {$$ = syntax_tree_node_new(AT_EMPTY);}
+              |                                   {$$ = NULL;}
               ;
 
 /* -----------------------------------------------------*/
@@ -501,8 +501,8 @@ liste_variables: liste_variables VIRGULE variable {$$ = syntax_tree_add_brother(
 /* EXPRESSIONS                                          */
 /* -----------------------------------------------------*/
        
-resultat_retourne:            {$$ = syntax_tree_node_new(AT_EMPTY);}
-                 | expression {$$ = $1;}
+resultat_retourne: expression {$$ = $1;}
+                 | {$$ = NULL;}
                  ;
              
 expression: expression PLUS expression2  {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_PLUS), 

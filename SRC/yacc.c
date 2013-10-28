@@ -627,13 +627,13 @@ static const yytype_uint8 yydefact[] =
        0,     8,     9,    10,    11,     1,     0,    28,    28,     0,
       21,     0,     4,     0,     0,     6,     0,     0,    24,     0,
        0,     0,    52,     0,     0,     0,    44,     0,     0,    84,
-       0,   108,     0,     0,     0,    75,     0,    42,     0,     0,
+       0,   109,     0,     0,     0,    75,     0,    42,     0,     0,
       58,    59,     0,    46,    47,    48,    49,    50,     0,     3,
        7,     0,     0,    29,     0,     0,    31,     5,     0,    23,
       36,    37,    38,    39,     0,    35,    22,    34,     0,     0,
        0,     0,     0,     0,   121,   122,   123,   124,   125,   129,
      130,   131,   128,     0,   113,   119,   114,     0,    84,    75,
-      83,     0,     0,     0,     0,   109,     0,    65,    66,     0,
+      83,     0,     0,     0,     0,   108,     0,    65,    66,     0,
        0,     0,    72,    97,    41,    43,    54,    45,     0,    63,
       64,    67,    68,    69,    70,    71,     0,    51,     0,     0,
        0,     0,     0,     0,     0,    30,    25,    26,     0,    55,
@@ -839,7 +839,7 @@ static const yytype_uint8 yyr2[] =
        1,     1,     2,     4,     3,     0,     4,     6,     6,     4,
        4,     6,     5,     1,     0,     1,     0,     5,     5,     6,
        5,     5,     4,     4,     3,     3,     0,     2,     2,     3,
-       1,     3,     1,     1,     3,     0,     3,     1,     0,     1,
+       1,     3,     1,     1,     3,     0,     3,     1,     1,     0,
        3,     3,     3,     1,     1,     3,     3,     3,     3,     1,
        3,     1,     1,     1,     1,     1,     2,     2,     1,     1,
        1,     1,     2,     3,     3,     2,     3,     1,     1,     1,
@@ -1933,7 +1933,7 @@ yyreduce:
 
   case 75:
 #line 386 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+    {(yyval.node) = NULL;}
 #line 1938 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
@@ -2128,7 +2128,7 @@ yyreduce:
 
   case 105:
 #line 489 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+    {(yyval.node) = NULL;}
 #line 2133 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
@@ -2146,13 +2146,13 @@ yyreduce:
 
   case 108:
 #line 504 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = syntax_tree_node_new(AT_EMPTY);}
+    {(yyval.node) = (yyvsp[0].node);}
 #line 2151 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 109:
 #line 505 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
+    {(yyval.node) = NULL;}
 #line 2157 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 

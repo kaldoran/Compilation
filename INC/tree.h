@@ -72,8 +72,8 @@ Tree *tree_node_get_father(Tree *t);
 /* %param parent : Noeud père. */
 /* %param pos : Position où doit se trouver le noeud. 
    Si pos < 0, le noeud est ajouté à la fin des fils du noeud père. */
-/* %param node : Noeud à ajouter, ne peut être NULL. */
-/* %return : Le noeud inseré. */
+/* %param node : Noeud à ajouter. */
+/* %return : NULL si parent == NULL ou le noeud père . */
 Tree *tree_node_insert(Tree *parent, int pos, Tree *node);
 
 /** Insère un noeud en dernière position de la liste des fils d'un père. */
@@ -114,7 +114,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node);
 /* Ajoute un noeud frère à un arbre. */
 /* %param origin : Frère d'origine du noeud. */
 /* %param brother : Frère à ajouter. */
-/* %return : NULL en cas d'erreur ou le frère ajouté en cas de réussite. */
+/* %return : NULL en cas d'erreur ou le frère ajouté en cas de réussite (ou si brother == NULL). */
 Tree *tree_add_brother(Tree *origin, Tree *brother);
 
 #endif /* _TREE_ INCLUDED */

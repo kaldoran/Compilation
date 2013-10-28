@@ -155,7 +155,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
   Tree *cp_node;
 
   if(node == NULL)
-    return NULL; /* Noeud vide... */
+    return parent; /* Noeud vide... */
 
   ORPHAN_TEST(node);
 
@@ -207,6 +207,9 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
 Tree *tree_add_brother(Tree *origin, Tree *brother)
 {
   Tree *cp_brother;
+
+  if(brother == NULL)
+    return origin;
 
   ORPHAN_TEST(brother);
   LAST_BROTHER(origin);
