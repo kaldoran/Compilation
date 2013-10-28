@@ -65,7 +65,7 @@ static void symbol_print(void *symbol)
 void symbol_table_init(Symbol_table *table)
 {
   Symbol *sym;
-  char *type[] = {"int", "float", "bool", "char"};
+  static const char *type[] = {"int", "float", "bool", "char"};
   int i;
   
   for(i = 0; i < SYMBOL_BASIC_MAX; i++)
@@ -123,7 +123,7 @@ void symbol_table_free(void *sym)
 }
 
 bool symbol_table_add(Symbol_table *table, Hashkey hkey, Type type, 
-		      int region, Index_t index, size_t exec)
+                      int region, Index_t index, size_t exec)
 {
   Symbol *sym = malloc(sizeof *sym);
   Symbol *origin;
@@ -164,7 +164,7 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
     /* Parcours des déclarations de même nom. */
     for(origin = start; origin != NULL; origin = origin->next)
       if(origin->region == node->region)
-	return origin; /* Trouvé ! */
+        return origin; /* Trouvé ! */
   }
 
   /* Si pas dans la pile, peut-être au niveau 0. */

@@ -64,7 +64,7 @@ void symbol_table_free(void *sym);
 /* %param exec : Taille à l'execution. */
 /* %return : false en cas d'erreur mémoire ou true en cas de réussite. */
 bool symbol_table_add(Symbol_table *table, Hashkey key, Type type, 
-		      int region, Index_t index, size_t exec);
+                      int region, Index_t index, size_t exec);
  
 /** Obtenir un champ de déclaration de la table. */
 /* Association de noms. */

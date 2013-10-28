@@ -30,8 +30,8 @@ struct Hashtable
   unsigned int size_max; /* Nombre d'éléments max dans la table. */
   List **array;          /* Tableau de pointeurs sur les listes d'éléments. */
   List *hvalues;         /* Pointeur sur valeurs/clefs. Permet d'éviter de parcourir
-			    toute la table pour appliquer une fonction sur toutes
-			    les valeurs. */
+                            toute la table pour appliquer une fonction sur toutes
+                            les valeurs. */
 };
 
 /** Valeur d'un élément d'une table de Hachage. */
@@ -133,9 +133,9 @@ void hashtable_free(Hashtable *h, void (*fun)(void *value))
     {
       for(cur = h->array[i]->start; cur != NULL; cur = next)
       {
-	next = cur->next;
-	hashvalue_free(cur->value, fun);
-	free(cur);
+        next = cur->next;
+        hashvalue_free(cur->value, fun);
+        free(cur);
       }
   
       free(h->array[i]);
@@ -162,13 +162,13 @@ Hashtable *hashtable_resize(Hashtable *h, size_t size)
     {
       for(cur = h->array[i]->start; cur != NULL; cur = next)
       {
-	/* Si erreur d'allocation */
-	if(hashtable_add_value(h_new, HNVALUE(cur)->id, HNVALUE(cur)->value) == NULL)
-	  fatal_error("hashtable_resize");
+        /* Si erreur d'allocation */
+        if(hashtable_add_value(h_new, HNVALUE(cur)->id, HNVALUE(cur)->value) == NULL)
+          fatal_error("hashtable_resize");
 
-	next = cur->next;
-	hashvalue_free(cur->value, NULL);
-	free(cur);
+        next = cur->next;
+        hashvalue_free(cur->value, NULL);
+        free(cur);
       }
 
       free(h->array[i]);
@@ -202,7 +202,7 @@ Hashkey hashtable_get_key(Hashtable *h, const char *id)
   if((l = h->array[index]) != NULL)
     for(ln = l->start; ln != NULL; ln = ln->next)
       if(strcmp(HNVALUE(ln)->id, id) == 0)
-	return ln->value;
+        return ln->value;
 
    return NULL; /* Elément non trouvé */
 }
@@ -216,7 +216,7 @@ void *hashtable_get_value_by_id(Hashtable *h, const char *id)
    if((l = h->array[index]) != NULL)
      for(ln = l->start; ln != NULL; ln = ln->next)
        if(strcmp(HNVALUE(ln)->id, id) == 0)
-	 return HNVALUE(ln)->value;
+         return HNVALUE(ln)->value;
 
    return NULL; /* Elément non trouvé */
 }
@@ -237,8 +237,8 @@ bool hashtable_set_value_by_id(Hashtable *h, const char *id, void *value)
      for(ln = l->start; ln != NULL; ln = ln->next)
        if(strcmp(HNVALUE(ln)->id, id) == 0)
        {
-	 HNVALUE(ln)->value = value;
-	 return true;
+         HNVALUE(ln)->value = value;
+         return true;
        }
 
    return false; /* Elément non trouvé */
@@ -262,7 +262,7 @@ Hashkey hashtable_exists_id(Hashtable *h, const char *id)
   if((l = h->array[index]) != NULL) 
     for(ln = l->start; ln != NULL; ln = ln->next, i++)
       if(strcmp(HNVALUE(ln)->id, id) == 0)
-	return ln->value;
+        return ln->value;
   
   return NULL;
 }

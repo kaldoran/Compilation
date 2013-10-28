@@ -144,7 +144,7 @@
 /* -----------------------------------------------------*/
 
 programme: PROG corps {if(regions_table_add(0, 0, $2) == BAD_REGION) 
-		         fatal_error("regions_table");}
+                         fatal_error("regions_table");}
          ;
           
 corps: liste_declarations START liste_instructions {$$ = $3;}
@@ -167,20 +167,20 @@ declaration: declaration_type
            ;
           
 declaration_type: TYPE IDF DEUX_POINTS TABLEAU dimension DE nom_type {if((array = array_new(dimensions_buffer_get_size(), SYMBOL_OF($7))) == NULL)
-									fatal_error("array_new");
-								      dimensions_buffer_copy(array->dimension);
-					                              dimensions_buffer_reset();
+                                                                        fatal_error("array_new");
+                                                                      dimensions_buffer_copy(array->dimension);
+                                                                      dimensions_buffer_reset();
 
-								      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, 0, array, 0))
-									fatal_error("symbol_table_add");
+                                                                      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, 0, array, 0))
+                                                                        fatal_error("symbol_table_add");
                                                                      }
                 | TYPE IDF DEUX_POINTS STRUCT liste_champs FSTRUCT   {if((structure = structure_new(variables_buffer_get_size())) == NULL)
-		                                                        fatal_error("structure_new");
+                                                                        fatal_error("structure_new");
                                                                       variables_buffer_copy(structure->field);
-								      variables_buffer_reset();
+                                                                      variables_buffer_reset();
 
-								      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, 0, structure, 0))
-									fatal_error("symbol_table_add");
+                                                                      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, 0, structure, 0))
+                                                                        fatal_error("symbol_table_add");
                                                                      }
                 ;
 
@@ -197,10 +197,10 @@ liste_dimensions: une_dimension
                                                  
 une_dimension: CSTE_ENTIERE POINT_ET_POINT CSTE_ENTIERE {if(dimensions_buffer_push($1, $3) == -1)
                                                          {
-							   fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
-								   MAX_DIMENSIONS_BUFFER_SIZE);
-							   exit(EXIT_FAILURE);
-							 }
+                                                           fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
+                                                                   MAX_DIMENSIONS_BUFFER_SIZE);
+                                                           exit(EXIT_FAILURE);
+                                                         }
                                                         }
              ;
                 
@@ -214,10 +214,10 @@ liste_champs: un_champ POINT_VIRGULE
 
 un_champ: IDF DEUX_POINTS nom_type {if(variables_buffer_push($1, SYMBOL_OF($3)) == -1)
                                     {
-				      fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
-					      MAX_VARIABLES_BUFFER_SIZE);
-				      exit(EXIT_FAILURE);
-				    }
+                                      fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
+                                              MAX_VARIABLES_BUFFER_SIZE);
+                                      exit(EXIT_FAILURE);
+                                    }
                                    }
         ;
      
@@ -229,14 +229,14 @@ declaration_variable: VARIABLE declaration_suite_variable
                     ;
 
 declaration_suite_variable: IDF DEUX_POINTS nom_type               {
-			                                            if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), 
-											 SYMBOL_OF($3), 0))
+                                                                    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), 
+                                                                                         SYMBOL_OF($3), 0))
                                                                       fatal_error("symbol_table_add");
                                                                     $$ = $3;
                                                                    }
                           | IDF VIRGULE declaration_suite_variable {
-			                                            if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), 
-											 SYMBOL_OF($3), 0))
+                                                                    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), 
+                                                                                         SYMBOL_OF($3), 0))
                                                                       fatal_error("symbol_table_add");
                                                                     $$ = $3;
                                                                    }
@@ -248,46 +248,46 @@ declaration_suite_variable: IDF DEUX_POINTS nom_type               {
 
 declaration_procedure: PROCEDURE IDF liste_parametres {
                                                        if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
-							 fatal_error("regions_table_add");
-						       if(regions_stack_push(region) == -1)
-							 fatal_error("regions_stack_push");
+                                                         fatal_error("regions_table_add");
+                                                       if(regions_stack_push(region) == -1)
+                                                         fatal_error("regions_stack_push");
                                                       } corps
 
                      {
                        if((procedure = procedure_new(variables_buffer_get_size())) == NULL)
-			 fatal_error("procedure_new");
-		       variables_buffer_copy(procedure->params);
-		       variables_buffer_reset();
-		       
-		       region = regions_stack_top();
-		       regions_table_set_tree(region, $5);
-		       level--;
-		       regions_stack_pop();
+                         fatal_error("procedure_new");
+                       variables_buffer_copy(procedure->params);
+                       variables_buffer_reset();
+                       
+                       region = regions_stack_top();
+                       regions_table_set_tree(region, $5);
+                       level--;
+                       regions_stack_pop();
 
-		       if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_PROCEDURE, regions_stack_top(), procedure, region))
-			 fatal_error("symbol_table_add");
+                       if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_PROCEDURE, regions_stack_top(), procedure, region))
+                         fatal_error("symbol_table_add");
                      }
                      ;
       
 declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
                                                                           if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
-									    fatal_error("regions_table_add");
-									  if(regions_stack_push(region) == -1)
-									    fatal_error("regions_stack_push");
+                                                                            fatal_error("regions_table_add");
+                                                                          if(regions_stack_push(region) == -1)
+                                                                            fatal_error("regions_stack_push");
                                                                          } corps
-		    {
+                    {
                       if((function = function_new(SYMBOL_OF($5), variables_buffer_get_size())) == NULL)
-			fatal_error("function_new");
-		      variables_buffer_copy(function->params);
-		      variables_buffer_reset();
-		      
-		      region = regions_stack_top();
-		      regions_table_set_tree(region, $7);
-		      level--;
-		      regions_stack_pop();
-		      
-		       if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_FUNCTION, regions_stack_top(), function, region))
-			 fatal_error("symbol_table_add");
+                        fatal_error("function_new");
+                      variables_buffer_copy(function->params);
+                      variables_buffer_reset();
+                      
+                      region = regions_stack_top();
+                      regions_table_set_tree(region, $7);
+                      level--;
+                      regions_stack_pop();
+                      
+                       if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_FUNCTION, regions_stack_top(), function, region))
+                         fatal_error("symbol_table_add");
                     }
                     ;
 
@@ -346,9 +346,9 @@ instruction: POINT_VIRGULE                            {$$ = syntax_tree_node_new
      
 instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE                         {$$ = syntax_tree_node_new(AT_FUN_READ);}
          | ECRIRE PARENTHESE_OUVRANTE format suite_ecriture PARENTHESE_FERMANTE {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE), 
-													  syntax_tree_add_brother($3, $4));}
+                                                                                                          syntax_tree_add_brother($3, $4));}
          | LIRE PARENTHESE_OUVRANTE liste_variables PARENTHESE_FERMANTE         {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), 
-													  $3);}
+                                                                                                          $3);}
          ;
 
 /* -----------------------------------------------------*/
@@ -381,7 +381,7 @@ variable: IDF suite_variable {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_V
         ;
 
 suite_variable: CROCHET_OUVRANT expression CROCHET_FERMANT suite_variable {$$ = syntax_tree_add_brother(syntax_tree_add_son(
-									        syntax_tree_node_new(AT_ARRAY_INDEX), $2), $4);}
+                                                                                syntax_tree_node_new(AT_ARRAY_INDEX), $2), $4);}
               | POINT IDF suite_variable                                  {$$ = syntax_tree_add_brother(syntax_tree_node_hkey_new($2), $3);}
               |                                                           {$$ = NULL;}
               ;

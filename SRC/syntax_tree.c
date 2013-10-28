@@ -14,19 +14,6 @@
 /** Profondeur max d'affichage de l'arbre. */
 #define MAX_DEPTH 1000
 
-/** Tableau servant à l'affichage de l'arbre. */
-static char *node_name[] = {"unknown", "plus", "minus", "mult", "div", "mod", "plus equal", "minus equal", 
-			    "mult equal", "div equal", "mod equal", "increment", "decrement", "pincrement", 
-			    "pdecrement", "equal", "greater than", "greater or equal", "lower than", 
-			    "lower or equal", "different", "and", "or", "not", "read", "write", "random",
-			    "if", "else", "while", "do while", "for", "array", "structure", "procedure", 
-			    "function", "return", "switch", "case", "default", "break", "continue", 
-			    "ternaire", "appel", "string", "real", "boolean", "char", "integer", "set", 
-			    "variable", "array index", "hkey index", "empty node"};
-
-/** Tableau de marquage de profondeur pour l'affichage de l'arbre. */
-static char arr_p[MAX_DEPTH] = {0};
-
 Syntax_tree *syntax_tree_node_new(unsigned char type)
 {
   Syntax_tree *tree;
@@ -97,6 +84,18 @@ void syntax_tree_print_node(Syntax_tree *node)
   int i, depth = tree_node_get_depth(node);
   Syntax_node_content *snode;
 
+  static const char *node_name[] = {"unknown", "plus", "minus", "mult", "div", "mod", "plus equal", 
+				    "minus equal", "mult equal", "div equal", "mod equal", "increment", 
+				    "decrement", "pincrement", "pdecrement", "equal", "greater than",
+				    "greater or equal",  "lower than", "lower or equal", "different", 
+				    "and", "or", "not", "read", "write", "random", "if", "else", "while", 
+				    "do while", "for", "array", "structure", "procedure", "function", 
+				    "return", "switch", "case", "default", "break", "continue", "ternaire", 
+				    "appel", "string", "real", "boolean", "char", "integer", "set", "variable",
+				    "array index", "hkey index", "empty node"};
+  
+  static char arr_p[MAX_DEPTH] = {0};
+
   if(depth >= MAX_DEPTH)
   {
     fprintf(stderr, "Error: The tree depth is so big !\n");
@@ -113,20 +112,6 @@ void syntax_tree_print_node(Syntax_tree *node)
       printf("│   ");
     else
       printf("    ");
-    
-    /* Code en commentaire à conserver en cas de détection d'erreur dans la génération de l'arbre. */
-
-    /*
-    if(arr_p[i] && node->prev == NULL && i == depth - 1)
-      printf("├───");
-    else if(node->prev == NULL && i == depth - 1)
-      printf("└───");
-    else if(arr_p[i])
-      printf("│   ");
-    else
-      printf("    ");
-
-    */
   }     
 
   if(node->prev == NULL)
@@ -139,25 +124,13 @@ void syntax_tree_print_node(Syntax_tree *node)
   else 
     (node->children != NULL || node->next != NULL) ? printf("├─") : printf("└─");
 
-  /*
-  if(node->father == NULL && node->prev == NULL)
-    printf("┬─");
-  else if(node->prev == NULL && (node->next != NULL || node->children != NULL))
-    printf("┬─");
-  else if(node->next == NULL && node->children == NULL && node->prev == NULL)
-    printf("──");
-  else if(node->children != NULL || node->next != NULL)
-    printf("├─");
- 
-  else 
-    printf("└─");
-  */
-
   /* Contenu adresse */
   snode = tree_node_get_value(node);
   
   if(snode->type >= 0 && snode->type < AT_SIZE) 
     printf("%s\n", node_name[snode->type]);
+  else
+    printf("NAME_ERROR\n");
 
   return;
 }

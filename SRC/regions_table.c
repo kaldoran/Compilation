@@ -82,7 +82,7 @@ void regions_table_print(void)
   for(i = 0; i < depth; i++)
   {
     printf("%04d: (%lu, %u, %p)\n", i, (long unsigned int)table[i]->size, table[i]->level, 
-	   (void *)table[i]->tree);
+           (void *)table[i]->tree);
     syntax_tree_print(table[i]->tree);
     printf("\n");
   }

@@ -1594,7 +1594,7 @@ yyreduce:
         case 2:
 #line 146 "SRC/y.tab.y" /* yacc.c:1646  */
     {if(regions_table_add(0, 0, (yyvsp[0].node)) == BAD_REGION) 
-		         fatal_error("regions_table");}
+                         fatal_error("regions_table");}
 #line 1599 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1619,12 +1619,12 @@ yyreduce:
   case 12:
 #line 169 "SRC/y.tab.y" /* yacc.c:1646  */
     {if((array = array_new(dimensions_buffer_get_size(), SYMBOL_OF((yyvsp[0].hkey)))) == NULL)
-									fatal_error("array_new");
-								      dimensions_buffer_copy(array->dimension);
-					                              dimensions_buffer_reset();
+                                                                        fatal_error("array_new");
+                                                                      dimensions_buffer_copy(array->dimension);
+                                                                      dimensions_buffer_reset();
 
-								      if(!symbol_table_add(hashtable, (yyvsp[-5].hkey), SYMBOL_TYPE_ARRAY, 0, array, 0))
-									fatal_error("symbol_table_add");
+                                                                      if(!symbol_table_add(hashtable, (yyvsp[-5].hkey), SYMBOL_TYPE_ARRAY, 0, array, 0))
+                                                                        fatal_error("symbol_table_add");
                                                                      }
 #line 1630 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1632,12 +1632,12 @@ yyreduce:
   case 13:
 #line 177 "SRC/y.tab.y" /* yacc.c:1646  */
     {if((structure = structure_new(variables_buffer_get_size())) == NULL)
-		                                                        fatal_error("structure_new");
+                                                                        fatal_error("structure_new");
                                                                       variables_buffer_copy(structure->field);
-								      variables_buffer_reset();
+                                                                      variables_buffer_reset();
 
-								      if(!symbol_table_add(hashtable, (yyvsp[-4].hkey), SYMBOL_TYPE_STRUCT, 0, structure, 0))
-									fatal_error("symbol_table_add");
+                                                                      if(!symbol_table_add(hashtable, (yyvsp[-4].hkey), SYMBOL_TYPE_STRUCT, 0, structure, 0))
+                                                                        fatal_error("symbol_table_add");
                                                                      }
 #line 1643 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1646,10 +1646,10 @@ yyreduce:
 #line 198 "SRC/y.tab.y" /* yacc.c:1646  */
     {if(dimensions_buffer_push((yyvsp[-2].val_i), (yyvsp[0].val_i)) == -1)
                                                          {
-							   fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
-								   MAX_DIMENSIONS_BUFFER_SIZE);
-							   exit(EXIT_FAILURE);
-							 }
+                                                           fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
+                                                                   MAX_DIMENSIONS_BUFFER_SIZE);
+                                                           exit(EXIT_FAILURE);
+                                                         }
                                                         }
 #line 1655 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1658,10 +1658,10 @@ yyreduce:
 #line 215 "SRC/y.tab.y" /* yacc.c:1646  */
     {if(variables_buffer_push((yyvsp[-2].hkey), SYMBOL_OF((yyvsp[0].hkey))) == -1)
                                     {
-				      fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
-					      MAX_VARIABLES_BUFFER_SIZE);
-				      exit(EXIT_FAILURE);
-				    }
+                                      fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
+                                              MAX_VARIABLES_BUFFER_SIZE);
+                                      exit(EXIT_FAILURE);
+                                    }
                                    }
 #line 1667 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1669,8 +1669,8 @@ yyreduce:
   case 22:
 #line 231 "SRC/y.tab.y" /* yacc.c:1646  */
     {
-			                                            if(!symbol_table_add(hashtable, (yyvsp[-2].hkey), SYMBOL_TYPE_VAR, regions_stack_top(), 
-											 SYMBOL_OF((yyvsp[0].hkey)), 0))
+                                                                    if(!symbol_table_add(hashtable, (yyvsp[-2].hkey), SYMBOL_TYPE_VAR, regions_stack_top(), 
+                                                                                         SYMBOL_OF((yyvsp[0].hkey)), 0))
                                                                       fatal_error("symbol_table_add");
                                                                     (yyval.hkey) = (yyvsp[0].hkey);
                                                                    }
@@ -1680,8 +1680,8 @@ yyreduce:
   case 23:
 #line 237 "SRC/y.tab.y" /* yacc.c:1646  */
     {
-			                                            if(!symbol_table_add(hashtable, (yyvsp[-2].hkey), SYMBOL_TYPE_VAR, regions_stack_top(), 
-											 SYMBOL_OF((yyvsp[0].hkey)), 0))
+                                                                    if(!symbol_table_add(hashtable, (yyvsp[-2].hkey), SYMBOL_TYPE_VAR, regions_stack_top(), 
+                                                                                         SYMBOL_OF((yyvsp[0].hkey)), 0))
                                                                       fatal_error("symbol_table_add");
                                                                     (yyval.hkey) = (yyvsp[0].hkey);
                                                                    }
@@ -1692,9 +1692,9 @@ yyreduce:
 #line 249 "SRC/y.tab.y" /* yacc.c:1646  */
     {
                                                        if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
-							 fatal_error("regions_table_add");
-						       if(regions_stack_push(region) == -1)
-							 fatal_error("regions_stack_push");
+                                                         fatal_error("regions_table_add");
+                                                       if(regions_stack_push(region) == -1)
+                                                         fatal_error("regions_stack_push");
                                                       }
 #line 1700 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1703,17 +1703,17 @@ yyreduce:
 #line 256 "SRC/y.tab.y" /* yacc.c:1646  */
     {
                        if((procedure = procedure_new(variables_buffer_get_size())) == NULL)
-			 fatal_error("procedure_new");
-		       variables_buffer_copy(procedure->params);
-		       variables_buffer_reset();
-		       
-		       region = regions_stack_top();
-		       regions_table_set_tree(region, (yyvsp[0].node));
-		       level--;
-		       regions_stack_pop();
+                         fatal_error("procedure_new");
+                       variables_buffer_copy(procedure->params);
+                       variables_buffer_reset();
+                       
+                       region = regions_stack_top();
+                       regions_table_set_tree(region, (yyvsp[0].node));
+                       level--;
+                       regions_stack_pop();
 
-		       if(!symbol_table_add(hashtable, (yyvsp[-3].hkey), SYMBOL_TYPE_PROCEDURE, regions_stack_top(), procedure, region))
-			 fatal_error("symbol_table_add");
+                       if(!symbol_table_add(hashtable, (yyvsp[-3].hkey), SYMBOL_TYPE_PROCEDURE, regions_stack_top(), procedure, region))
+                         fatal_error("symbol_table_add");
                      }
 #line 1719 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1722,9 +1722,9 @@ yyreduce:
 #line 272 "SRC/y.tab.y" /* yacc.c:1646  */
     {
                                                                           if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
-									    fatal_error("regions_table_add");
-									  if(regions_stack_push(region) == -1)
-									    fatal_error("regions_stack_push");
+                                                                            fatal_error("regions_table_add");
+                                                                          if(regions_stack_push(region) == -1)
+                                                                            fatal_error("regions_stack_push");
                                                                          }
 #line 1730 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1733,17 +1733,17 @@ yyreduce:
 #line 278 "SRC/y.tab.y" /* yacc.c:1646  */
     {
                       if((function = function_new(SYMBOL_OF((yyvsp[-2].hkey)), variables_buffer_get_size())) == NULL)
-			fatal_error("function_new");
-		      variables_buffer_copy(function->params);
-		      variables_buffer_reset();
-		      
-		      region = regions_stack_top();
-		      regions_table_set_tree(region, (yyvsp[0].node));
-		      level--;
-		      regions_stack_pop();
-		      
-		       if(!symbol_table_add(hashtable, (yyvsp[-5].hkey), SYMBOL_TYPE_FUNCTION, regions_stack_top(), function, region))
-			 fatal_error("symbol_table_add");
+                        fatal_error("function_new");
+                      variables_buffer_copy(function->params);
+                      variables_buffer_reset();
+                      
+                      region = regions_stack_top();
+                      regions_table_set_tree(region, (yyvsp[0].node));
+                      level--;
+                      regions_stack_pop();
+                      
+                       if(!symbol_table_add(hashtable, (yyvsp[-5].hkey), SYMBOL_TYPE_FUNCTION, regions_stack_top(), function, region))
+                         fatal_error("symbol_table_add");
                     }
 #line 1749 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1889,14 +1889,14 @@ yyreduce:
   case 56:
 #line 348 "SRC/y.tab.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE), 
-													  syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[-1].node)));}
+                                                                                                          syntax_tree_add_brother((yyvsp[-2].node), (yyvsp[-1].node)));}
 #line 1894 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
 #line 350 "SRC/y.tab.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), 
-													  (yyvsp[-1].node));}
+                                                                                                          (yyvsp[-1].node));}
 #line 1901 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1993,7 +1993,7 @@ yyreduce:
   case 73:
 #line 383 "SRC/y.tab.y" /* yacc.c:1646  */
     {(yyval.node) = syntax_tree_add_brother(syntax_tree_add_son(
-									        syntax_tree_node_new(AT_ARRAY_INDEX), (yyvsp[-2].node)), (yyvsp[0].node));}
+                                                                                syntax_tree_node_new(AT_ARRAY_INDEX), (yyvsp[-2].node)), (yyvsp[0].node));}
 #line 1998 "y.tab.c" /* yacc.c:1646  */
     break;
 
