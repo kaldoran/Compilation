@@ -70,9 +70,8 @@ bool symbol_table_add(Symbol_table *table, Hashkey key, Type type,
 /* Association de noms. */
 /* %param table : Table des déclarations. */
 /* %param hkey : Numéro lexicographique de la déclaration. */
-/* %param region : Numéro de la région contenant la déclaration. */
 /* %return : Le champ de déclaration correspondant ou NULL si non trouvé. */
-Symbol *symbol_table_get(Symbol_table *table, Hashkey hkey, int region);
+Symbol *symbol_table_get(Symbol_table *table, Hashkey hkey);
 
 /** Retourne l'index d'un type de Base dans la table. */
 /* %param : Numéro du Type de base à récupérer. */

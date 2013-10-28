@@ -10,6 +10,7 @@
 #include "symbol_table.h"
 #include "list.h"
 #include "description_table.h"
+#include "regions_stack.h"
 #include "error.h"
 
 /* Nombre de types de bases. (int, float, char, bool) */
@@ -152,15 +153,28 @@ bool symbol_table_add(Symbol_table *table, Hashkey hkey, Type type,
   return true;
 }
 
-Symbol *symbol_table_get(Hashtable *table, Hashkey hkey, int region)
+Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
 {
-  Symbol *origin = hashtable_get_value_by_key(table, hkey);
+  Symbol *start = hashtable_get_value_by_key(table, hkey), *origin;
+  Region_node *node = regions_stack_get_node();
+ 
+  /* Parcours de la pile des régions. */
+  for(; node != NULL; node = node->next)
+  {
+    /* Parcours des déclarations de même nom. */
+    for(origin = start; origin != NULL; origin = origin->next)
+      if(origin->region == node->region)
+	return origin; /* Trouvé ! */
+  }
 
-  for(; origin != NULL; origin = origin->next)
-    if(origin->region == region)
+  /* Si pas dans la pile, peut-être au niveau 0. */
+  for(origin = start; origin != NULL; origin = origin->next)
+    if(origin->region == 0)
       return origin; /* Trouvé ! */
-
-  return NULL; /* Non trouvé. */
+  
+  /* Non trouvé. */
+  fprintf(stderr, "Unable to find the declaration of %s\n", hashtable_get_id(table, hkey));
+  return NULL;
 }
 
 Index_t symbol_table_get_basic(int basic_num)

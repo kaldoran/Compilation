@@ -15,6 +15,9 @@ extern int yylex_destroy(void);
    Table déclarée dans yacc.y */
 extern Hashtable *hashtable;
 
+#define PRINT_TITLE(STR) \
+  printf("\n# ------------------------------\n%s\n# ------------------------------\n\n", STR);
+    
 void test(void)
 {
   Hashkey a, b;
@@ -128,25 +131,31 @@ void test3()
 
 int main(void)
 {
+  int ret;
+
   /* Initialisation */
   hashtable = hashtable_new();
   symbol_table_init(hashtable);
   lexeme_table_init(hashtable);
 
   /* Execution */
-  yyparse();
+  if(!(ret = yyparse()))
+  {
+    /* Affichage */
+    PRINT_TITLE("LEXEMES");
+    lexeme_table_print(hashtable);
+    
+    PRINT_TITLE("SYMBOLS");
+    symbol_table_print(hashtable);
 
-  /* test();
-  test2();
-  test3(); */
- 
-  /* Affichage */
-  symbol_table_print(hashtable);
-
+    PRINT_TITLE("REGIONS");
+    regions_table_print();
+  }
+  
   /* Libération */
   yylex_destroy();
   hashtable_free(hashtable, symbol_table_free);
   regions_table_free();
   
-  exit(EXIT_SUCCESS);
+  exit(ret);
 }

@@ -4,13 +4,20 @@
   extern int yylex(void);
   extern void yyerror(const char *str);
   
+  /* Retourne un champ de déclaration d'une Hashkey */
+  #define SYMBOL_OF(HKEY) symbol_table_get(hashtable, HKEY)
+
   /* Table principale. */
   Hashtable *hashtable;
 
   /* Données. */
   Array *array;
   Structure *structure;
-  
+  Function *function;
+  Procedure *procedure;
+  unsigned int level = 0;
+  int region;
+
 %}
 
 %union
@@ -140,9 +147,9 @@ programme: PROG corps {if(regions_table_add(0, 0, $2) == BAD_REGION)
 		         fatal_error("regions_table");}
          ;
           
-corps: liste_declarations START liste_instructions {$$ = $3;}
-     | START liste_instructions                    {$$ = $2;}
-     |                                             {$$ = syntax_tree_node_new(AT_EMPTY);}
+ corps: liste_declarations START liste_instructions {$$ = $3;}
+     | START liste_instructions                     {$$ = $2;}
+     |                                              {$$ = syntax_tree_node_new(AT_EMPTY);}
      ;
 
 /* -----------------------------------------------------*/
@@ -159,7 +166,7 @@ declaration: declaration_type
            | declaration_fonction
            ;
           
-declaration_type: TYPE IDF DEUX_POINTS TABLEAU dimension DE nom_type {if((array = array_new(dimensions_buffer_get_size(), $7)) == NULL)
+declaration_type: TYPE IDF DEUX_POINTS TABLEAU dimension DE nom_type {if((array = array_new(dimensions_buffer_get_size(), SYMBOL_OF($7))) == NULL)
 									fatal_error("array_new");
 								      dimensions_buffer_copy(array->dimension);
 					                              dimensions_buffer_reset();
@@ -205,7 +212,7 @@ liste_champs: un_champ POINT_VIRGULE
             | liste_champs un_champ POINT_VIRGULE
             ;
 
-un_champ: IDF DEUX_POINTS nom_type {if(variables_buffer_push($1, $3) == -1)
+un_champ: IDF DEUX_POINTS nom_type {if(variables_buffer_push($1, SYMBOL_OF($3)) == -1)
                                     {
 				      fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
 					      MAX_VARIABLES_BUFFER_SIZE);
@@ -220,27 +227,70 @@ un_champ: IDF DEUX_POINTS nom_type {if(variables_buffer_push($1, $3) == -1)
 
 declaration_variable: VARIABLE declaration_suite_variable 
                     ;
-          
-declaration_suite_variable: IDF DEUX_POINTS nom_type               {if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, 
-											 regions_stack_top(), $3, 0))
+
+declaration_suite_variable: IDF DEUX_POINTS nom_type               {
+			                                            if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), 
+											 SYMBOL_OF($3), 0))
                                                                       fatal_error("symbol_table_add");
-                                                                    $$ = $3;}
-                          | IDF VIRGULE declaration_suite_variable {if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, 
-											 regions_stack_top(), $3, 0))
+                                                                    $$ = $3;
+                                                                   }
+                          | IDF VIRGULE declaration_suite_variable {
+			                                            if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), 
+											 SYMBOL_OF($3), 0))
                                                                       fatal_error("symbol_table_add");
-                                                                    $$ = $3;}
+                                                                    $$ = $3;
+                                                                   }
                           ;
 
 /* -----------------------------------------------------*/
 /* Déclarations  : PROCEDURES/ FONCTIONS                */
 /* -----------------------------------------------------*/
 
-declaration_procedure: PROCEDURE IDF liste_parametres corps
+declaration_procedure: PROCEDURE IDF liste_parametres {
+                                                       if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
+							 fatal_error("regions_table_add");
+						       if(regions_stack_push(region) == -1)
+							 fatal_error("regions_stack_push");
+                                                      } corps
+
+                     {
+                       if((procedure = procedure_new(variables_buffer_get_size())) == NULL)
+			 fatal_error("procedure_new");
+		       variables_buffer_copy(procedure->params);
+		       variables_buffer_reset();
+		       
+		       region = regions_stack_top();
+		       regions_table_set_tree(region, $5);
+		       level--;
+		       regions_stack_pop();
+
+		       if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_PROCEDURE, regions_stack_top(), procedure, region))
+			 fatal_error("symbol_table_add");
+                     }
                      ;
       
-declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple corps
-                    ;
-          
+ declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
+                                                                           if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
+									     fatal_error("regions_table_add");
+									   if(regions_stack_push(region) == -1)
+									     fatal_error("regions_stack_push");
+                                                                          } corps
+		     {
+                       if((function = function_new(SYMBOL_OF($5), variables_buffer_get_size())) == NULL)
+			 fatal_error("function_new");
+		       variables_buffer_copy(function->params);
+		       variables_buffer_reset();
+		       
+		       region = regions_stack_top();
+		       regions_table_set_tree(region, $7);
+		       level--;
+		       regions_stack_pop();
+
+		       if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_FUNCTION, regions_stack_top(), function, region))
+			 fatal_error("symbol_table_add");
+                     }
+                     ;
+
 liste_parametres:
                 | PARENTHESE_OUVRANTE PARENTHESE_FERMANTE
                 | PARENTHESE_OUVRANTE liste_param PARENTHESE_FERMANTE
@@ -250,12 +300,14 @@ liste_param: un_param
            | liste_param VIRGULE un_param
            ;
           
-un_param: IDF DEUX_POINTS nom_type {variables_buffer_push($1, symbol_table_get(hashtable, $3, regions_stack_top()));}
+un_param: IDF DEUX_POINTS nom_type {variables_buffer_push($1, SYMBOL_OF($3));}
         ;
 
 /* -----------------------------------------------------*/
 /* Déclarations  : TYPES                                */
 /* -----------------------------------------------------*/
+
+/* Retourne un Hashkey de lexème */
 
 nom_type: type_simple {$$ = $1;}
         | IDF         {$$ = $1;}
@@ -265,7 +317,7 @@ type_simple: ENTIER                                              {$$ = LBASIC_IN
            | REEL                                                {$$ = LBASIC_FLOAT;}
            | BOOLEEN                                             {$$ = LBASIC_BOOL;}
            | CARACTERE                                           {$$ = LBASIC_CHAR;}
-           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = LBASIC_CHAR;}
+           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = LBASIC_CHAR;} /* ------------ A CORRIGER */
            ;
 
 /* -----------------------------------------------------*/
@@ -449,7 +501,7 @@ liste_variables: liste_variables VIRGULE variable {$$ = syntax_tree_add_brother(
 /* EXPRESSIONS                                          */
 /* -----------------------------------------------------*/
        
-resultat_retourne:            {syntax_tree_node_new(AT_EMPTY);}
+resultat_retourne:            {$$ = syntax_tree_node_new(AT_EMPTY);}
                  | expression {$$ = $1;}
                  ;
              

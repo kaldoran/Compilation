@@ -37,7 +37,13 @@ void regions_table_free(void);
 /* %param tree : Arbre représentatif de la région. */
 /* %return : Le niveau de la région actuelle ou la constante BAD_REGION en cas d'erreur. 
    Celle-ci symbolise une erreur d'allocation ou un dépassement de pile. */
-int regions_table_add(size_t size, size_t level, Syntax_tree *tree);
+int regions_table_add(size_t size, unsigned int level, Syntax_tree *tree);
+
+/** Définit l'arbre d'une région. */
+/* %param region : Numéro de la région. */
+/* %param tree : Arbre source. */
+/* %return : BAD_REGION si la région n'existe pas ou la région sinon. */
+int regions_table_set_tree(int region, Syntax_tree *tree);
 
 /** Affiche la table des régions. */
 void regions_table_print(void);

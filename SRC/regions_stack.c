@@ -9,17 +9,6 @@
 #include "regions_stack.h"
 
 /* ---------------------------------------------------------------------- */
-/* Structures internes (privées)                                          */
-/* ---------------------------------------------------------------------- */
-
-/** Un élément de la pile. */
-typedef struct Region_node
-{
-  int region;               /* Numéro de région. */
-  struct Region_node *next; /* Région suivante. */
-} Region_node;
-
-/* ---------------------------------------------------------------------- */
 /* Données internes (privées)                                             */
 /* ---------------------------------------------------------------------- */
 
@@ -67,7 +56,7 @@ int regions_stack_pop(void)
   int region;
 
   if(start == NULL)
-    return -1; /* Pile vide. */
+    return 0; /* Pile vide. */
 
   region = start->region;
   node = start;
@@ -82,7 +71,7 @@ int regions_stack_pop(void)
 int regions_stack_top(void)
 {
   if(start == NULL)
-    return -1; /* Pile vide. */
+    return 0; /* Pile vide. */
   return start->region;
 }
 
@@ -91,3 +80,7 @@ unsigned int regions_stack_get_size(void)
   return regions_stack_size;
 }
 
+Region_node *regions_stack_get_node(void)
+{
+  return start;
+}
