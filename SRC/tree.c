@@ -29,7 +29,12 @@
   }
 
 /** Racine d'un arbre. */
-#define ROOT(NODE) for(; NODE->father != NULL; NODE = NODE->father)
+#define ROOT(NODE)                                    \
+  if(1)                                               \
+  {                                                   \
+    for(; NODE->father != NULL; NODE = NODE->father); \
+    FIRST_BROTHER(NODE);			      \
+  }
 
 /** Teste si un noeud est orphelin. */
 #define ORPHAN_TEST(NODE)                                               \
@@ -92,7 +97,7 @@ void tree_foreach_node(Tree *t, void (*fun)(Tree *node))
   List *stack;
 
   ROOT(t);
-  
+
   if((stack = list_new()) == NULL || list_add_node(stack, t) == NULL)
     fatal_error("tree_foreach_node");
   

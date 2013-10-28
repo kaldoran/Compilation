@@ -1649,30 +1649,30 @@ yyreduce:
   case 26:
 #line 272 "SRC/yacc.y" /* yacc.c:1646  */
     {
-                                                                           if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
-									     fatal_error("regions_table_add");
-									   if(regions_stack_push(region) == -1)
-									     fatal_error("regions_stack_push");
-                                                                          }
+                                                                          if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
+									    fatal_error("regions_table_add");
+									  if(regions_stack_push(region) == -1)
+									    fatal_error("regions_stack_push");
+                                                                         }
 #line 1658 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
   case 27:
 #line 278 "SRC/yacc.y" /* yacc.c:1646  */
     {
-                       if((function = function_new(SYMBOL_OF((yyvsp[-2].hkey)), variables_buffer_get_size())) == NULL)
-			 fatal_error("function_new");
-		       variables_buffer_copy(function->params);
-		       variables_buffer_reset();
-		       
-		       region = regions_stack_top();
-		       regions_table_set_tree(region, (yyvsp[0].node));
-		       level--;
-		       regions_stack_pop();
-
+                      if((function = function_new(SYMBOL_OF((yyvsp[-2].hkey)), variables_buffer_get_size())) == NULL)
+			fatal_error("function_new");
+		      variables_buffer_copy(function->params);
+		      variables_buffer_reset();
+		      
+		      region = regions_stack_top();
+		      regions_table_set_tree(region, (yyvsp[0].node));
+		      level--;
+		      regions_stack_pop();
+		      
 		       if(!symbol_table_add(hashtable, (yyvsp[-5].hkey), SYMBOL_TYPE_FUNCTION, regions_stack_top(), function, region))
 			 fatal_error("symbol_table_add");
-                     }
+                    }
 #line 1677 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 
@@ -1726,7 +1726,7 @@ yyreduce:
 
   case 41:
 #line 327 "SRC/yacc.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[-1].node);}
+    {(yyval.node) = (yyvsp[-1].node); syntax_tree_print((yyvsp[-1].node));}
 #line 1731 "SRC/yacc.c" /* yacc.c:1646  */
     break;
 

@@ -147,9 +147,9 @@ programme: PROG corps {if(regions_table_add(0, 0, $2) == BAD_REGION)
 		         fatal_error("regions_table");}
          ;
           
- corps: liste_declarations START liste_instructions {$$ = $3;}
-     | START liste_instructions                     {$$ = $2;}
-     |                                              {$$ = syntax_tree_node_new(AT_EMPTY);}
+corps: liste_declarations START liste_instructions {$$ = $3;}
+     | START liste_instructions                    {$$ = $2;}
+     |                                             {$$ = syntax_tree_node_new(AT_EMPTY);}
      ;
 
 /* -----------------------------------------------------*/
@@ -269,27 +269,27 @@ declaration_procedure: PROCEDURE IDF liste_parametres {
                      }
                      ;
       
- declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
-                                                                           if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
-									     fatal_error("regions_table_add");
-									   if(regions_stack_push(region) == -1)
-									     fatal_error("regions_stack_push");
-                                                                          } corps
-		     {
-                       if((function = function_new(SYMBOL_OF($5), variables_buffer_get_size())) == NULL)
-			 fatal_error("function_new");
-		       variables_buffer_copy(function->params);
-		       variables_buffer_reset();
-		       
-		       region = regions_stack_top();
-		       regions_table_set_tree(region, $7);
-		       level--;
-		       regions_stack_pop();
-
+declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
+                                                                          if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
+									    fatal_error("regions_table_add");
+									  if(regions_stack_push(region) == -1)
+									    fatal_error("regions_stack_push");
+                                                                         } corps
+		    {
+                      if((function = function_new(SYMBOL_OF($5), variables_buffer_get_size())) == NULL)
+			fatal_error("function_new");
+		      variables_buffer_copy(function->params);
+		      variables_buffer_reset();
+		      
+		      region = regions_stack_top();
+		      regions_table_set_tree(region, $7);
+		      level--;
+		      regions_stack_pop();
+		      
 		       if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_FUNCTION, regions_stack_top(), function, region))
 			 fatal_error("symbol_table_add");
-                     }
-                     ;
+                    }
+                    ;
 
 liste_parametres:
                 | PARENTHESE_OUVRANTE PARENTHESE_FERMANTE
@@ -324,7 +324,7 @@ type_simple: ENTIER                                              {$$ = LBASIC_IN
 /* Instructions                                         */
 /* -----------------------------------------------------*/
 
-liste_instructions: ACC_DEBUT suite_liste_inst ACC_FIN {$$ = $2;}
+liste_instructions: ACC_DEBUT suite_liste_inst ACC_FIN {$$ = $2; syntax_tree_print($2);}
                   ;
           
 suite_liste_inst: instruction                  {$$ = $1;}
