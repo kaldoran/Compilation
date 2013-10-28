@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "lexeme_table.h"
 #include "regions_table.h"
 #include "description_table.h"
@@ -18,5 +19,6 @@
 #include "regions_stack.h"
 #include "mystring.h"
 #include "error.h"
+#include "y.tab.h"
 
 #endif /* _KERNEL_ INCLUDED */

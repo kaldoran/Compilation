@@ -324,7 +324,7 @@ type_simple: ENTIER                                              {$$ = LBASIC_IN
 /* Instructions                                         */
 /* -----------------------------------------------------*/
 
-liste_instructions: ACC_DEBUT suite_liste_inst ACC_FIN {$$ = $2; syntax_tree_print($2);}
+liste_instructions: ACC_DEBUT suite_liste_inst ACC_FIN {$$ = $2;}
                   ;
           
 suite_liste_inst: instruction                  {$$ = $1;}
@@ -392,10 +392,14 @@ suite_variable: CROCHET_OUVRANT expression CROCHET_FERMANT suite_variable {$$ = 
   
 condition: SI expression ALORS liste_instructions                          {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF),
                                                                                  syntax_tree_add_brother($2, $4));}
-         | SI expression ALORS liste_instructions SINON liste_instructions {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF_ELSE),
-	     			       					         syntax_tree_add_brother($2, syntax_tree_add_brother($4, $6)));}
-         | SI expression ALORS liste_instructions SINON condition          {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF_ELSE),
-									         syntax_tree_add_brother($2, syntax_tree_add_brother($4, $6)));}
+   | SI expression ALORS liste_instructions SINON liste_instructions 
+
+   {$$ = syntax_tree_add_brother(syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF), syntax_tree_add_brother($2, $4)), 
+     syntax_tree_add_son(syntax_tree_node_new(AT_CTL_ELSE), $6));}
+
+         | SI expression ALORS liste_instructions SINON condition        
+     {$$ = syntax_tree_add_brother(syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF), syntax_tree_add_brother($2, $4)), 
+     syntax_tree_add_son(syntax_tree_node_new(AT_CTL_ELSE), $6));}
          ;
 
 /* -----------------------------------------------------*/

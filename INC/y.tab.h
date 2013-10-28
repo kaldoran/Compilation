@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_SRC_YACC_H_INCLUDED
-# define YY_YY_SRC_YACC_H_INCLUDED
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -118,13 +118,85 @@ extern int yydebug;
     IDF = 328
   };
 #endif
+/* Tokens.  */
+#define VIDE 258
+#define RAND 259
+#define ECRIRE 260
+#define LIRE 261
+#define CROCHET_OUVRANT 262
+#define CROCHET_FERMANT 263
+#define VIRGULE 264
+#define POINT_VIRGULE 265
+#define POINT 266
+#define PARENTHESE_OUVRANTE 267
+#define PARENTHESE_FERMANTE 268
+#define DEUX_POINTS 269
+#define POINT_ET_POINT 270
+#define INTERROGATION 271
+#define OPAFF 272
+#define PROG 273
+#define ACC_DEBUT 274
+#define ACC_FIN 275
+#define SI 276
+#define ALORS 277
+#define SINON 278
+#define TANT_QUE 279
+#define POUR 280
+#define FAIRE 281
+#define RETOURNE 282
+#define STRUCT 283
+#define FSTRUCT 284
+#define TABLEAU 285
+#define TYPE 286
+#define DE 287
+#define PROCEDURE 288
+#define FONCTION 289
+#define VARIABLE 290
+#define SWITCH 291
+#define CASE 292
+#define DEFAULT 293
+#define ENTIER 294
+#define REEL 295
+#define BOOLEEN 296
+#define CARACTERE 297
+#define CHAINE 298
+#define PLUS 299
+#define MOINS 300
+#define MULTIPLICATION 301
+#define DIVISION 302
+#define MODULO 303
+#define PLUS_ET_PLUS 304
+#define MOINS_ET_MOINS 305
+#define NEGATION 306
+#define PLUS_EGAL 307
+#define MOINS_EGAL 308
+#define MULT_EGAL 309
+#define DIV_EGAL 310
+#define MODULO_EGAL 311
+#define INFERIEUR 312
+#define SUPERIEUR 313
+#define INFERIEUR_OU_EGAL 314
+#define SUPERIEUR_OU_EGAL 315
+#define EGAL 316
+#define DIFFERENT 317
+#define ET 318
+#define OU 319
+#define CONTINUE 320
+#define BREAK 321
+#define START 322
+#define CSTE_ENTIERE 323
+#define CSTE_REELLE 324
+#define CSTE_CARACTERE 325
+#define CSTE_BOOLEENNE 326
+#define CSTE_CHAINE 327
+#define IDF 328
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 24 "SRC/yacc.y" /* yacc.c:1909  */
+#line 24 "SRC/y.tab.y" /* yacc.c:1909  */
 
   int val_i; 
   float val_f; 
@@ -133,7 +205,7 @@ union YYSTYPE
   Hashkey hkey;
   Syntax_tree *node;
 
-#line 137 "SRC/yacc.h" /* yacc.c:1909  */
+#line 209 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -144,4 +216,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_SRC_YACC_H_INCLUDED  */
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */

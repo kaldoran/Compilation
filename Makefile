@@ -10,12 +10,12 @@ OBJ_DIR = OBJ
 BIN_DIR = BIN
 
 # Yacc & lex commandes
-CMD_YACC = bison
-CMD_LEX = flex
+CMD_YACC = yacc
+CMD_LEX = lex
 
 # Yacc & lex .c et .h
-YACC = yacc
-LEX = lex
+YACC = y.tab
+LEX = lex.yy
 OUT_YACC_LEX = $(SRC_DIR)/$(YACC).c $(SRC_DIR)/$(LEX).c
 
 # Compilation flags
@@ -50,8 +50,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
 
 parse:
-	$(CMD_YACC) -d $(SRC_DIR)/$(YACC).y -o $(SRC_DIR)/$(YACC).c
-	mv $(SRC_DIR)/$(YACC).h $(INC_DIR)
+	$(CMD_YACC) -d $(SRC_DIR)/$(YACC).y
+	mv $(YACC).h $(INC_DIR) && mv $(YACC).c $(SRC_DIR)
 	$(CMD_LEX) -t $(SRC_DIR)/$(LEX).l > $(SRC_DIR)/$(LEX).c
 
 clean:

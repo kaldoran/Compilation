@@ -1,6 +1,5 @@
 %{
   #include "kernel.h"
-  #include "yacc.h"
 
   #ifdef YY_NEED_STRLEN
     #undef YY_NEED_STRLEN

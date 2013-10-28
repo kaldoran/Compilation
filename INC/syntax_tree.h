@@ -57,7 +57,7 @@
 
 /** Contrôleurs. */
 #define AT_CTL_IF       27 /* if */
-#define AT_CTL_IF_ELSE  28 /* else */
+#define AT_CTL_ELSE     28 /* else */
 #define AT_CTL_WHILE    29 /* while */
 #define AT_CTL_DO_WHILE 30 /* do while */
 #define AT_CTL_FOR      31 /* for */
