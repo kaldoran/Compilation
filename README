@@ -21,7 +21,7 @@
 	Une fois dans ce dossier taper la commence "make" ou "make all"
      pour lancer la compilation.
 
-	Un exécutable au nom de "prog" sera créé dans le dossier 
+	Un exécutable au nom de "prog" sera créée dans le dossier 
 	BIN.
 	
 	En cas de soucis essayer la commande "make rebuild" si le soucis 
@@ -58,22 +58,6 @@ Note :
 .
 +--- defound
 +--- Makefile
-+--- OBJ
-|   +--- variables_buffer.o
-|   +--- dimensions_buffer.o
-|   +--- mystring.o
-|   +--- symbol_table.o
-|   +--- regions_stack.o
-|   +--- error.o
-|   +--- regions_table.o
-|   +--- syntax_tree.o
-|   +--- description_table.o
-|   +--- main.o
-|   +--- lexeme_table.o
-|   +--- hashtable.o
-|   +--- list.o
-|   +--- stack.o
-|   +--- tree.o
 +--- INC
 |   +--- regions_table.h
 |   +--- symbol_table.h
@@ -95,7 +79,6 @@ Note :
 |   +--- description_table.h
 +--- README.md
 +--- BIN
-|   +--- prog
 +--- TODO
 +--- SRC
 |   +--- list.c
