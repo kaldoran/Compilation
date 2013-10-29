@@ -1,10 +1,10 @@
 [PRENOM]	|			[ TODO ]		|	[STATUS]
 -------------------------------------------------------------------------------------
-Florian		| Représentation des types			|
-		| Entete de sous programme 			|
+Florian		| Représentation des types			|  Fait 
+		| Entete de sous programme 			|  Fait
 		|						|
 		|						|
-Ronan		| Exemples fonctionnels				|
+Ronan		| Modifications yacc				|  Fait
 		|						|
 		|						|
 		|						|
@@ -12,13 +12,10 @@ Nicolas		| Ajout yyparse - yytext etc dans lex.l		|  Fait par Ronan
 		| Modification syntaxe_tree ajout des #define	|  Fait
 		|  	Manquant				|
 		| Ajout dans l'affichage de l'arbre		|  Fait perl.l 
-		|  	Afficher la vrai valeur pas juste le    |
+		|  	Afficher la vrai valeur pas juste le    | 
 		|       chiffre					|
-		| Exemples fonctionnels				| 
-		|						|
--------------------------------------------------------------------------------------
-Flo + nico 	| Pile des regions				|
--------------------------------------------------------------------------------------
-Restant 	: Modification yacc
+		| Exemples fonctionnels				|  En cours
+		| Pile des regions 				|  Fait
+--------------------------------------------------------------------------------------
 
-
+Reste quoi ? mis a part les exemples fonctionnels
