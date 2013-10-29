@@ -1,0 +1,118 @@
+# ------------------------------------------------ #
+# Auteurs:                                         #
+# 						   				 #
+#   ABHAMON Ronan	                           	 #
+#   BIGARD Florian				   			 #		
+#   REYNAUD Nicolas				   			 #
+# ------------------------------------------------ #
+
+
+--------------------------------------------------------
+    INSTALLATION
+--------------------------------------------------------
+
+
+	Pour installer le programme commencer par décompresser	l'archive 
+	dans le dossier de votre choix.
+	
+	Ensuite a l'aide du terminal accéder au fichier nouvellement crée 
+	lors de la décompression.
+	
+	Une fois dans ce dossier taper la commence "make" ou "make all"
+     pour lancer la compilation.
+
+	Un exécutable au nom de "prog" sera créé dans le dossier 
+	BIN.
+	
+	En cas de soucis essayer la commande "make rebuild" si le soucis 
+	persiste , merci de nous contacter.
+
+--------------------------------------------------------
+    DESINSTALLATION
+--------------------------------------------------------
+
+	Pour désinstaller le programme placer vous dans le dossier
+	où le fichier makefile est présent.
+
+	Taper ensuite simplement la commande "make mrproper"
+
+	Cette commande supprimera le contenu du fichier 
+	OBJ et l'exécutable "prog".
+	
+	
+--------------------------------------------------------
+    UTILISATION
+--------------------------------------------------------
+
+	Uilisez simplement "./prog < <prog source>" pour executer un 
+	programme.
+
+Note : 
+	La commande "./prog < <prog source>" donne les détails du parsage.
+	Et affiche les lexemes; les symboles les regions avec l'arbre
+	correspondant.
+
+--------------------------------------------------------
+    LISTING FICHIER 
+--------------------------------------------------------
+.
++--- defound
++--- Makefile
++--- OBJ
+|   +--- variables_buffer.o
+|   +--- dimensions_buffer.o
+|   +--- mystring.o
+|   +--- symbol_table.o
+|   +--- regions_stack.o
+|   +--- error.o
+|   +--- regions_table.o
+|   +--- syntax_tree.o
+|   +--- description_table.o
+|   +--- main.o
+|   +--- lexeme_table.o
+|   +--- hashtable.o
+|   +--- list.o
+|   +--- stack.o
+|   +--- tree.o
++--- INC
+|   +--- regions_table.h
+|   +--- symbol_table.h
+|   +--- list.h
+|   +--- mystring.h
+|   +--- regions_stack.h
+|   +--- private_tree.h
+|   +--- error.h
+|   +--- kernel.h
+|   +--- y.tab.h
+|   +--- syntax_tree.h
+|   +--- dimensions_buffer.h
+|   +--- lexeme_table.h
+|   +--- variables_buffer.h
+|   +--- hashtable.h
+|   +--- tree.h
+|   +--- ptypes.h
+|   +--- private_list.h
+|   +--- description_table.h
++--- README.md
++--- BIN
+|   +--- prog
++--- TODO
++--- SRC
+|   +--- list.c
+|   +--- hashtable.c
+|   +--- dimensions_buffer.c
+|   +--- main.c
+|   +--- variables_buffer.c
+|   +--- symbol_table.c
+|   +--- syntax_tree.c
+|   +--- y.tab.y
+|   +--- regions_table.c
+|   +--- tree.c
+|   +--- regions_stack.c
+|   +--- lex.yy.c
+|   +--- lex.yy.l
+|   +--- error.c
+|   +--- lexeme_table.c
+|   +--- y.tab.c
+|   +--- mystring.c
+|   +--- description_table.c
