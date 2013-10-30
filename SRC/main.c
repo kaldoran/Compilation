@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
   extern Hashtable *hashtable;
 
   int ret = 0;
-  int options;
+  int options = 0;
 
   char input[BUFFER_SIZE_MAX] = "";
   char output[BUFFER_SIZE_MAX] = OUTPUT_FILENAME;
