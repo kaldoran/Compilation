@@ -21,7 +21,7 @@ OUT_YACC_LEX = $(SRC_DIR)/$(YACC).c $(SRC_DIR)/$(LEX).c
 # Compilation flags
 
 CXX = gcc
-CXXFLAGS = -Wall -pedantic -ansi
+CXXFLAGS = -Wall -pedantic
 LDFLAGS = -ly -lfl
 
 ifeq ($(DEBUG), yes)
