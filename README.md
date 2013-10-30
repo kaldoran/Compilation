@@ -1,61 +1,41 @@
-# ------------------------------------------------ #
-# Auteurs:                                         #
-# 						   #
-#   ABHAMON Ronan	                           #
-#   BIGARD Florian				   #		
-#   REYNAUD Nicolas				   #
-# ------------------------------------------------ #
+Projet de Compilation L3 - Info (Jean Monnet)
+============================================
 
+INSTALLATION
+------------
 
---------------------------------------------------------
-    INSTALLATION
---------------------------------------------------------
+Décompresser l'archive dans le dossier de votre choix ou cloner le repository.
 
+Puis, dans le dossier créé, lancer la commande suivante pour compiler : 
+    make
 
-	Pour installer le programme commencer par décompresser	l'archive 
-	dans le dossier de votre choix.
-	
-	Ensuite a l'aide du terminal accéder au fichier nouvellement crée 
-	lors de la décompression.
-	
-	Une fois dans ce dossier taper la commence "make" ou "make all"
-     pour lancer la compilation.
+Un exécutable au nom de "prog" sera créé dans le dossier BIN.
 
-	Un exécutable au nom de "prog" sera créé dans le dossier 
-	BIN.
-	
-	En cas de soucis essayer la commande "make rebuild" si le soucis 
-	persiste , merci de nous contacter (contactez Nico, moi j'ai rien
-    à voir la dedans).
+En cas de soucis essayer la commande 
+    make rebuild
+Si le soucis persiste, merci de contacter Reynaud Nicolas au 06 79 00...
 
---------------------------------------------------------
-    DESINSTALLATION
---------------------------------------------------------
-
-	Pour désinstaller le programme placer vous dans le dossier
-	où le fichier makefile est présent.
-
-	Taper ensuite simplement la commande "make mrproper"
-
-	Cette commande supprimera le contenu du fichier 
-	OBJ et l'exécutable "prog".
+DÉSINSTALLATION
+---------------
+Se déplacer à la racine du dossier (dans le répertoire du Makefile) puis exécuter la commande suivante : 
+    make mrproper
+Cette commande supprimera le contenu du fichier OBJ et l'exécutable "prog".
 	
 	
---------------------------------------------------------
-    UTILISATION
---------------------------------------------------------
+UTILISATION
+-----------
+	Uilisez simplement la commande suivante pour exécuter un programme : 
+    ./prog < <prog source>
 
-	Uilisez simplement "./prog < <prog source>" pour executer un 
-	programme.
+NOTE
+----
+La commande 
+    ./prog < <prog source>
+donne les détails du parsage et affiche les lexèmes, les symboles et les régions avec l'arbre correspondant.
 
-Note : 
-	La commande "./prog < <prog source>" donne les détails du parsage.
-	Et affiche les lexemes; les symboles les regions avec l'arbre
-	correspondant.
 
---------------------------------------------------------
-    LISTING FICHIER 
---------------------------------------------------------
+LISTING FICHIER 
+---------------
 .
 +--- defound
 +--- Makefile
