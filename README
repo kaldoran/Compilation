@@ -21,7 +21,7 @@
 	Une fois dans ce dossier taper la commence "make" ou "make all"
      pour lancer la compilation.
 
-	Un exécutable au nom de "prog" sera créée dans le dossier 
+	Un exécutable au nom de "prog" sera créé dans le dossier 
 	BIN.
 	
 	En cas de soucis essayer la commande "make rebuild" si le soucis 
