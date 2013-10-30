@@ -44,6 +44,14 @@ typedef Hashtable Symbol_table;
 /** Type d'une déclaration. */
 typedef char Type;
 
+/** Allouer une nouvelle déclaration. */
+/* %param type : Type/Nature du symbole. */
+/* %param region : Region du symbole. */
+/* %param index : Index sur la table de description ou de symboles. */
+/* %param exec : Taille à l'execution. */
+/* %return : Une nouvelle déclaration ou NULL en cas d'erreur d'allocation. */
+Symbol *symbol_new(char type, int region, Index_t index, size_t exec);
+
 /** Initialise la table des déclarations. */
 /* Définit les types de base + Init des lexèmes de base. */
 /* %param table : Table des déclarations. */

@@ -34,9 +34,7 @@ typedef struct Dimension
 typedef struct Structure
 {
   unsigned int field_number; /* Nombre de champs de la structure. */
-  Hashkey hkey;              /* Numéro lexicographique. */
   Field *field;              /* Tableau des champs de la structure. */
-  size_t exec;               /* Taille à l'execution. */
 } Structure;
 
 /** Structure d'un tableau. */

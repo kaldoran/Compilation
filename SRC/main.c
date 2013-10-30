@@ -6,6 +6,7 @@
 /* ---------------------------------------------------------------------- */
 
 #include "kernel.h"
+#include "save.h"
 
 extern int yyparse(void);
 extern int yylex_destroy(void);
@@ -19,8 +20,9 @@ extern Hashtable *hashtable;
 
 int main(void)
 {
-  int ret;
+  int ret = 0;
 
+  #ifdef OOOO
   /* Initialisation */
   hashtable = hashtable_new();
   symbol_table_init(hashtable);
@@ -40,10 +42,16 @@ int main(void)
     regions_table_print();
   }
   
+  /* Sauvegarde */
+  save("test", hashtable);
+
   /* Libération */
   yylex_destroy();
   hashtable_free(hashtable, symbol_table_free);
   regions_table_free();
   
+  #endif
+
+  load("test");
   exit(ret);
 }

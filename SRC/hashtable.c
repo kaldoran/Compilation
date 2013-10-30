@@ -10,37 +10,9 @@
 #include <string.h>
 #include "private_list.h"
 #include "list.h"
+#include "private_hashtable.h"
 #include "hashtable.h"  
 #include "error.h"
-
-/** Cast d'un noeud de la table de Hachage en Hashvalue. */
-#define HNVALUE(NODE) ((Hashvalue *)NODE->value)
-
-/** Calcule l'index d'un Hashcode. */
-#define HCODE(HASH, ID) (hashcode(ID) % HASH->size_max)
-
-/* ---------------------------------------------------------------------- */
-/* Structures internes (privées)                                          */
-/* ---------------------------------------------------------------------- */
-
-/** Structure d'une table de Hachage. */
-struct Hashtable
-{
-  unsigned int size;     /* Nombre d'éléments dans la table. */
-  unsigned int size_max; /* Nombre d'éléments max dans la table. */
-  List **array;          /* Tableau de pointeurs sur les listes d'éléments. */
-  List *hvalues;         /* Pointeur sur valeurs/clefs. Permet d'éviter de parcourir
-                            toute la table pour appliquer une fonction sur toutes
-                            les valeurs. */
-};
-
-/** Valeur d'un élément d'une table de Hachage. */
-typedef struct Hashvalue
-{
-  char *id;    /* Référence de la valeur. (Key) */
-  size_t len;  /* Longueur de la référence. */
-  void *value; /* Valeur. */
-} Hashvalue;
 
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
@@ -187,6 +159,11 @@ unsigned int hashtable_get_size(Hashtable *h)
   return h->size;
 }
 
+unsigned int hashtable_get_size_max(Hashtable *h)
+{
+  return h->size_max;
+}
+
 const char *hashtable_get_id(Hashtable *h, Hashkey hkey)
 {
   (void)h;
@@ -303,6 +280,26 @@ Hashkey hashtable_add_value(Hashtable *h, const char *id, void *value)
   return hvalue;
 }
  
+void hashtable_foreach_key(Hashtable *h, void (*fun)(const char *key, void *value), void *value)
+{
+  List_node *ln;
+
+  for(ln = h->hvalues->start; ln != NULL; ln = ln->next)
+    fun(HNVALUE(ln)->id, value);
+
+  return;
+}
+
+void hashtable_foreach_value(Hashtable *h, void (*fun)(void *value, void *cvalue), void *cvalue)
+{
+  List_node *ln;
+
+  for(ln = h->hvalues->start; ln != NULL; ln = ln->next)
+    fun(HNVALUE(ln)->value, cvalue);
+
+  return;
+}
+
 void hashtable_print(Hashtable *h, void (*fun)(void *value))
 {
   List_node *ln;

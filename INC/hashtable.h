@@ -60,6 +60,11 @@ Hashtable *hashtable_resize(Hashtable *h, size_t size);
 /* %return : Le nombre d'éléments de la table de Hachage. */
 unsigned int hashtable_get_size(Hashtable *h);
 
+/** Récupère la taille max d'une table de Hachage. */
+/* %param h : La Hashtable. */
+/* %return : La taille max de la table. */
+unsigned int hashtable_get_size_max(Hashtable *h);
+
 /** Récupère la chaine relative à une clef de Hachage. */
 /* %param h : La Hashtable contenant l'id recherché. */
 /* %param hkey : Clef de Hachage de l'id recherché. */ 
@@ -111,6 +116,16 @@ Hashkey hashtable_exists_id(Hashtable *h, const char *id);
 /* %param value : Valeur de l'élément. */
 /* %return : Retourne une clef. */
 Hashkey hashtable_add_value(Hashtable *h, const char *key, void *value);
+
+/** Execute une fonction sur chaque clef d'une table de Hachage. */
+/* %param h : Hashtable à traiter. */
+/* %param fun : Fonction appellée pour chaque clef. */
+void hashtable_foreach_key(Hashtable *h, void (*fun)(const char *key, void *value), void *value);
+
+/** Execute une fonction sur chaque valeur d'une table de Hachage. */
+/* %param h : Hashtable à traiter. */
+/* %param fun : Fonction appellée pour chaque valeur. */
+void hashtable_foreach_value(Hashtable *h, void (*fun)(void *value, void *cvalue), void *cvalue);
 
 /** Affiche le contenu d'une table de Hachage. */
 /* %param h : Hashtable à afficher. */

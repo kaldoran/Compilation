@@ -52,7 +52,7 @@ static void symbol_print(void *symbol)
       default: printf("UNKNOWN"); break;
     }
 
-    printf(", Region=%d, Index=%p, Size=%lu)", s->region, s->index, (long unsigned int)s->exec);
+    printf(", Region=%d, Index=%p, Size=%lu, Adress=%p)", s->region, s->index, (long unsigned int)s->exec, (void *)s);
   }
   
   printf("\n");
@@ -62,6 +62,22 @@ static void symbol_print(void *symbol)
 
 /* ---------------------------------------------------------------------- */
 
+Symbol *symbol_new(char type, int region, Index_t index, size_t exec)
+{
+  Symbol *sym = malloc(sizeof *sym);
+
+  if(sym == NULL)
+    return NULL; /* Bad alloc. */
+  
+  sym->type = type;
+  sym->region = region;
+  sym->index = index;
+  sym->next = NULL;
+  sym->exec = exec;
+    
+  return sym;
+}
+
 void symbol_table_init(Symbol_table *table)
 {
   Symbol *sym;
@@ -70,14 +86,8 @@ void symbol_table_init(Symbol_table *table)
   
   for(i = 0; i < SYMBOL_BASIC_MAX; i++)
   {
-    if((sym = malloc(sizeof *sym)) == NULL)
+    if((sym = symbol_new(SYMBOL_TYPE_BASE, 0, NULL, 1)) == NULL)
       fatal_error("symbol_table_init");
-
-    sym->type = SYMBOL_TYPE_BASE;
-    sym->exec = 1;
-    sym->next = NULL;
-    sym->index = NULL;
-    sym->region = 0;
 
     symbol_basic[i] = sym;
 
@@ -125,18 +135,12 @@ void symbol_table_free(void *sym)
 bool symbol_table_add(Symbol_table *table, Hashkey hkey, Type type, 
                       int region, Index_t index, size_t exec)
 {
-  Symbol *sym = malloc(sizeof *sym);
+  Symbol *sym;
   Symbol *origin;
-
-  if(sym == NULL)
-    return false; /* Bad alloc. */
   
-  sym->type = type;
-  sym->region = region;
-  sym->index = index;
-  sym->next = NULL;
-  sym->exec = exec;
-    
+  if((sym = symbol_new(type, region, index, exec)) == NULL)
+    return false;
+
   /* Si le champ est déjà pris. */
   if((origin = hashtable_get_value_by_key(table, hkey)) != NULL)
   {
