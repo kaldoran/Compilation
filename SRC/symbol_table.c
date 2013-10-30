@@ -43,12 +43,12 @@ static void symbol_print(void *symbol)
 
     switch(s->type)
     {
-      case SYMBOL_TYPE_BASE:      printf("BASE");   break;
-      case SYMBOL_TYPE_STRUCT:    printf("STRUCT"); break;
-      case SYMBOL_TYPE_ARRAY:     printf("ARRAY");  break;
-      case SYMBOL_TYPE_VAR:       printf("VAR");    break;
-      case SYMBOL_TYPE_PROCEDURE: printf("PROC");   break;
-      case SYMBOL_TYPE_FUNCTION:  printf("FUNC");   break;
+      case SYMBOL_TYPE_BASE:      printf("BASE");                            break;
+      case SYMBOL_TYPE_STRUCT:    printf("STRUCT");  struct_print(s->index); break;
+      case SYMBOL_TYPE_ARRAY:     printf("ARRAY");   array_print(s->index);  break;
+      case SYMBOL_TYPE_VAR:       printf("VAR");                             break;
+      case SYMBOL_TYPE_PROCEDURE: printf("PROC");    proc_print(s->index);   break;
+      case SYMBOL_TYPE_FUNCTION:  printf("FUNC");    func_print(s->index);   break;
       default: printf("UNKNOWN"); break;
     }
 
