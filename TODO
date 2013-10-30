@@ -19,3 +19,9 @@ Nicolas		| Ajout yyparse - yytext etc dans lex.l		|  Fait par Ronan
 --------------------------------------------------------------------------------------
 
 Reste quoi ? mis a part les exemples fonctionnels
+
+--------------------------------------------------------------------------------------
+MAJ TODO :
+	-> Gestion string
+	-> Sauvegarde arbres
+	-> ?!? 
