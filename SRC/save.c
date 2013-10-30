@@ -351,12 +351,10 @@ Hashtable *load(const char *filename)
 	}
       }
  
-  symbol_table_print(h);
-  hashtable_free(h, symbol_table_free);
   free(index_array);
   fclose(file);
 
-  return NULL;
+  return h;
 }
 
 
