@@ -344,7 +344,7 @@ instruction: POINT_VIRGULE                            {$$ = syntax_tree_node_new
            | instr_pre POINT_VIRGULE                  {$$ = $1;}
            ;
      
-instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE                         {$$ = syntax_tree_node_new(AT_FUN_READ);}
+instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE                         {$$ = syntax_tree_node_new(AT_FUN_RAND);}
          | ECRIRE PARENTHESE_OUVRANTE format suite_ecriture PARENTHESE_FERMANTE {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE), 
                                                                                                           syntax_tree_add_brother($3, $4));}
          | LIRE PARENTHESE_OUVRANTE liste_variables PARENTHESE_FERMANTE         {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), 

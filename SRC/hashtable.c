@@ -18,7 +18,7 @@
 /* Fonctions internes (privées)                                           */
 /* ---------------------------------------------------------------------- */
 
-/** Alloue et initialize une structure Hashvalue. */
+/** Alloue et initialise une structure Hashvalue. */
 /* %param id : Id (chaine) servant à générer la clef de Hachage. */
 /* %param value : Valeur à stocker. */
 /* %return : Une structure Hashvalue initialisée ou NULL en cas d'échec. */
