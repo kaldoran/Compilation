@@ -95,23 +95,23 @@ void function_free(Function *f);
 Procedure *procedure_new(unsigned int param_number);
 
 /** Libère une procédure. */
-/* %param *p : Procédure à libérer. */
-void procedure_free(Procedure *p);
+/* %param p : Procédure à libérer. */
+void procedure_free(Procedure *procedure);
 
 /** Affiche une structure. */
 /* %param *structure : Structure à afficher. */
-void struct_print(Structure *structure);
+void structure_print(Structure *structure);
 
 /** Affiche une procédure. */
-/* %param *procedure : Procédure à afficher. */
-void proc_print(Procedure *procedure);
+/* %param procedure : Procédure à afficher. */
+void procedure_print(Procedure *procedure);
 
 /** Affiche une fonction. */
-/* %param *function : Fonction à afficher. */
-void func_print(Function *function);
+/* %param function : Fonction à afficher. */
+void function_print(Function *function);
 
 /** Affiche un tableau. */
-/* %param *array : Tableau à afficher. */
+/* %param array : Tableau à afficher. */
 void array_print(Array *array);
 
 #endif /* _DESCRIPTION_TABLE_ INCLUDED */

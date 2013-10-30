@@ -22,7 +22,7 @@ int main(void)
 {
   int ret = 0;
 
-  /*#ifdef OOOO*/
+#if 1
   /* Initialisation */
   hashtable = hashtable_new();
   symbol_table_init(hashtable);
@@ -49,9 +49,8 @@ int main(void)
   yylex_destroy();
   hashtable_free(hashtable, symbol_table_free);
   regions_table_free();
-  
-  /*#endif
-
-  load("test");*/
+ 
+#endif
+  /*load("test");*/
   exit(ret);
 }

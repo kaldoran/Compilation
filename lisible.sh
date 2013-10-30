@@ -4,16 +4,16 @@
 
 # utilisation : ./lisible.sh [Nom fichier]
 
-if test -z "$1"; then
-     echo "Erreur : Il faut 1 argument au minimum."
+if test -z "$2"; then
+     echo "Erreur : Il faut 2 arguments au minimum."
      echo -e "$0 [fichier]"
      exit 1
 else
-     ./BIN/prog < $1 > out;
+     cat $1 > $2;
      i=0
-     for j in $(grep -o "0x[^,) ]*" out); do
+     for j in $(grep -o "0x[^,) ]*" $2); do
 	echo "$j -> $i";
-	sed -i "s/$j/$i/g" out
+	sed -i "s/$j/$i/g" $2
 	i=$(( i + 1 ));
      done	
 fi	

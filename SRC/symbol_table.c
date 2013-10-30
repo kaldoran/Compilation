@@ -43,16 +43,17 @@ static void symbol_print(void *symbol)
 
     switch(s->type)
     {
-      case SYMBOL_TYPE_BASE:      printf("BASE");                            break;
-      case SYMBOL_TYPE_STRUCT:    printf("STRUCT");  struct_print(s->index); break;
-      case SYMBOL_TYPE_ARRAY:     printf("ARRAY");   array_print(s->index);  break;
-      case SYMBOL_TYPE_VAR:       printf("VAR");                             break;
-      case SYMBOL_TYPE_PROCEDURE: printf("PROC");    proc_print(s->index);   break;
-      case SYMBOL_TYPE_FUNCTION:  printf("FUNC");    func_print(s->index);   break;
+      case SYMBOL_TYPE_BASE:      printf("BASE");                               break;
+      case SYMBOL_TYPE_STRUCT:    printf("STRUCT");  structure_print(s->index); break;
+      case SYMBOL_TYPE_ARRAY:     printf("ARRAY");   array_print(s->index);     break;
+      case SYMBOL_TYPE_VAR:       printf("VAR");                                break;
+      case SYMBOL_TYPE_PROCEDURE: printf("PROC");    procedure_print(s->index); break;
+      case SYMBOL_TYPE_FUNCTION:  printf("FUNC");    function_print(s->index);  break;
       default: printf("UNKNOWN"); break;
     }
 
-    printf(", Region=%d, Index=%p, Size=%lu, Adress=%p)", s->region, s->index, (long unsigned int)s->exec, (void *)s);
+    printf(", Region=%d, Index=%p, Size=%lu, Adress=%p)", s->region, s->index, 
+	   (long unsigned int)s->exec, (void *)s);
   }
   
   printf("\n");
