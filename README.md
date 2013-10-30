@@ -30,12 +30,15 @@ Cette commande supprimera le contenu du fichier OBJ et l'exécutable "prog".
 UTILISATION
 -----------
 Utiliser simplement la commande suivante pour exécuter un programme : 
+
     ./prog < <prog source>
 
 NOTE
 ----
-La commande 
+La commande : 
+
     ./prog < <prog source>
+
 donne les détails du parsage et affiche les lexèmes, les symboles et les régions avec l'arbre correspondant.
 
 
