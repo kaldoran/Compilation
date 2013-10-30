@@ -253,7 +253,7 @@ Hashtable *load(const char *filename)
       if((s = calloc(1, sizeof *s)) == NULL)
 	fatal_error("load");
       
-      sscanf(buffer, "S %d %d %d %lu\n", (int *)&s->type, &s->region, &j, &s->exec);
+      sscanf(buffer, "S %d %d %d %lu\n", (int *)&s->type, &s->region, &j, (unsigned long int *)&s->exec);
       index_array[i++] = s;
       
       /* Si aucune déclaration. */
