@@ -1,6 +1,6 @@
 4096
-41
-21
+22
+13
 L int 0
 S 0 0 -1 1
 L float 1
@@ -9,99 +9,44 @@ L bool 2
 S 0 0 -1 1
 L char 3
 S 0 0 -1 1
-L date 4
-S 1 0 -1 0
-3
-0 jour
-0 mois
-0 annee
-L jour -1
-L mois -1
-L annee -1
-L adresse 5
-S 1 0 -1 0
-7
-0 numero
-2 estrue
-2 estchemin
-2 estboulevard
-2 estautre
-3 adresse
-0 codePostal
-L numero -1
-L estrue -1
-L estchemin -1
-L estboulevard -1
-L estautre -1
-L codePostal -1
-L contact 6
-S 1 0 -1 0
-7
-3 nom
-3 prenom
-4 date_naissance
-2 marier
-4 dateajout
-3 email
-5 adresse_contact
-L nom -1
-L prenom -1
-L date_naissance -1
-L marier -1
-L dateajout -1
-L email -1
-L adresse_contact -1
-L carnet 7
+L banana 4
+S 3 0 0 0
+L ensembleFruit 5
 S 2 0 -1 0
-2 6
+1 -1
 0 100
-0 100
-L moncarnet 8
-S 3 0 7 0
-L datetime 9
-S 3 0 4 0
-L init_adresse 10
-S 4 0 -1 0
-1
-5 adr
-L adr -1
-L boulevard -1
-L init 11
-S 4 0 -1 1
-1
-7 moncarnet
-L i 12
-S 3 5 0 0
-S 3 4 0 0
-S 3 3 0 0
-S 3 1 0 0
-L init_date 16
+L smoothie 6
+S 1 0 -1 0
+4
+3 fraise
+0 nb_fraise
+3 banane
+0 nb_banane
+L mix 7
+S 5 0 -1 0
+1 3
+5 ensembleFruit
+L rand10 8
+S 5 0 -1 1
+2 0
+0 min
+0 max
+L min -1
+L max -1
+L RAND_MAX -1
+L randommix 9
 S 4 0 -1 2
 1
-4 datetime
-L existe 17
-S 5 0 -1 3
-3 2
-3 prenom
-3 nom
-7 moncarnet
-S 3 3 2 0
-L addcarnet 19
-S 5 0 -1 4
-4 2
-7 moncarnet
-3 prenom
-3 nom
-4 date_naissance
-L zero -1
-L mariage 20
-S 4 0 -1 5
-3
-7 moncarnet
-6 homme
-6 femme
-L homme -1
-L femme -1
-L fonctioninutilequifait -1
-L jours -1
-L casequiexistepas -1
+-1 smoothie
+L rand1 10
+S 3 2 0 0
+L rand2 11
+S 3 2 0 0
+L continu 12
+S 3 2 2 0
+L ensemblefruit -1
+L nb_fraise -1
+L nb_banane -1
+L fraise -1
+L banane -1
+L mangue -1

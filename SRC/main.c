@@ -22,7 +22,7 @@ int main(void)
 {
   int ret = 0;
 
-  #ifdef OOOO
+  /*#ifdef OOOO*/
   /* Initialisation */
   hashtable = hashtable_new();
   symbol_table_init(hashtable);
@@ -50,8 +50,8 @@ int main(void)
   hashtable_free(hashtable, symbol_table_free);
   regions_table_free();
   
-  #endif
+  /*#endif
 
-  load("test");
+  load("test");*/
   exit(ret);
 }
