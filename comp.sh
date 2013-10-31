@@ -14,12 +14,12 @@ function changepointer() {
 }
 
 function sub() {
-
+    echo -e  "\nDifférence(s) pour $1:"
      ./BIN/prog -a -c "$1" > out;
      changepointer out
      ./BIN/prog -a -s myout > out2
      changepointer out2
-     echo -e  "\nDifférence(s) pour $1:"
+ 
  
      if [[ $(diff out out2 | grep ">" | sed '1,4d' | wc -l) == 0 ]]; then
 	echo -e "\tAucune différence\n";
@@ -34,7 +34,7 @@ if test -z "$1"; then
      echo -e "$0 [ARG 1]"
      exit 1
 else
-	for i in $(find "$1" -type f ! -path "$1/marche_pas/*"); do
+	for i in $(find "$1" -type f ! -path "*/marche_pas/*"); do
 		sub "$i"
 		rm out
 		rm out2
