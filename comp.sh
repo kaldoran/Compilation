@@ -14,16 +14,17 @@ function changepointer() {
 }
 
 function sub() {
+     echo -e  "\nDifférence(s) pour $1:"
+
      ./BIN/prog -a -c "$1" > out;
      changepointer out
      ./BIN/prog -a -s myout > out2
      changepointer out2
     
-     echo -e  "\nDifférence(s) pour $1: "
      if [[ $(diff out out2 | grep ">" | sed '1,4d' | wc -l) == 0 ]]; then
-	echo -e "\tAucune différence";
+	echo -e "\tAucune différence\n";
      else 
-	echo -e "\tLes fichiers ne sont pas identiques";
+	echo -e "\tLes fichiers ne sont pas identiques\n";
      fi
 }
 
