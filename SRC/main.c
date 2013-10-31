@@ -6,11 +6,11 @@
 /* ---------------------------------------------------------------------- */
 
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
 
 #include "kernel.h"
 #include "save.h"
+#include "getopt.h"
 
 /** Fichier de sortie par défaut du programme. */
 #define OUTPUT_FILENAME "myout"
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 {  int optch;
 
   extern FILE *yyin;
-  extern int opterr;
+  extern char *optarg;
   extern Hashtable *hashtable;
 
   int ret = 0;
@@ -72,10 +72,8 @@ int main(int argc, char *argv[])
   char input[BUFFER_SIZE_MAX] = "";
   char output[BUFFER_SIZE_MAX] = OUTPUT_FILENAME;
 
-  const char format[] = "c:o:aes:h";
+  char format[] = "c:o:aes:h";
   
-  opterr = 1;
-
   while((optch = getopt(argc, argv, format)) != -1)
     switch(optch) 
     {
