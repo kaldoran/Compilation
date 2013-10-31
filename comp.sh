@@ -23,7 +23,7 @@ function sub() {
      if [[ $(diff out out2 | grep ">" | sed '1,4d' | wc -l) == 0 ]]; then
 	echo -e "\tAucune différence";
      else 
-	diff out out2 | grep ">" | sed '1,4d' | sed "s/> //g"
+	echo -e "\tLes fichiers ne sont pas identiques";
      fi
 }
 
