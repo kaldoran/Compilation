@@ -155,7 +155,7 @@ or  {return(OU);}
 
 " "|\t ;
 
-\n {++line_num; printf("%d\n", line_num);}
+\n {++line_num;}
 
 %%
 

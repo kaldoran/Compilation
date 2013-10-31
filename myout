@@ -1,0 +1,67 @@
+4096
+24
+20
+L int 0
+S 0 0 -1 1
+L float 1
+S 0 0 -1 1
+L bool 2
+S 0 0 -1 1
+L char 3
+S 0 0 -1 1
+L Point 4
+S 1 0 -1 0
+2
+0 x
+0 y
+L x -1
+L y -1
+L List 5
+S 2 0 -1 0
+1 4
+0 50
+L ensemble 6
+S 1 0 -1 0
+2
+0 size
+5 content
+L size -1
+L content -1
+L valeurs 7
+S 3 0 6 0
+L remplir 8
+S 4 0 -1 0
+1
+-1 ensemble
+L v -1
+L i 9
+S 3 2 0 0
+S 3 1 0 0
+S 3 0 0 0
+L sqrt -1
+L afficher 12
+S 4 0 -1 1
+0
+L search_point 13
+S 5 0 -1 2
+2 2
+0 x
+0 y
+L machin_bidule 14
+S 5 0 -1 3
+0 0
+L truc 15
+S 4 3 -1 4
+0
+L k 16
+S 3 4 0 0
+L mise_k_0 17
+S 4 4 -1 5
+2
+0 x
+0 y
+L get_k 18
+S 4 4 -1 6
+0
+L p 19
+S 3 3 0 0
