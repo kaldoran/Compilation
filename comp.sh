@@ -14,7 +14,7 @@ function changepointer() {
 }
 
 function sub() {
-    echo -e  "\nDifférence(s) pour $1:"
+     echo -e  "\nDifférence(s) pour $1:"
      ./BIN/prog -a -c "$1" > out;
      changepointer out
      ./BIN/prog -a -s myout > out2
