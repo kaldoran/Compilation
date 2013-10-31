@@ -695,7 +695,7 @@ char *yytext_ptr;
   int yyerror(const char *s);
 
   /* Numéro de ligne. */
-  static int line_num = 1;
+  int line_num = 1;
 
   /* Table. */
   extern Hashtable *hashtable;

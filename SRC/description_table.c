@@ -129,7 +129,7 @@ void procedure_free(Procedure *p)
 
 void structure_print(Structure *structure) 
 {
-  int i;
+  unsigned int i;
 
   printf("\n\tStructure (%d)\n", structure->field_number);
 
@@ -144,7 +144,7 @@ void structure_print(Structure *structure)
 
 void procedure_print(Procedure *procedure) 
 {
-  int i;
+  unsigned int i;
 	
   printf("\n\tProcedure (%d)\n", procedure->param_number);
 	
@@ -159,7 +159,7 @@ void procedure_print(Procedure *procedure)
 
 void function_print(Function *function) 
 {
-  int i;
+  unsigned int i;
 	
   printf("\n\tFunction (%d) - Return (%p)\n", function->param_number, function->return_type);
 	
@@ -174,7 +174,7 @@ void function_print(Function *function)
 
 void array_print(Array *array) 
 {
-  int i;
+  unsigned int i;
 	
   printf("\n\tArray (%d) - Type (%p)\n", array->dimension_number,array->type);
 	

@@ -127,7 +127,7 @@ void syntax_tree_print_node(Syntax_tree *node)
   /* Contenu adresse */
   snode = tree_node_get_value(node);
   
-  if(snode->type >= 0 && snode->type < AT_SIZE) 
+  if(snode->type < AT_SIZE) 
     printf("%s\n", node_name[snode->type]);
   else
     printf("NAME_ERROR\n");

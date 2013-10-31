@@ -193,7 +193,7 @@ Hashtable *load(const char *filename)
   unsigned int n_symbols = 0, i = 0;
   Symbol *s, *origin;
   List_node *ln;
-  int j, k;
+  unsigned int j, k;
 
   /* Lexeme. */
   Hashkey hkey;
@@ -288,7 +288,7 @@ Hashtable *load(const char *filename)
 	  switch(s->type)
 	  {
 	    case SYMBOL_TYPE_VAR:
-	      sscanf(buffer, "S %*d %*d %d %*d", &j);
+	      sscanf(buffer, "S %*d %*d %u %*d", &j);
 	      s->index = index_array[j];
 	      break;
 
@@ -300,14 +300,14 @@ Hashtable *load(const char *filename)
 
 	      for(k = 0; k < i; k++)
 	      {
-		fscanf(file, "%d %s", &j, lexeme); 
+		fscanf(file, "%u %s", &j, lexeme); 
 		structure->field[k].type = index_array[j];
 		structure->field[k].hkey = hashtable_get_key(h, lexeme);
 	      }
 	      break;
 
 	    case SYMBOL_TYPE_ARRAY:
-	      fscanf(file, "%u %d", &i, &j);
+	      fscanf(file, "%u %u", &i, &j);
 	      
 	      if((s->index = array = array_new(i, index_array[j])) == NULL)
 		fatal_error("load");
@@ -317,14 +317,14 @@ Hashtable *load(const char *filename)
 	      break;
 
 	    case SYMBOL_TYPE_FUNCTION:
-	      fscanf(file, "%u %d", &i, &j);
+	      fscanf(file, "%u %u", &i, &j);
 	      
 	      if((s->index = function = function_new(index_array[j], i)) == NULL)
 		fatal_error("load");
 
 	      for(k = 0; k < i; k++)
 	      {
-		fscanf(file, "%d %s", &j, lexeme); 
+		fscanf(file, "%u %s", &j, lexeme); 
 		function->params[k].type = index_array[j];
 		function->params[k].hkey = hashtable_get_key(h, lexeme);
 	      }
@@ -339,7 +339,7 @@ Hashtable *load(const char *filename)
 
 	      for(k = 0; k < i; k++)
 	      {
-		fscanf(file, "%d %s", &j, lexeme); 
+		fscanf(file, "%u %s", &j, lexeme); 
 		procedure->params[k].type = index_array[j];
 		procedure->params[k].hkey = hashtable_get_key(h, lexeme);
 	      }

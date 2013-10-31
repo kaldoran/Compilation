@@ -23,6 +23,8 @@
 /** Déclarations des types de bases. */
 static Symbol *symbol_basic[SYMBOL_BASIC_MAX];
 
+bool unable_to_find_declaration = false;
+
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
 /* ---------------------------------------------------------------------- */
@@ -162,7 +164,8 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
 {
   Symbol *start = hashtable_get_value_by_key(table, hkey), *origin;
   Region_node *node = regions_stack_get_node();
- 
+  extern int line_num;
+
   /* Parcours de la pile des régions. */
   for(; node != NULL; node = node->next)
   {
@@ -178,7 +181,8 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
       return origin; /* Trouvé ! */
   
   /* Non trouvé. */
-  fprintf(stderr, "Unable to find the declaration of %s\n", hashtable_get_id(table, hkey));
+  unable_to_find_declaration = true;
+  fprintf(stderr, "Line %d - Unable to find the declaration of %s\n", line_num, hashtable_get_id(table, hkey));
   return NULL;
 }
 

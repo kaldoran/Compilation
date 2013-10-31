@@ -55,7 +55,8 @@ void usage(const char *arg)
   fprintf(stderr, "-s <filename> : Run a compiled program.\n");
   fprintf(stderr, "-h : Help.\n");
   fprintf(stderr, "\nPossible: -c -<oae>\n");
-  fprintf(stderr, "            -s -<a>\n");
+  fprintf(stderr, "          -s -<a>\n");
+
   exit(EXIT_FAILURE);
 }
 
@@ -65,6 +66,7 @@ int main(int argc, char *argv[])
   extern FILE *yyin;
   extern char *optarg;
   extern Hashtable *hashtable;
+  extern bool unable_to_find_declaration;
 
   int ret = 0;
   int options = 0;
@@ -115,17 +117,25 @@ int main(int argc, char *argv[])
     lexeme_table_init(hashtable);
 
     if((yyin = fopen(input, "r")) == NULL)
+    {
+      hashtable_free(hashtable, symbol_table_free);
       fatal_error("main");
+    }
 
     if(!(ret = yyparse()))
     {
-      save(output, hashtable);
+      if(!unable_to_find_declaration)
+      {
+	save(output, hashtable);
+	
+	if((options & OPT_A) != 0)
+	  PRINT_LOG();
+      }
+      else
+	fprintf(stderr, "ATTENTION : Compilation aborted.\n");
 
-      if((options & OPT_A) != 0)
-	PRINT_LOG();
-
-      if((options & OPT_E) != 0)
-	/* Execution */;
+      /* if((options & OPT_E) != 0)
+	 Execution ; */
     }
 
     fclose(yyin);
