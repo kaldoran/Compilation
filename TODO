@@ -1,27 +1,6 @@
-[PRENOM]	|			[ TODO ]		|	[STATUS]
--------------------------------------------------------------------------------------
-Florian		| Représentation des types			|  Fait 
-		| Entete de sous programme 			|  Fait
-		|						|
-		|						|
-Ronan		| Modifications yacc				|  Fait
-		|						|
-		|						|
-		|						|
-Nicolas		| Ajout yyparse - yytext etc dans lex.l		|  Fait par Ronan
-		| Modification syntaxe_tree ajout des #define	|  Fait
-		|  	Manquant				|
-		| Ajout dans l'affichage de l'arbre		|  Fait perl.l 
-		|  	Afficher la vrai valeur pas juste le    | 
-		|       chiffre					|
-		| Exemples fonctionnels				|  En cours
-		| Pile des regions 				|  Fait
---------------------------------------------------------------------------------------
 
-Reste quoi ? mis a part les exemples fonctionnels
-
---------------------------------------------------------------------------------------
 MAJ TODO :
-	-> Gestion string
+	-> Gestion string (Sauvegarde des tailles des chaines + modif yacc)
 	-> Sauvegarde arbres
-	-> ?!? 
+	-> Exemples divers (Voir avec prof)
+	-> 

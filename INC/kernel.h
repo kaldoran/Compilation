@@ -19,6 +19,6 @@
 #include "regions_stack.h"
 #include "mystring.h"
 #include "error.h"
-#include "y.tab.h"
+#include "yacc.h"
 
 #endif /* _KERNEL_ INCLUDED */

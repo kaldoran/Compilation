@@ -137,6 +137,9 @@
 /* Variable. */
 %type <node> variable suite_variable
 
+/* Déclarations. */
+%type <val_i> liste_param un_param liste_parametres
+
 %%
 
 /* -----------------------------------------------------*/
@@ -171,7 +174,7 @@ declaration_type: TYPE IDF DEUX_POINTS TABLEAU dimension DE nom_type {if((array 
                                                                       dimensions_buffer_copy(array->dimension);
                                                                       dimensions_buffer_reset();
 
-                                                                      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, 0, array, 0))
+                                                                      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, regions_stack_top(), array, 0))
                                                                         fatal_error("symbol_table_add");
                                                                      }
                 | TYPE IDF DEUX_POINTS STRUCT liste_champs FSTRUCT   {if((structure = structure_new(variables_buffer_get_size())) == NULL)
@@ -179,7 +182,7 @@ declaration_type: TYPE IDF DEUX_POINTS TABLEAU dimension DE nom_type {if((array 
                                                                       variables_buffer_copy(structure->field);
                                                                       variables_buffer_reset();
 
-                                                                      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, 0, structure, 0))
+                                                                      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, regions_stack_top(), structure, 0))
                                                                         fatal_error("symbol_table_add");
                                                                      }
                 ;
@@ -254,6 +257,8 @@ declaration_procedure: PROCEDURE IDF liste_parametres {
                                                       } corps
 
                      {
+  		       variables_buffer_set_offset(-$3);
+
                        if((procedure = procedure_new(variables_buffer_get_size())) == NULL)
                          fatal_error("procedure_new");
                        variables_buffer_copy(procedure->params);
@@ -276,11 +281,13 @@ declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
                                                                             fatal_error("regions_stack_push");
                                                                          } corps
                     {
+  		       variables_buffer_set_offset(-$3);
+
                       if((function = function_new(SYMBOL_OF($5), variables_buffer_get_size())) == NULL)
                         fatal_error("function_new");
                       variables_buffer_copy(function->params);
                       variables_buffer_reset();
-                      
+
                       region = regions_stack_top();
                       regions_table_set_tree(region, $7);
                       level--;
@@ -291,13 +298,12 @@ declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
                     }
                     ;
 
-liste_parametres:
-                | PARENTHESE_OUVRANTE PARENTHESE_FERMANTE
-                | PARENTHESE_OUVRANTE liste_param PARENTHESE_FERMANTE
-                ;
+liste_parametres:  PARENTHESE_OUVRANTE PARENTHESE_FERMANTE             {$$ = 0;}
+                 | PARENTHESE_OUVRANTE liste_param PARENTHESE_FERMANTE {$$ = $2; variables_buffer_set_offset($2);}
+                 ;
           
-liste_param: un_param
-           | liste_param VIRGULE un_param
+liste_param: un_param                     {$$ = 1;}
+           | liste_param VIRGULE un_param {$$ = $1 + 1;}
            ;
           
 un_param: IDF DEUX_POINTS nom_type {variables_buffer_push($1, SYMBOL_OF($3));}

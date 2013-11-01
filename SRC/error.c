@@ -13,7 +13,7 @@
 
 void fatal_error(const char *msg)
 {
-  perror(msg);
+  fprintf(stderr, "%s\n", msg);
   fprintf(stderr, "Errno: %d - %s\n", errno, strerror(errno));
   exit(EXIT_FAILURE);
 }

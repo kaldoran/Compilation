@@ -19,7 +19,12 @@
 /* %return : -1 si buffer plein, 0 sinon. */
 int variables_buffer_push(Hashkey hkey, Index_t type);
 
-/** Remet le buffer à 0. */
+/** Définit où commence le buffer. */
+/* %param offset : Valeur de décalage dans le buffer.
+   Une valeur négative recule, à l'inverse, une positive avance. */
+void variables_buffer_set_offset(int offset);
+
+/** Reset les valeurs courantes du buffer. (Par le biais de l'offset en cours.) */
 void variables_buffer_reset(void);
 
 /** Copie le buffer dans un tableau de variables suffisament grand. */
