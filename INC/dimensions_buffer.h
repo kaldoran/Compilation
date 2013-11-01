@@ -22,8 +22,8 @@ int dimensions_buffer_push(unsigned int bound_lower, unsigned int bound_upper);
 /** Remet le buffer à 0. */
 void dimensions_buffer_reset(void);
 
-/** Copie le buffer dans un tableau de variables suffisament grand. */
-/* %param variables : Destination du buffer. */
+/** Copie le buffer dans un tableau de dimensions suffisament grand. */
+/* %param dimensions : Destination du buffer. */
 /* %return : La destination de la copie. */
 Dimension *dimensions_buffer_copy(Dimension *dimensions);
 
