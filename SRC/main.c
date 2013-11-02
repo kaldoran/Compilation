@@ -80,20 +80,20 @@ int main(int argc, char *argv[])
     switch(optch) 
     {
       case 'a': options |= OPT_A;
-	break;
+        break;
       case 'e': options |= OPT_E;
-	break;
+        break;
       case 'c': options |= OPT_C;
-	strcpy(input, optarg);
-	break;
+        strcpy(input, optarg);
+        break;
       case 'o': options |= OPT_O;
-	strcpy(output, optarg);
-	break;
+        strcpy(output, optarg);
+        break;
       case 's': options |= OPT_S;
-	strcpy(input, optarg);
-	break;
+        strcpy(input, optarg);
+        break;
       case '?': 
-      case 'h':	usage(*argv);
+      case 'h':        usage(*argv);
     }
 
   /* Execution. */
@@ -126,16 +126,16 @@ int main(int argc, char *argv[])
     {
       if(!unable_to_find_declaration)
       {
-	save(output, hashtable);
-	
-	if((options & OPT_A) != 0)
-	  PRINT_LOG();
+        save(output, hashtable);
+        
+        if((options & OPT_A) != 0)
+          PRINT_LOG();
       }
       else
-	fprintf(stderr, "ATTENTION : Compilation aborted.\n");
+        fprintf(stderr, "ATTENTION : Compilation aborted.\n");
 
       /* if((options & OPT_E) != 0)
-	 Execution ; */
+         Execution ; */
     }
 
     fclose(yyin);

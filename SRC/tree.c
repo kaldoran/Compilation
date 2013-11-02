@@ -33,7 +33,7 @@
   if(1)                                               \
   {                                                   \
     for(; NODE->father != NULL; NODE = NODE->father); \
-    FIRST_BROTHER(NODE);			      \
+    FIRST_BROTHER(NODE);                              \
   }
 
 /** Teste si un noeud est orphelin. */

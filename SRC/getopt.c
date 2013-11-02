@@ -79,7 +79,7 @@ int getopt(int argc, char *argv[], char *opts)
     else if(++optind >= argc) 
     {
       if(opterr)
-	fprintf(stderr, ": option requires an argument -- %c\n", c);
+        fprintf(stderr, ": option requires an argument -- %c\n", c);
       sp = 1;
       return '?';
     } 

@@ -133,49 +133,49 @@ void save(const char *filename, Hashtable *h)
     {
       /* Print : Déclaration de variable (TYPE, REGION, ID, EXEC). */
       if(s->type == SYMBOL_TYPE_VAR)
-	fprintf(file, "S %d %d %d %lu\n", s->type, s->region, index_array_get(s->index, n_symbols), 
-		(unsigned long int)s->exec);
+        fprintf(file, "S %d %d %d %lu\n", s->type, s->region, index_array_get(s->index, n_symbols), 
+                (unsigned long int)s->exec);
       else
       {
-	fprintf(file, "S %d %d -1 %lu\n", s->type, s->region, (unsigned long int)s->exec);
-	
-	switch(s->type)
-	{
-	  case SYMBOL_TYPE_STRUCT:
-	    structure = s->index;
-	    fprintf(file, "%u\n", structure->field_number);
-	    
-	    for(j = 0; j < structure->field_number; j++)
-	      fprintf(file, "%d %s\n", index_array_get(structure->field[j].type, n_symbols), 
-		      lexeme_table_get(h, structure->field[j].hkey));
-	    break;
-	    
-	  case SYMBOL_TYPE_ARRAY:
-	    array = s->index;
-	    fprintf(file, "%u %d\n", array->dimension_number, index_array_get(array->type, n_symbols));
-	    
-	    for(j = 0; j < array->dimension_number; j++)
-	      fprintf(file, "%u %u\n", array->dimension[j].bound_lower, array->dimension[j].bound_upper);
-	    break;
-	  
-	  case SYMBOL_TYPE_FUNCTION:
-	    function = s->index;
-	    fprintf(file, "%u %d\n", function->param_number, index_array_get(function->return_type, n_symbols));
+        fprintf(file, "S %d %d -1 %lu\n", s->type, s->region, (unsigned long int)s->exec);
+        
+        switch(s->type)
+        {
+          case SYMBOL_TYPE_STRUCT:
+            structure = s->index;
+            fprintf(file, "%u\n", structure->field_number);
+            
+            for(j = 0; j < structure->field_number; j++)
+              fprintf(file, "%d %s\n", index_array_get(structure->field[j].type, n_symbols), 
+                      lexeme_table_get(h, structure->field[j].hkey));
+            break;
+            
+          case SYMBOL_TYPE_ARRAY:
+            array = s->index;
+            fprintf(file, "%u %d\n", array->dimension_number, index_array_get(array->type, n_symbols));
+            
+            for(j = 0; j < array->dimension_number; j++)
+              fprintf(file, "%u %u\n", array->dimension[j].bound_lower, array->dimension[j].bound_upper);
+            break;
+          
+          case SYMBOL_TYPE_FUNCTION:
+            function = s->index;
+            fprintf(file, "%u %d\n", function->param_number, index_array_get(function->return_type, n_symbols));
 
-	    for(j = 0; j < function->param_number; j++)
-	      fprintf(file, "%d %s\n", index_array_get(function->params[j].type, n_symbols), 
-		      lexeme_table_get(h, function->params[j].hkey));
-	    break;
+            for(j = 0; j < function->param_number; j++)
+              fprintf(file, "%d %s\n", index_array_get(function->params[j].type, n_symbols), 
+                      lexeme_table_get(h, function->params[j].hkey));
+            break;
 
-	  case SYMBOL_TYPE_PROCEDURE:
-	    procedure = s->index;
-	    fprintf(file, "%u\n", procedure->param_number);
+          case SYMBOL_TYPE_PROCEDURE:
+            procedure = s->index;
+            fprintf(file, "%u\n", procedure->param_number);
 
-	    for(j = 0; j < procedure->param_number; j++)
-	      fprintf(file, "%d %s\n", index_array_get(procedure->params[j].type, n_symbols), 
-		      lexeme_table_get(h, procedure->params[j].hkey));
-	    break;
-	}
+            for(j = 0; j < procedure->param_number; j++)
+              fprintf(file, "%d %s\n", index_array_get(procedure->params[j].type, n_symbols), 
+                      lexeme_table_get(h, procedure->params[j].hkey));
+            break;
+        }
       }
     }
   }
@@ -191,12 +191,12 @@ Hashtable *load(const char *filename)
   Hashtable *h;
   FILE *file;
   unsigned int n_symbols = 0, i = 0;
-  Symbol *s, *origin;
+  Symbol *s, *origin = NULL;
   List_node *ln;
   unsigned int j, k;
 
   /* Lexeme. */
-  Hashkey hkey;
+  Hashkey hkey = NULL;
 
   /* Buffer. */
   char buffer[BUFFER_SIZE];
@@ -245,14 +245,14 @@ Hashtable *load(const char *filename)
       sscanf(buffer, "L %s %d", lexeme, (int *)&i);
       
       if((hkey = lexeme_table_add(h, lexeme)) == NULL)
-	fatal_error("load");
+        fatal_error("load");
     }
 
     /* Déclaration. */
     else if(*buffer == 'S')
     {
       if((s = calloc(1, sizeof *s)) == NULL)
-	fatal_error("load");
+        fatal_error("load");
       
       sscanf(buffer, "S %d %d %*d %lu\n", (int *)&s->type, &s->region, (unsigned long int *)&s->exec);
       index_array[i++] = s;
@@ -260,14 +260,14 @@ Hashtable *load(const char *filename)
       /* Si aucune déclaration. */
       if(((Hashvalue *)hkey)->value == NULL)
       {
-	 ((Hashvalue *)hkey)->value = s;
-	 origin = s;
+         ((Hashvalue *)hkey)->value = s;
+         origin = s;
       }
       /* Si déjà une déclaration. */
       else
       {
-	origin->next = s;
-	origin = s;
+        origin->next = s;
+        origin = s;
       }
     }
   }
@@ -280,75 +280,75 @@ Hashtable *load(const char *filename)
     for(s = HNVALUE(ln)->value; s != NULL; s = s->next)
       for(;;)
       {
-	fgets(buffer, BUFFER_SIZE, file);
-	
-	/* Symbole trouvé. */
-	if(*buffer == 'S')
-	{
-	  switch(s->type)
-	  {
-	    case SYMBOL_TYPE_VAR:
-	      sscanf(buffer, "S %*d %*d %u %*d", &j);
-	      s->index = index_array[j];
-	      break;
+        fgets(buffer, BUFFER_SIZE, file);
+        
+        /* Symbole trouvé. */
+        if(*buffer == 'S')
+        {
+          switch(s->type)
+          {
+            case SYMBOL_TYPE_VAR:
+              sscanf(buffer, "S %*d %*d %u %*d", &j);
+              s->index = index_array[j];
+              break;
 
-	    case SYMBOL_TYPE_STRUCT:
-	      fscanf(file, "%u", &i);
+            case SYMBOL_TYPE_STRUCT:
+              fscanf(file, "%u", &i);
 
-	      if((s->index = structure = structure_new(i)) == NULL)
-		fatal_error("load");
+              if((s->index = structure = structure_new(i)) == NULL)
+                fatal_error("load");
 
-	      for(k = 0; k < i; k++)
-	      {
-		fscanf(file, "%u %s", &j, lexeme); 
-		structure->field[k].type = index_array[j];
-		structure->field[k].hkey = hashtable_get_key(h, lexeme);
-	      }
-	      break;
+              for(k = 0; k < i; k++)
+              {
+                fscanf(file, "%u %s", &j, lexeme); 
+                structure->field[k].type = index_array[j];
+                structure->field[k].hkey = hashtable_get_key(h, lexeme);
+              }
+              break;
 
-	    case SYMBOL_TYPE_ARRAY:
-	      fscanf(file, "%u %u", &i, &j);
-	      
-	      if((s->index = array = array_new(i, index_array[j])) == NULL)
-		fatal_error("load");
+            case SYMBOL_TYPE_ARRAY:
+              fscanf(file, "%u %u", &i, &j);
+              
+              if((s->index = array = array_new(i, index_array[j])) == NULL)
+                fatal_error("load");
 
-	      for(k = 0; k < i; k++)
-		fscanf(file, "%u %u", &array->dimension[k].bound_lower, &array->dimension[k].bound_upper);
-	      break;
+              for(k = 0; k < i; k++)
+                fscanf(file, "%u %u", &array->dimension[k].bound_lower, &array->dimension[k].bound_upper);
+              break;
 
-	    case SYMBOL_TYPE_FUNCTION:
-	      fscanf(file, "%u %u", &i, &j);
-	      
-	      if((s->index = function = function_new(index_array[j], i)) == NULL)
-		fatal_error("load");
+            case SYMBOL_TYPE_FUNCTION:
+              fscanf(file, "%u %u", &i, &j);
+              
+              if((s->index = function = function_new(index_array[j], i)) == NULL)
+                fatal_error("load");
 
-	      for(k = 0; k < i; k++)
-	      {
-		fscanf(file, "%u %s", &j, lexeme); 
-		function->params[k].type = index_array[j];
-		function->params[k].hkey = hashtable_get_key(h, lexeme);
-	      }
+              for(k = 0; k < i; k++)
+              {
+                fscanf(file, "%u %s", &j, lexeme); 
+                function->params[k].type = index_array[j];
+                function->params[k].hkey = hashtable_get_key(h, lexeme);
+              }
 
-	      break;
+              break;
 
-	    case SYMBOL_TYPE_PROCEDURE:
-	      fscanf(file, "%u", &i);
-	      
-	      if((s->index = procedure = procedure_new(i)) == NULL)
-		fatal_error("load");
+            case SYMBOL_TYPE_PROCEDURE:
+              fscanf(file, "%u", &i);
+              
+              if((s->index = procedure = procedure_new(i)) == NULL)
+                fatal_error("load");
 
-	      for(k = 0; k < i; k++)
-	      {
-		fscanf(file, "%u %s", &j, lexeme); 
-		procedure->params[k].type = index_array[j];
-		procedure->params[k].hkey = hashtable_get_key(h, lexeme);
-	      }
+              for(k = 0; k < i; k++)
+              {
+                fscanf(file, "%u %s", &j, lexeme); 
+                procedure->params[k].type = index_array[j];
+                procedure->params[k].hkey = hashtable_get_key(h, lexeme);
+              }
 
-	      break;
-	  }
+              break;
+          }
 
-	  break;
-	}
+          break;
+        }
       }
  
   free(index_array);

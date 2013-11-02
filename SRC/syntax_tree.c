@@ -85,14 +85,14 @@ void syntax_tree_print_node(Syntax_tree *node)
   Syntax_node_content *snode;
 
   static const char *node_name[] = {"unknown", "plus", "minus", "mult", "div", "mod", "plus equal", 
-				    "minus equal", "mult equal", "div equal", "mod equal", "increment", 
-				    "decrement", "pincrement", "pdecrement", "equal", "greater than",
-				    "greater or equal",  "lower than", "lower or equal", "different", 
-				    "and", "or", "not", "read", "write", "random", "if", "else", "while", 
-				    "do while", "for", "array", "structure", "procedure", "function", 
-				    "return", "switch", "case", "default", "break", "continue", "ternaire", 
-				    "appel", "string", "real", "boolean", "char", "integer", "set", "variable",
-				    "array index", "hkey index", "empty node"};
+                                    "minus equal", "mult equal", "div equal", "mod equal", "increment", 
+                                    "decrement", "pincrement", "pdecrement", "equal", "greater than",
+                                    "greater or equal",  "lower than", "lower or equal", "different", 
+                                    "and", "or", "not", "read", "write", "random", "if", "else", "while", 
+                                    "do while", "for", "array", "structure", "procedure", "function", 
+                                    "return", "switch", "case", "default", "break", "continue", "ternaire", 
+                                    "appel", "string", "real", "boolean", "char", "integer", "set", "variable",
+                                    "array index", "hkey index", "empty node"};
   
   static char arr_p[MAX_DEPTH] = {0};
 

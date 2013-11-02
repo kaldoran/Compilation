@@ -135,7 +135,7 @@ void structure_print(Structure *structure)
 
   for(i = 0; i < structure->field_number; i++) 
     printf("\t   [%d] Key : %p - Index : %p\n", i, structure->field[i].hkey, 
-	   structure->field[i].type);
+           structure->field[i].type);
 
   printf("\tEnd structure\n    ");
 
@@ -145,45 +145,45 @@ void structure_print(Structure *structure)
 void procedure_print(Procedure *procedure) 
 {
   unsigned int i;
-	
+        
   printf("\n\tProcedure (%d)\n", procedure->param_number);
-	
+        
   for(i = 0; i < procedure->param_number; i++) 
     printf("\t   [%d] Key : %p - Index : %p\n", i, procedure->params[i].hkey,
-	   procedure->params[i].type);
-		
+           procedure->params[i].type);
+                
   printf("\tEnd procedure\n    ");
-	
+        
   return;
 }
 
 void function_print(Function *function) 
 {
   unsigned int i;
-	
+        
   printf("\n\tFunction (%d) - Return (%p)\n", function->param_number, function->return_type);
-	
+        
   for(i = 0; i < function->param_number; i++) 
     printf("\t   [%d] Key : %p - Index : %p\n", i, function->params[i].hkey,
-	   function->params[i].type);
-		
+           function->params[i].type);
+                
   printf("\tEnd function\n    ");
-	
+        
   return;
 }
 
 void array_print(Array *array) 
 {
   unsigned int i;
-	
+        
   printf("\n\tArray (%d) - Type (%p)\n", array->dimension_number,array->type);
-	
+        
   for (i = 0; i < array->dimension_number; i++) 
     printf("\t   [%d] Start : %d - End : %d (%d)\n", i, array->dimension[i].bound_lower,
-	   array->dimension[i].bound_upper,
-	   array->dimension[i].bound_upper - array->dimension[i].bound_lower );
-		
+           array->dimension[i].bound_upper,
+           array->dimension[i].bound_upper - array->dimension[i].bound_lower );
+                
   printf("\tEnd array\n    ");
-	
+        
   return;
 }

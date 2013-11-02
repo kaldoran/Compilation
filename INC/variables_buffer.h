@@ -11,7 +11,7 @@
 #include "symbol_table.h"
 
 /** Taille maximale du buffer. */
-#define MAX_VARIABLES_BUFFER_SIZE 1024
+#define MAX_VARIABLES_BUFFER_SIZE 4096
 
 /** Ajoute une variable au buffer. */
 /* %param hkey : Numéro lexicographique de la variable. */

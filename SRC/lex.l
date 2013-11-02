@@ -27,6 +27,7 @@
 --.*-- ;
 \/\/.* ;
 
+
 ".." {return(POINT_ET_POINT);}
 "["  {return(CROCHET_OUVRANT);}
 "]"  {return(CROCHET_FERMANT);}
@@ -39,50 +40,51 @@
 
 \./[a-zA-Z_][a-zA-Z0-9_]* {return(POINT);}
 
+
 \"(\\.|[^\"])*\" {
-                   if((yylval.val_s = mystrdup(yytext)) == NULL)
-                     yyerror("Bad alloc: String");
-                   return(CSTE_CHAINE);
+                  if((yylval.val_s = mystrdup(yytext)) == NULL)
+                    yyerror("Bad alloc: String");
+                  return(CSTE_CHAINE);
                  }
 
-'[^'\\]' {
-          yylval.val_c = *yytext; 
+\'[^'\\]\' {
+            yylval.val_c = yytext[1]; 
+            return(CSTE_CARACTERE);
+           }
+
+\'\\\\\' {
+          yylval.val_c = '\\'; 
           return(CSTE_CARACTERE);
+         }
+
+\'\\t\' {
+         yylval.val_c = '\t'; 
+         return(CSTE_CARACTERE);
         }
 
-'\\' {
-       yylval.val_c = '\\'; 
-       return(CSTE_CARACTERE);
-     }
+\'\\n\' {
+         yylval.val_c = '\n'; 
+         return(CSTE_CARACTERE);
+        }
 
-'\\t' {
-       yylval.val_c = '\t'; 
-       return(CSTE_CARACTERE);
-     }
-
-'\\n' {
-       yylval.val_c = '\n'; 
-       return(CSTE_CARACTERE);
-     }
-
-'\\r' {
-       yylval.val_c = '\r'; 
-       return(CSTE_CARACTERE);
-     }
+\'\\r\' {
+         yylval.val_c = '\r'; 
+         return(CSTE_CARACTERE);
+        }
 
 (0|[1-9][0-9]*) {
-                  yylval.val_i = atoi(yytext);
-                  return(CSTE_ENTIERE);
+                 yylval.val_i = atoi(yytext);
+                 return(CSTE_ENTIERE);
                 }
 
 (0|[1-9][0-9]*)?\.[0-9]+ {
-                           yylval.val_f = atof(yytext);
-                           return(CSTE_REELLE);
+                          yylval.val_f = atof(yytext);
+                          return(CSTE_REELLE);
                          }
 
 "true"|"false" {
-                 yylval.val_c = yyleng == 4;
-                 return(CSTE_BOOLEENNE);
+                yylval.val_c = yyleng == 4;
+                return(CSTE_BOOLEENNE);
                }
 
 rand  {return(RAND);}
@@ -148,19 +150,25 @@ and {return(ET);}
 or  {return(OU);}
 
 [a-zA-Z_][a-zA-Z0-9_]* {
-                         if((yylval.hkey = lexeme_table_add(hashtable, yytext)) == NULL)
-                           yyerror("Bad alloc: Lexeme");
-                         return(IDF);
+                        if((yylval.hkey = lexeme_table_add(hashtable, yytext)) == NULL)
+                          yyerror("Bad alloc: Lexeme");
+                        return(IDF);
                        }
 
 " "|\t ;
 
 \n {++line_num;}
 
+. {yyerror("Unknown char");}
+
 %%
 
 int yyerror(const char *s)
-{                                                     
-  fprintf(stderr, "Line %d - Error: %s\n", line_num, s);
-  return 0;
+{                      
+  static int line_cur = -1;
+
+  if(line_cur != line_num)
+    fprintf(stderr, "Line %d - Error: %s\n", line_cur = line_num, s);
+
+  return 1;
 }

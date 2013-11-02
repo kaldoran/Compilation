@@ -55,7 +55,7 @@ static void symbol_print(void *symbol)
     }
 
     printf(", Region=%d, Index=%p, Size=%lu, Adress=%p)", s->region, s->index, 
-	   (long unsigned int)s->exec, (void *)s);
+           (long unsigned int)s->exec, (void *)s);
   }
   
   printf("\n");
