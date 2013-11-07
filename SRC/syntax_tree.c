@@ -20,6 +20,10 @@
 /* Fonctions internes (privées)                                           */
 /* ---------------------------------------------------------------------- */
 
+/** Attribue la valeur d'un noeud en fonction de son type en lisant dans un flux. */
+/* %param table : Table des lexèmes. */
+/* %param stream : Flux d'entrée. */
+/* %param tree : Noeud à modifier. */
 static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tree *tree);
 
 /* ---------------------------------------------------------------------- */
@@ -33,13 +37,13 @@ static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tre
   {
     case AT_CST_STRING: fgets(buffer, 255, stream);
       if((content->value.s = mystrdup(buffer)) == NULL)
-	fatal_error("syntax_tree_read_value");
+        fatal_error("syntax_tree_read_value");
       break;
       
-    case AT_CST_FLOAT:  fscanf(stream, "%f ", &content->value.f); break;
-    case AT_CST_BOOL:   fscanf(stream, "%c ", &content->value.c); break;
-    case AT_CST_CHAR:   fscanf(stream, "%c ", &content->value.c); break;
-    case AT_CST_INT:    fscanf(stream, "%d ", &content->value.i); break;
+    case AT_CST_FLOAT: fscanf(stream, "%f ", &content->value.f); break;
+    case AT_CST_BOOL:  fscanf(stream, "%c ", &content->value.c); break;
+    case AT_CST_CHAR:  fscanf(stream, "%c ", &content->value.c); break;
+    case AT_CST_INT:   fscanf(stream, "%d ", &content->value.i); break;
     
     case AT_HKEY_INDEX: 
     case AT_VAR:       
@@ -208,8 +212,8 @@ void syntax_tree_save(FILE *stream, Syntax_tree *node)
     {
       /* Ajout des fils/frere dans la file. */ 
       if(list_push_node(queue, ((node->children == NULL) ? (void *)-1 : node->children)) == NULL ||
-	 list_push_node(queue, ((node->next == NULL)  ? (void *)-1 : node->next )) == NULL)
-	fatal_error("syntax_tree_save");
+         list_push_node(queue, ((node->next == NULL)  ? (void *)-1 : node->next )) == NULL)
+        fatal_error("syntax_tree_save");
 
       /* Ecriture du noeud. */
       content = node->value;
@@ -217,18 +221,18 @@ void syntax_tree_save(FILE *stream, Syntax_tree *node)
 
       switch(content->type)
       {
-	case AT_CST_STRING: fprintf(stream, "\n%s\n", content->value.s); break;
-	case AT_CST_FLOAT:  fprintf(stream, "%f ", content->value.f); break;
-	case AT_CST_BOOL:   fprintf(stream, "%c ", content->value.c); break;
-	case AT_CST_CHAR:   fprintf(stream, "%c ", content->value.c); break;
-	case AT_CST_INT:    fprintf(stream, "%d ", content->value.i); break;
-	case AT_HKEY_INDEX:
-	case AT_VAR:        
-	case AT_CTL_CALL: fprintf(stream, "%s ", hashtable_get_id(NULL, content->value.hkey)); break;
+        case AT_CST_STRING: fprintf(stream, "\n%s\n", content->value.s); break;
+        case AT_CST_FLOAT:  fprintf(stream, "%f ", content->value.f); break;
+        case AT_CST_BOOL:   fprintf(stream, "%c ", content->value.c); break;
+        case AT_CST_CHAR:   fprintf(stream, "%c ", content->value.c); break;
+        case AT_CST_INT:    fprintf(stream, "%d ", content->value.i); break;
+        case AT_HKEY_INDEX:
+        case AT_VAR:        
+        case AT_CTL_CALL: fprintf(stream, "%s ", hashtable_get_id(NULL, content->value.hkey)); break;
 
-	default: break;
+        default: break;
       }
-    }	
+    }        
     else
       fprintf(stream, "-1 ");
   }
@@ -273,7 +277,7 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
       syntax_tree_add_son(node, child);
 
       if(list_push_node(queue, child) == NULL)
-	fatal_error("syntax_tree_save");
+        fatal_error("syntax_tree_save");
     }
  
     /* Frère. */
@@ -286,7 +290,7 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
       syntax_tree_add_brother(node, brother);
 
       if(list_push_node(queue, brother) == NULL)
-	fatal_error("syntax_tree_save");
+        fatal_error("syntax_tree_save");
     }
   }
   
