@@ -28,16 +28,11 @@ function sub() {
 }
 
 
-if test -z "$1"; then
-     echo "Erreur : Il faut 1 argument au minimum."
-     echo -e "$0 [ARG 1]"
-     exit 1
-else
-	for i in $(find "$1" -type f ! -path "*/marche_pas/*"); do
+for i in $(find "./BIN/examples" -type f ! -path "*/marche_pas/*"); do
 		sub "$i"
 		rm out
 		rm out2
 		sleep 1
 
-	done	
-fi
+done	
+
