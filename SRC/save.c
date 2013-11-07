@@ -69,7 +69,6 @@ void fill_index_array(void *value, void *cvalue)
   return;
 }
 
-
 int index_array_get(Index_t index, int n_symbols)
 {
   int i;

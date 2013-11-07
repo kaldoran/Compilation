@@ -79,13 +79,13 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node);
 /** Insère un noeud en dernière position de la liste des fils d'un père. */
 /* %param PARENT : Noeud père. */
 /* %param NODE : Noeud à ajouter, ne peut être NULL. */
-/* %return : Le noeud inseré. */
+/* %return : Le noeud père. */
 #define tree_node_append(PARENT, NODE) tree_node_insert(PARENT, -1, NODE)
 
 /** Insère un noeud en première position de la liste des fils d'un père. */
 /* %param PARENT : Noeud père. */
 /* %param NODE : Noeud à ajouter, ne peut être NULL. */
-/* %return : Le noeud inseré. */
+/* %return : Le noeud père. */
 #define tree_node_prepend(PARENT, NODE) tree_node_insert(PARENT, 0, NODE)
 
 /** Insére un nouveau noeud en dessous d'un noeud père. */
@@ -93,21 +93,21 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node);
 /* %param POS : Position où doit se trouver le noeud. 
    Si pos < 0, le noeud est ajouté à la fin des fils du noeud père. */
 /* %param VALUE : Valeur du noeud à ajouter. */
-/* %return : Le noeud inseré ou NULL en cas d'erreur d'allocation. */
+/* %return : Le noeud père ou NULL en cas d'erreur d'allocation. */
 #define tree_node_insert_value(PARENT, POS, VALUE) \
   tree_node_insert(PARENT, POS, tree_node_new(VALUE))
 
 /** Insère un nouveau noeud en dernière position de la liste des fils d'un père. */
 /* %param PARENT : Noeud père. */
 /* %param VALUE : Valeur du noeud à ajouter. */
-/* %return : Le noeud inseré ou NULL en cas d'erreur d'allocation. */
+/* %return : Le noeud père ou NULL en cas d'erreur d'allocation. */
 #define tree_node_append_value(PARENT, VALUE) \
   tree_node_insert(PARENT, -1, tree_node_new(VALUE))
  
 /* Insère un nouveau noeud en première position de la liste des fils d'un père. */
 /* %param PARENT : Noeud père. */
 /* %param VALUE : Valeur du noeud à ajouter. */
-/* %return : Le noeud inseré ou NULL en cas d'erreur d'allocation. */
+/* %return : Le noeud père ou NULL en cas d'erreur d'allocation. */
 #define tree_node_prepend_value(PARENT, VALUE) \
   tree_node_insert(PARENT, 0, tree_node_new(VALUE))
 

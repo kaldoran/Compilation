@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "regions_table.h"
+#include "error.h"
 
 /* ---------------------------------------------------------------------- */
 /* Données internes (privées)                                             */
@@ -17,7 +18,7 @@
 static int depth = 0;
 
 /** Table des régions. */
-static Region **table = NULL;
+static Region **r_table = NULL;
 
 /* ---------------------------------------------------------------------- */
 
@@ -25,39 +26,39 @@ void regions_table_free(void)
 {
   for(depth--; depth >= 0; depth--)
   {
-    syntax_tree_free(table[depth]->tree);
-    free(table[depth]);
+    syntax_tree_free(r_table[depth]->tree);
+    free(r_table[depth]);
   }
 
-  free(table);
+  free(r_table);
   return;
 }
 
 int regions_table_add(size_t size, unsigned int level, Syntax_tree *tree)
 {
   Region *region = malloc(sizeof *region);
-  Region **new_table;
+  Region **new_r_table;
 
   if(region == NULL)
     return BAD_REGION; /* Région non allouée ! */
 
-  /* Reallocation de la table */
+  /* Reallocation de la r_table */
   if(depth % REGIONS_TABLE_SIZE_MIN == 0)
   {
-    if((new_table = realloc(table, (depth + REGIONS_TABLE_SIZE_MIN) * sizeof *new_table)) == NULL)
+    if((new_r_table = realloc(r_table, (depth + REGIONS_TABLE_SIZE_MIN) * sizeof *new_r_table)) == NULL)
     {
       free(region);
       return BAD_REGION; /* Bad alloc. */
     }
 
-    table = new_table;
+    r_table = new_r_table;
   }
 
   /* Ajout de la région. */
   region->size = size;
   region->level = level;
   region->tree = tree;
-  table[depth] = region;
+  r_table[depth] = region;
   
   return depth++;
 }
@@ -67,7 +68,7 @@ int regions_table_set_tree(int region, Syntax_tree *tree)
   if(region < 0 || region >= depth)
     return BAD_REGION; /* Région inexistante. */
 
-  table[region]->tree = tree;
+  r_table[region]->tree = tree;
 
   return region;
 }
@@ -81,11 +82,58 @@ void regions_table_print(void)
 
   for(i = 0; i < depth; i++)
   {
-    printf("%04d: (%lu, %u, %p)\n", i, (long unsigned int)table[i]->size, table[i]->level, 
-           (void *)table[i]->tree);
-    syntax_tree_print(table[i]->tree);
+    printf("%04d: (%lu, %u, %p)\n", i, (long unsigned int)r_table[i]->size, r_table[i]->level, 
+           (void *)r_table[i]->tree);
+    syntax_tree_print(r_table[i]->tree);
     printf("\n");
   }
 
   return;
 }
+
+void regions_table_save(const char *filename)
+{
+  FILE *file;
+  int i;
+
+  if((file = fopen(filename, "w")) == NULL)
+    fatal_error("regions_table_save");
+
+  fprintf(file, "%d\n", depth);
+
+  for(i = 0; i < depth; i++)
+  {
+    fprintf(file, "%lu %u\n", (long unsigned int)r_table[i]->size, r_table[i]->level);
+    syntax_tree_save(file, r_table[i]->tree);
+  }
+
+  fclose(file);
+
+  return;
+}
+
+void regions_table_load(Lexeme_table *table, const char *filename)
+{
+  FILE *file;
+  int i, t_depth;
+
+  if((file = fopen(filename, "r")) == NULL)
+    fatal_error("regions_table_load");
+
+  fscanf(file, "%d\n", &t_depth);
+
+  for(i = 0; i < t_depth; i++)
+  {
+    if(regions_table_add(0, 0, NULL) == BAD_REGION)
+      fatal_error("regions_table_load");
+
+    fscanf(file, "%lu %u\n", (long unsigned int *)&r_table[i]->size, &r_table[i]->level);
+    r_table[i]->tree = syntax_tree_load(table, file);
+  }
+
+  depth = t_depth;
+  fclose(file);
+
+  return;
+}
+

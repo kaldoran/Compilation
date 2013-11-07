@@ -9,7 +9,7 @@
 #define _SYNTAX_TREE_
 
 #include "tree.h"
-#include "hashtable.h"
+#include "lexeme_table.h"
 
 /** Nombre de types de noeuds. */
 #define AT_SIZE AT_EMPTY + 1
@@ -108,8 +108,8 @@ typedef union Syntax_node_value
 /** Structure du contenu d'un noeud d'un arbre. */
 typedef struct Syntax_node_content
 { 
-  unsigned char type;       /* Type du noeud. */
-  Syntax_node_value value;  /* Valeur du noeud. */
+  unsigned char type;      /* Type du noeud. */
+  Syntax_node_value value; /* Valeur du noeud. */
 } Syntax_node_content;
 
 /** Crée un nouveau noeud d'un arbre abstrait. */
@@ -128,6 +128,8 @@ Syntax_tree *syntax_tree_node_char_new(char value);
 Syntax_tree *syntax_tree_node_bool_new(bool value);
 Syntax_tree *syntax_tree_node_string_new(const char *value);
 Syntax_tree *syntax_tree_node_hkey_new(Hashkey value);
+Syntax_tree *syntax_tree_node_var_new(Hashkey value);
+Syntax_tree *syntax_tree_node_call_new(Hashkey value);
 
 /** Libération de la valeur d'un noeud d'un arbre abstrait. */
 /* %param : Valeur du noeud à supprimer. */
@@ -156,5 +158,16 @@ void syntax_tree_print_node(Syntax_tree *node);
 /** Affiche un arbre abstrait. */
 /* %param TREE : Arbre à afficher. */
 #define syntax_tree_print(TREE) tree_foreach_node(TREE, syntax_tree_print_node)
+
+/** Sauvegarde d'un arbre abstrait dans un flux. */
+/* %param stream : Flux de sortie. */
+/* %param node : Arbre à sauvegarder. */
+void syntax_tree_save(FILE *stream, Syntax_tree *node);
+
+/** Charge un arbre abstrait dans un flux. */
+/* %param table : Table des lexèmes. */
+/* %param stream : Flux d'entrée. */
+/* %return : Arbre à charger. */
+Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream);
 
 #endif /* _SYNTAX_TREE_ INCLUDED */

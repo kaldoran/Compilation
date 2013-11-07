@@ -93,14 +93,15 @@ int main(int argc, char *argv[])
         strcpy(input, optarg);
         break;
       case '?': 
-      case 'h':        usage(*argv);
+      case 'h': usage(*argv);
     }
 
   /* Execution. */
   if(options == OPT_S || options == (OPT_S | OPT_A))
   {
     hashtable = load(input);
-    
+    regions_table_load(hashtable, strcat(output, ".reg"));
+
     if((options & OPT_A) != 0)
       PRINT_LOG();
 
@@ -121,13 +122,15 @@ int main(int argc, char *argv[])
       hashtable_free(hashtable, symbol_table_free);
       fatal_error("main");
     }
-
+    
+    /* Sauvegarde. */
     if(!(ret = yyparse()))
     {
       if(!unable_to_find_declaration)
       {
         save(output, hashtable);
-        
+        regions_table_save(strcat(output, ".reg"));
+
         if((options & OPT_A) != 0)
           PRINT_LOG();
       }

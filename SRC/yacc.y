@@ -146,7 +146,7 @@
 /* Programme général                                    */
 /* -----------------------------------------------------*/
 
-programme: PROG corps {if(regions_table_add(0, 0, $2) == BAD_REGION) 
+programme: PROG corps {if(regions_table_add(0, 0,  tree_get_root($2)) == BAD_REGION) 
                          fatal_error("regions_table");}
          ;
           
@@ -265,7 +265,7 @@ declaration_procedure: PROCEDURE IDF liste_parametres {
                        variables_buffer_reset();
                        
                        region = regions_stack_top();
-                       regions_table_set_tree(region, $5);
+                       regions_table_set_tree(region, tree_get_root($5));
                        level--;
                        regions_stack_pop();
 
@@ -289,7 +289,7 @@ declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
                       variables_buffer_reset();
 
                       region = regions_stack_top();
-                      regions_table_set_tree(region, $7);
+                      regions_table_set_tree(region, tree_get_root($7));
                       level--;
                       regions_stack_pop();
                       
@@ -383,7 +383,7 @@ op_rac: PLUS_EGAL   {$$ = AT_OPR_PLUSE;}
       | MODULO_EGAL {$$ = AT_OPR_MODE;}
       ;
 
-variable: IDF suite_variable {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_VAR), $2);}
+variable: IDF suite_variable {$$ = syntax_tree_add_son(syntax_tree_node_var_new($1), $2);}
         ;
 
 suite_variable: CROCHET_OUVRANT expression CROCHET_FERMANT suite_variable {$$ = syntax_tree_add_brother(syntax_tree_add_son(
@@ -398,14 +398,14 @@ suite_variable: CROCHET_OUVRANT expression CROCHET_FERMANT suite_variable {$$ = 
   
 condition: SI expression ALORS liste_instructions                          {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF),
                                                                                  syntax_tree_add_brother($2, $4));}
-   | SI expression ALORS liste_instructions SINON liste_instructions 
+         | SI expression ALORS liste_instructions SINON liste_instructions 
 
-   {$$ = syntax_tree_add_brother(syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF), syntax_tree_add_brother($2, $4)), 
-     syntax_tree_add_son(syntax_tree_node_new(AT_CTL_ELSE), $6));}
+         {$$ = syntax_tree_add_brother(syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF), syntax_tree_add_brother($2, $4)), 
+          syntax_tree_add_son(syntax_tree_node_new(AT_CTL_ELSE), $6));}
 
          | SI expression ALORS liste_instructions SINON condition        
-     {$$ = syntax_tree_add_brother(syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF), syntax_tree_add_brother($2, $4)), 
-     syntax_tree_add_son(syntax_tree_node_new(AT_CTL_ELSE), $6));}
+         {$$ = syntax_tree_add_brother(syntax_tree_add_son(syntax_tree_node_new(AT_CTL_IF), syntax_tree_add_brother($2, $4)), 
+          syntax_tree_add_son(syntax_tree_node_new(AT_CTL_ELSE), $6));}
          ;
 
 /* -----------------------------------------------------*/
@@ -474,7 +474,7 @@ default: DEFAULT DEUX_POINTS liste_instructions {$$ = syntax_tree_add_son(syntax
 /* Appel                                                */
 /* -----------------------------------------------------*/
 
-appel: IDF liste_arguments {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_CALL), $2);}
+ appel: IDF liste_arguments {$$ = syntax_tree_add_son(syntax_tree_node_call_new($1), $2);}
      ;
           
 liste_arguments: PARENTHESE_OUVRANTE PARENTHESE_FERMANTE            {$$ = syntax_tree_node_new(AT_EMPTY);}

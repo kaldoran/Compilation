@@ -7,12 +7,54 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "list.h"
 #include "private_tree.h"
 #include "syntax_tree.h"
 #include "error.h"
+#include "mystring.h"
 
 /** Profondeur max d'affichage de l'arbre. */
 #define MAX_DEPTH 1000
+
+/* ---------------------------------------------------------------------- */
+/* Fonctions internes (privées)                                           */
+/* ---------------------------------------------------------------------- */
+
+static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tree *tree);
+
+/* ---------------------------------------------------------------------- */
+
+static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tree *tree)
+{
+  Syntax_node_content *content = tree->value;
+  static char buffer[255] = "";
+  
+  switch(content->type)
+  {
+    case AT_CST_STRING: fgets(buffer, 255, stream);
+      if((content->value.s = mystrdup(buffer)) == NULL)
+	fatal_error("syntax_tree_read_value");
+      break;
+      
+    case AT_CST_FLOAT:  fscanf(stream, "%f ", &content->value.f); break;
+    case AT_CST_BOOL:   fscanf(stream, "%c ", &content->value.c); break;
+    case AT_CST_CHAR:   fscanf(stream, "%c ", &content->value.c); break;
+    case AT_CST_INT:    fscanf(stream, "%d ", &content->value.i); break;
+    
+    case AT_HKEY_INDEX: 
+    case AT_VAR:       
+    case AT_CTL_CALL:
+      fscanf(stream, "%s ", buffer);
+      content->value.hkey = hashtable_get_key(table, buffer);
+      break;
+      
+    default: break;
+  }
+
+  return;
+}
+
+/* ---------------------------------------------------------------------- */
 
 Syntax_tree *syntax_tree_node_new(unsigned char type)
 {
@@ -64,6 +106,20 @@ Syntax_tree *syntax_tree_node_string_new(const char *value)
 Syntax_tree *syntax_tree_node_hkey_new(Hashkey value)
 {
   Syntax_tree *tree = syntax_tree_node_new(AT_HKEY_INDEX);
+  ((Syntax_node_content *)tree->value)->value.hkey = value;
+  return tree;
+}
+
+Syntax_tree *syntax_tree_node_var_new(Hashkey value)
+{
+  Syntax_tree *tree = syntax_tree_node_new(AT_VAR);
+  ((Syntax_node_content *)tree->value)->value.hkey = value;
+  return tree;
+}
+
+Syntax_tree *syntax_tree_node_call_new(Hashkey value)
+{
+  Syntax_tree *tree = syntax_tree_node_new(AT_CTL_CALL);
   ((Syntax_node_content *)tree->value)->value.hkey = value;
   return tree;
 }
@@ -133,4 +189,108 @@ void syntax_tree_print_node(Syntax_tree *node)
     printf("NAME_ERROR\n");
 
   return;
+}
+
+void syntax_tree_save(FILE *stream, Syntax_tree *node)
+{
+  List *queue;
+  Syntax_node_content *content;
+
+  /* Ajout de la racine dans une file. */
+  if((queue = list_new()) == NULL || list_push_node(queue, node) == NULL)
+    fatal_error("syntax_tree_save");
+  
+  /* Premier élément de la file. */
+  while((node = list_shift_node(queue)) != NULL)
+  {
+    /* Si noeud existant. */
+    if(node != (void *)-1)
+    {
+      /* Ajout des fils/frere dans la file. */ 
+      if(list_push_node(queue, ((node->children == NULL) ? (void *)-1 : node->children)) == NULL ||
+	 list_push_node(queue, ((node->next == NULL)  ? (void *)-1 : node->next )) == NULL)
+	fatal_error("syntax_tree_save");
+
+      /* Ecriture du noeud. */
+      content = node->value;
+      fprintf(stream, "%d ", content->type);
+
+      switch(content->type)
+      {
+	case AT_CST_STRING: fprintf(stream, "\n%s\n", content->value.s); break;
+	case AT_CST_FLOAT:  fprintf(stream, "%f ", content->value.f); break;
+	case AT_CST_BOOL:   fprintf(stream, "%c ", content->value.c); break;
+	case AT_CST_CHAR:   fprintf(stream, "%c ", content->value.c); break;
+	case AT_CST_INT:    fprintf(stream, "%d ", content->value.i); break;
+	case AT_HKEY_INDEX:
+	case AT_VAR:        
+	case AT_CTL_CALL: fprintf(stream, "%s ", hashtable_get_id(NULL, content->value.hkey)); break;
+
+	default: break;
+      }
+    }	
+    else
+      fprintf(stream, "-1 ");
+  }
+
+  /* Fin de l'arbre. */
+  fprintf(stream, "-2\n");
+
+  list_free(queue, NULL);
+
+  return;
+}
+
+Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
+{
+  int type;
+  List *queue;
+  Syntax_tree *root, *node, *child, *brother;
+
+  /* Type du noeud de la racine. */
+  fscanf(stream, "%d ", &type);
+  root = node = syntax_tree_node_new(type);
+  syntax_tree_read_value(table, stream, node);
+
+  /* Ajout de la racine dans une file. */
+  if((queue = list_new()) == NULL || list_push_node(queue, node) == NULL)
+    fatal_error("syntax_tree_save");
+
+  while(1)
+  {
+    node = list_shift_node(queue);
+    fscanf(stream, "%d ", &type);
+
+    /* Fin de l'arbre. */
+    if(type == -2)
+      break;
+
+    /* Fils. */
+    if(type != -1)
+    {
+      child = syntax_tree_node_new(type);
+      syntax_tree_read_value(table, stream, child);
+      syntax_tree_add_son(node, child);
+
+      if(list_push_node(queue, child) == NULL)
+	fatal_error("syntax_tree_save");
+    }
+ 
+    /* Frère. */
+    fscanf(stream, "%d ", &type);
+    
+    if(type != - 1)
+    {
+      brother = syntax_tree_node_new(type);
+      syntax_tree_read_value(table, stream, brother);
+      syntax_tree_add_brother(node, brother);
+
+      if(list_push_node(queue, brother) == NULL)
+	fatal_error("syntax_tree_save");
+    }
+  }
+  
+  list_free(queue, NULL);
+
+  return root;
 }

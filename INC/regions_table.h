@@ -9,6 +9,7 @@
 #define _REGIONS_TABLE_
 
 #include "syntax_tree.h"
+#include "lexeme_table.h"
 
 /* Note : La table des régions n'a pas à être initialisé par une quelconque fonction.
    Sa taille est gérée automatiquement en interne. */
@@ -47,5 +48,14 @@ int regions_table_set_tree(int region, Syntax_tree *tree);
 
 /** Affiche la table des régions. */
 void regions_table_print(void);
+
+/** Sauvegarde la table des régions dans le fichier spécifié. */
+/* %param filename : Nom du fichier de sauvegarde. */
+void regions_table_save(const char *filename);
+
+/** Charge la table des régions. 
+    Necessite l'initialisation des tables principales. */
+/* %param filename : Nom du fichier à charger. */
+void regions_table_load(Lexeme_table *table, const char *filename);
 
 #endif /* _REGIONS_TABLE_ INCLUDED */
