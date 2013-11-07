@@ -20,10 +20,10 @@ function sub() {
      ./BIN/prog -a -s myout > out2
      changepointer out2
  
-     if [[ $(diff out out2 | grep ">" | sed '1,4d' | wc -l) == 0 ]]; then
+     if [[ $(diff out out2 | grep "^>" | sed '1,4d' | wc -l) == 0 ]]; then
 	echo -e "\tAucune différence";
      else 
-	echo -e "\tLes fichiers ne sont pas identiques";
+	echo -e "\tLes fichiers ne sont pas identiques ou Erreur lors de la compilation";
      fi
 }
 
