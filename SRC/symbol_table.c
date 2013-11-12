@@ -23,6 +23,7 @@
 /** Déclarations des types de bases. */
 static Symbol *symbol_basic[SYMBOL_BASIC_MAX];
 
+/** Mauvaise compilation lié aux données. */
 bool bad_compil = false;
 
 /* ---------------------------------------------------------------------- */
@@ -84,12 +85,12 @@ Symbol *symbol_new(char type, int region, Index_t index, size_t exec)
 void symbol_table_init(Symbol_table *table)
 {
   Symbol *sym;
-  static const char *type[] = {"int", "float", "bool", "char"};
+  const char *type[] = {"int", "float", "bool", "char"};
   int i;
   
   for(i = 0; i < SYMBOL_BASIC_MAX; i++)
   {
-    if((sym = symbol_new(SYMBOL_TYPE_BASE, 0, NULL, 1)) == NULL)
+    if((sym = symbol_new(SYMBOL_TYPE_BASE, -1, NULL, 1)) == NULL)
       fatal_error("symbol_table_init");
 
     symbol_basic[i] = sym;
@@ -165,7 +166,7 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
   Symbol *start = hashtable_get_value_by_key(table, hkey), *origin;
   Region_node *node = regions_stack_get_node();
   extern int line_num;
-
+  
   /* Parcours de la pile des régions. */
   for(; node != NULL; node = node->next)
   {
@@ -173,16 +174,18 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
     for(origin = start; origin != NULL; origin = origin->next)
       if(origin->region == node->region)
         return origin; /* Trouvé ! */
-  }
+  } 
 
-  /* Si pas dans la pile, peut-être au niveau 0. */
+  /* Si pas dans la pile, peut-être au niveau -1. */
   for(origin = start; origin != NULL; origin = origin->next)
-    if(origin->region == 0)
+    if(origin->region == -1)
       return origin; /* Trouvé ! */
   
   /* Non trouvé. */
   bad_compil = true;
-  fprintf(stderr, "Line %d - Unable to find the declaration of %s\n", line_num, hashtable_get_id(table, hkey));
+  fprintf(stderr, "Line %d - Unable to find the declaration of %s\n", line_num, 
+	  hashtable_get_id(table, hkey));
+
   return NULL;
 }
 

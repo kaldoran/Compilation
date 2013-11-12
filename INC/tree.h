@@ -68,6 +68,16 @@ int tree_node_get_depth(Tree *node);
 /* %return : NULL si le noeud t est la racine. */
 Tree *tree_node_get_father(Tree *t);
 
+/** Obtenir le premier frère d'un noeud. */
+/* %param node : Noeud. */
+/* %return : NULL si le noeud frère n'existe pas où le frère sinon. */
+Tree *tree_node_get_brother(Tree *node);
+
+/** Obtenir le premier fils d'un noeud. */
+/* %param node : Noeud. */
+/* %return : NULL si le noeud fils n'existe pas où le fils sinon. */
+Tree *tree_node_get_son(Tree *node);
+
 /** Insère un noeud en dessous d'un noeud père. */
 /* %param parent : Noeud père. */
 /* %param pos : Position où doit se trouver le noeud. 

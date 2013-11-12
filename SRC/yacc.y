@@ -3,7 +3,9 @@
 
   extern int yylex(void);
   extern void yyerror(const char *str);
-  
+  extern int bad_compil;
+  extern int line_num;
+
   /* Retourne un champ de déclaration d'une Hashkey */
   #define SYMBOL_OF(HKEY) symbol_table_get(hashtable, HKEY)
 
@@ -11,13 +13,8 @@
   Hashtable *hashtable;
 
   /* Données. */
-  Array *array;
-  Structure *structure;
-  Function *function;
-  Procedure *procedure;
-  unsigned int level = 0;
-  int region;
-
+  static unsigned int level = 0;
+  static int region;
 %}
 
 %union
@@ -172,20 +169,24 @@ declaration: declaration_type
 declaration_type: 
    TYPE IDF DEUX_POINTS TABLEAU dimension DE nom_type 
    {
+    Array *array;
+    
     if((array = array_new(dimensions_buffer_get_size(), SYMBOL_OF($7))) == NULL)
-     fatal_error("array_new");
+      fatal_error("array_new");
     
     dimensions_buffer_copy(array->dimension);
     dimensions_buffer_reset();
-   
+    
     if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, regions_stack_top(), array, 0))
       fatal_error("symbol_table_add");
    }
 
    | TYPE IDF DEUX_POINTS STRUCT liste_champs FSTRUCT   
    {
+    Structure *structure;
+    
     if((structure = structure_new(variables_buffer_get_size())) == NULL)
-     fatal_error("structure_new");
+      fatal_error("structure_new");
    
     variables_buffer_copy(structure->field);
     variables_buffer_reset();
@@ -268,6 +269,7 @@ declaration_procedure: PROCEDURE IDF liste_parametres {
                                                       } corps
 
                      {
+                      Procedure *procedure;
                       unsigned int i;
   		      
 		      variables_buffer_set_offset(-$3);
@@ -300,6 +302,7 @@ declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
                                                                             fatal_error("regions_stack_push");
                                                                          } corps
                     {
+                     Function *function;
                      unsigned int i;
 		     
 		     variables_buffer_set_offset(-$3);
@@ -413,8 +416,8 @@ variable: IDF suite_variable {$$ = syntax_tree_add_son(syntax_tree_node_var_new(
 
 suite_variable: CROCHET_OUVRANT expression CROCHET_FERMANT suite_variable {$$ = syntax_tree_add_brother(syntax_tree_add_son(
                                                                                 syntax_tree_node_new(AT_ARRAY_INDEX), $2), $4);}
-              | POINT IDF suite_variable                                  {$$ = syntax_tree_add_brother(syntax_tree_node_hkey_new($2), $3);}
-              |                                                           {$$ = NULL;}
+              | POINT IDF suite_variable {$$ = syntax_tree_add_brother(syntax_tree_node_hkey_new($2), $3);}
+              |                          {$$ = NULL;}
               ;
 
 /* -----------------------------------------------------*/
@@ -499,7 +502,41 @@ default: DEFAULT DEUX_POINTS liste_instructions {$$ = syntax_tree_add_son(syntax
 /* Appel                                                */
 /* -----------------------------------------------------*/
 
- appel: IDF liste_arguments {$$ = syntax_tree_add_son(syntax_tree_node_call_new($1), $2);}
+appel: IDF liste_arguments {
+                            unsigned int i, j;
+			    Syntax_node_content *content;
+                            Symbol *sym;
+			    Syntax_tree *tree;
+
+			    $$ = tree = syntax_tree_add_son(syntax_tree_node_call_new($1), $2);
+			    content = syntax_tree_node_get_content($$);
+
+			    /* Si la déclaration existe... */
+			    if((sym = content->value.var.type) != NULL)
+			    {
+                              if(sym->type == SYMBOL_TYPE_PROCEDURE || sym->type == SYMBOL_TYPE_FUNCTION)
+			      {
+                                tree = tree_node_get_son(tree);
+                              
+				/* Comptage des noeuds. */
+				for(i = 0; tree != NULL; i++, tree = tree_node_get_brother(tree));
+				
+				/* Comparaison... */
+				if((j = ((Function *)sym->index)->param_number) != i)
+				{
+                                    bad_compil = true;
+				    fprintf(stderr, "Line %d - Function %s has %u arguments. (No %u...)\n", 
+                                            line_num, hashtable_get_id(NULL, content->value.var.hkey), i, j);  
+                                }
+                              }
+			      else
+			      {
+                                bad_compil = true;
+				fprintf(stderr, "Line %d - %s is not a procedure or function.\n", 
+                                        line_num, hashtable_get_id(NULL, content->value.var.hkey));
+                              }
+                            }
+                           }
      ;
           
 liste_arguments: PARENTHESE_OUVRANTE PARENTHESE_FERMANTE            {$$ = syntax_tree_node_new(AT_EMPTY);}
@@ -507,7 +544,7 @@ liste_arguments: PARENTHESE_OUVRANTE PARENTHESE_FERMANTE            {$$ = syntax
                ;
 
 liste_args: un_arg                    {$$ = $1;}
-          | liste_args VIRGULE un_arg {syntax_tree_add_brother($1, $3);}
+          | liste_args VIRGULE un_arg {$$ = syntax_tree_add_brother($1, $3);}
           ;
           
 un_arg: expression {$$ = $1;}

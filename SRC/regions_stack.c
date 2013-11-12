@@ -56,7 +56,7 @@ int regions_stack_pop(void)
   int region;
 
   if(start == NULL)
-    return 0; /* Pile vide. */
+    return -1; /* Pile vide. */
 
   region = start->region;
   node = start;
@@ -71,7 +71,7 @@ int regions_stack_pop(void)
 int regions_stack_top(void)
 {
   if(start == NULL)
-    return 0; /* Pile vide. */
+    return -1; /* Pile vide. */
   return start->region;
 }
 

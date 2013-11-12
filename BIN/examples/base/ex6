@@ -1,8 +1,13 @@
 %PROGRAM% 
 
+type pepe : struct
+  test_int : int;
+  test_char : bool;
+end struct;
+
 type type_normal : struct
   test_int : int;
-  test_char : char;
+  test_char : pepe;
 end struct;
 
 type type_tableau : array[1 .. 3] of int;
@@ -16,18 +21,25 @@ var i : int;
 var variable_carac : char;
 var tab : type_tableau;
 var var_struct : type_normal;
+var annee : int;
+
+var c : int;
 
 start{
+
   while (1 > 2) do { 
     write ("coucou les amis"); 
   }
 };
 
 var coucou:char;
+var annee: int;
+var p :type_normal;
 
 start {
-  coucou = type_normal.test_char;
 
+  coucou = p.test_char.test_int;
+  prem_fun(5, 3, 48, 6, 9, fun(5, 8, 7, 6), 3);
   read(annee, chaine[50]);
   write("J'ai %d ans et toutes mes %s !\n", annee, chaine[50]);
 }

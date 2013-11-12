@@ -10,6 +10,7 @@
 
 #include "tree.h"
 #include "lexeme_table.h"
+#include "description_table.h"
 
 /** Nombre de types de noeuds. */
 #define AT_SIZE AT_EMPTY + 1
@@ -102,7 +103,7 @@ typedef union Syntax_node_value
   float f;      /* Flottant. */
   char c;       /* Caractère/Booléen. */
   char *s;      /* Chaîne. */
-  Hashkey hkey; /* Numéro lexicographique. */
+  Variable var; /* Variable. */
 } Syntax_node_value;
 
 /** Structure du contenu d'un noeud d'un arbre. */
@@ -127,9 +128,9 @@ Syntax_tree *syntax_tree_node_float_new(float value);
 Syntax_tree *syntax_tree_node_char_new(char value);
 Syntax_tree *syntax_tree_node_bool_new(bool value);
 Syntax_tree *syntax_tree_node_string_new(const char *value);
-Syntax_tree *syntax_tree_node_hkey_new(Hashkey value);
 Syntax_tree *syntax_tree_node_var_new(Hashkey value);
 Syntax_tree *syntax_tree_node_call_new(Hashkey value);
+Syntax_tree *syntax_tree_node_hkey_new(Hashkey value);
 
 /** Libération de la valeur d'un noeud d'un arbre abstrait. */
 /* %param : Valeur du noeud à supprimer. */
@@ -158,6 +159,11 @@ void syntax_tree_print_node(Syntax_tree *node);
 /** Affiche un arbre abstrait. */
 /* %param TREE : Arbre à afficher. */
 #define syntax_tree_print(TREE) tree_foreach_node(TREE, syntax_tree_print_node)
+
+/** Retourne le contenu d'un noeud. */
+/* %param node : Noeud à évaluer. */
+/* %return : La valeur du noeud. */
+Syntax_node_content *syntax_tree_node_get_content(Syntax_tree *node);
 
 /** Sauvegarde d'un arbre abstrait dans un flux. */
 /* %param stream : Flux de sortie. */

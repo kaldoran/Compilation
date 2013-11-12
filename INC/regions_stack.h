@@ -24,11 +24,11 @@ void regions_stack_free(void);
 int regions_stack_push(int region);
 
 /** Dépile une région de la pile. */
-/* %return : 0 si pile vide ou le numéro de la région dépilée sinon. */
+/* %return : -1 si pile vide ou le numéro de la région dépilée sinon. */
 int regions_stack_pop(void);
 
 /** Retourne le numéro de la région en sommet de pile. */
-/* %return : 0 si pile vide ou le numéro de la région du sommet de pile sinon. */
+/* %return : -1 si pile vide ou le numéro de la région du sommet de pile sinon. */
 int regions_stack_top(void);
 
 /** Obtenir la taille de la pile des régions. */

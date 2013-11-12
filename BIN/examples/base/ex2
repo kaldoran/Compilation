@@ -3,6 +3,8 @@
 # Proc 1
 proc proc_1 () 
   var coucou : char;
+  var x : int;
+  var y : int;
 
   start
   {

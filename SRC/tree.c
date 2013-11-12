@@ -149,6 +149,16 @@ Tree *tree_node_get_father(Tree *t)
   return t->father;
 }
 
+Tree *tree_node_get_brother(Tree *node)
+{
+  return node->next;
+}
+
+Tree *tree_node_get_son(Tree *node)
+{
+  return node->children;
+}
+
 Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
 {
   Tree *children = parent->children;
