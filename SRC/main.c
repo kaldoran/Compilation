@@ -61,12 +61,13 @@ void usage(const char *arg)
 }
 
 int main(int argc, char *argv[])
-{  int optch;
+{ 
+  int optch;
 
   extern FILE *yyin;
   extern char *optarg;
   extern Hashtable *hashtable;
-  extern bool unable_to_find_declaration;
+  extern bool bad_compil;
 
   int ret = 0;
   int options = 0;
@@ -126,7 +127,7 @@ int main(int argc, char *argv[])
     /* Sauvegarde. */
     if(!(ret = yyparse()))
     {
-      if(!unable_to_find_declaration)
+      if(!bad_compil)
       {
         save(output, hashtable);
         regions_table_save(strcat(output, ".reg"));

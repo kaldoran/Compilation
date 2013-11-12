@@ -15,7 +15,7 @@ start {
   }
 };
 
-function pipi (arg:int, arg2:string[10]) return int 
+function pipi (arg3:int, arg4:string[10]) return int 
 var coucou : char;
     
 start {

@@ -187,8 +187,35 @@ void syntax_tree_print_node(Syntax_tree *node)
   /* Contenu adresse */
   snode = tree_node_get_value(node);
   
-  if(snode->type < AT_SIZE) 
-    printf("%s\n", node_name[snode->type]);
+  if(snode->type < AT_SIZE)
+  {
+    printf("%s", node_name[snode->type]);
+
+    switch(snode->type)
+    {
+      case AT_VAR: 
+	printf(" (%s)", lexeme_table_get(NULL, snode->value.hkey));
+	break;
+      case AT_CST_STRING:
+	printf(" (%s)", snode->value.s);
+	break;
+      case AT_CST_FLOAT:
+	printf(" (%f)", snode->value.f);
+	break; 
+      case AT_CST_BOOL:
+	printf(snode->value.c ? "true" : "false");
+	break;
+      case AT_CST_CHAR:
+	printf(" (%c)", snode->value.c);
+	break;
+      case AT_CST_INT:
+	printf(" (%d)", snode->value.i);
+	break;
+      default: break;
+    }
+
+    printf("\n");
+  }
   else
     printf("NAME_ERROR\n");
 

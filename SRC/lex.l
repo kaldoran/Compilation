@@ -42,7 +42,10 @@
 
 
 \"(\\.|[^\"])*\" {
-                  if((yylval.val_s = mystrdup(yytext)) == NULL)
+                  /* Les guillemets de la chaine sont supprimés. */
+                  yytext[yyleng - 1] = '\0';
+
+                  if((yylval.val_s = mystrdup(yytext + 1)) == NULL)
                     yyerror("Bad alloc: String");
                   return(CSTE_CHAINE);
                  }

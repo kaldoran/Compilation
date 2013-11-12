@@ -23,7 +23,7 @@
 /** Déclarations des types de bases. */
 static Symbol *symbol_basic[SYMBOL_BASIC_MAX];
 
-bool unable_to_find_declaration = false;
+bool bad_compil = false;
 
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
@@ -181,7 +181,7 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
       return origin; /* Trouvé ! */
   
   /* Non trouvé. */
-  unable_to_find_declaration = true;
+  bad_compil = true;
   fprintf(stderr, "Line %d - Unable to find the declaration of %s\n", line_num, hashtable_get_id(table, hkey));
   return NULL;
 }
