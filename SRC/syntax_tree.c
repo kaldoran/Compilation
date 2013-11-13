@@ -133,7 +133,7 @@ Syntax_tree *syntax_tree_node_hkey_new(Hashkey value)
   Syntax_tree *tree = syntax_tree_node_new(AT_HKEY_INDEX);
 
   STVALUE(tree)->value.var.hkey = value;
-  STVALUE(tree)->value.var.type = NULL;
+  STVALUE(tree)->value.var.type = NULL; 
 
   return tree;
 }

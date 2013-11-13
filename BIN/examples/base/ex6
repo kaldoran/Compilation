@@ -44,4 +44,3 @@ start {
   write("J'ai %d ans et toutes mes %s !\n", annee, chaine[50]);
 }
 
-

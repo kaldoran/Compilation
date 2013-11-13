@@ -3,8 +3,13 @@
 
   extern int yylex(void);
   extern void yyerror(const char *str);
-  extern int bad_compil;
-  extern int line_num;
+
+  extern int bad_compil; /* symbol_table. */
+  extern int line_num;   /* Voir lex. */
+
+  /** Teste si une variable est bien formée. */
+  /* %param tree : Arbre contenant la variable. */
+  void test_variable(Syntax_tree *tree);
 
   /* Retourne un champ de déclaration d'une Hashkey */
   #define SYMBOL_OF(HKEY) symbol_table_get(hashtable, HKEY)
@@ -16,6 +21,7 @@
   static unsigned int level = 0;
   static int region;
 %}
+
 
 %union
 {
@@ -304,7 +310,7 @@ declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
                     {
                      Function *function;
                      unsigned int i;
-		     
+		     /* void add_function(Hashkey hashkey, Syntax_tree *params, Symbol *sym, Syntax_tree *root); */
 		     variables_buffer_set_offset(-$3);
 		     
 		     if((function = function_new(SYMBOL_OF($5), variables_buffer_get_size())) == NULL)
@@ -411,7 +417,10 @@ op_rac: PLUS_EGAL   {$$ = AT_OPR_PLUSE;}
       | MODULO_EGAL {$$ = AT_OPR_MODE;}
       ;
 
-variable: IDF suite_variable {$$ = syntax_tree_add_son(syntax_tree_node_var_new($1), $2);}
+variable: IDF suite_variable {
+                              $$ = syntax_tree_add_son(syntax_tree_node_var_new($1), $2);
+			      test_variable($$);
+                             }
         ;
 
 suite_variable: CROCHET_OUVRANT expression CROCHET_FERMANT suite_variable {$$ = syntax_tree_add_brother(syntax_tree_add_son(
@@ -511,18 +520,22 @@ appel: IDF liste_arguments {
 			    $$ = tree = syntax_tree_add_son(syntax_tree_node_call_new($1), $2);
 			    content = syntax_tree_node_get_content($$);
 
+			    /* VERIFICATION DE LA FIABILITE DE LA FONCTION : Son existence + Son nombre de paramètres. */
+
 			    /* Si la déclaration existe... */
 			    if((sym = content->value.var.type) != NULL)
 			    {
                               if(sym->type == SYMBOL_TYPE_PROCEDURE || sym->type == SYMBOL_TYPE_FUNCTION)
 			      {
+                                  j = sym->type == SYMBOL_TYPE_PROCEDURE ? ((Procedure *)sym->index)->param_number :
+			                                                   ((Function *)sym->index)->param_number;
                                 tree = tree_node_get_son(tree);
                               
 				/* Comptage des noeuds. */
 				for(i = 0; tree != NULL; i++, tree = tree_node_get_brother(tree));
 				
 				/* Comparaison... */
-				if((j = ((Function *)sym->index)->param_number) != i)
+				if(j != i)
 				{
                                     bad_compil = true;
 				    fprintf(stderr, "Line %d - Function %s has %u arguments. (No %u...)\n", 
@@ -629,3 +642,106 @@ test_comp: INFERIEUR         {$$ = AT_CMP_L;}
          ;
 
 %%
+
+void test_variable(Syntax_tree *tree)
+{
+  Syntax_node_content *content;
+  Syntax_tree *current;
+  Symbol *sym;
+  unsigned int i;
+  Structure *structure;
+  
+  /* Récupération du contenu de l'arbre. */
+  content = syntax_tree_node_get_content(tree);
+			      
+  /* Si association de noms échouée. */
+  if(content->value.var.type == NULL)
+    return;
+
+  sym = content->value.var.type;
+
+  /* Si le contenu n'est pas une variable. */
+  if(sym->type != SYMBOL_TYPE_VAR)
+  {
+    bad_compil = true;
+    fprintf(stderr, "Line %d - %s is not a variable !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey));  
+    return;
+  }
+  
+  /* Récupération du type de la variable. */
+  sym = sym->index;
+
+  for(;;)
+  {
+    /* Parcours des champs. */
+    switch(sym->type)
+    {
+      /* ------------------------------------------ */
+      /* TYPE BASE                                  */
+      /* ------------------------------------------ */
+      
+      case SYMBOL_TYPE_BASE:
+	if(tree_node_get_son(tree) != NULL)
+	{
+	  bad_compil = true;
+	  fprintf(stderr, "Line %d - %s is not a structure !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey));  
+	}
+	return; /* Type de base, plus rien à vérifier. */
+	
+      /* ------------------------------------------ */
+      /* TYPE STRUCTURE                             */
+      /* ------------------------------------------ */
+	
+      case SYMBOL_TYPE_STRUCT:
+	if((current = tree_node_get_brother(tree)) == NULL && (current = tree_node_get_son(tree)) == NULL)
+	{
+	  bad_compil = true;
+	  fprintf(stderr, "Line %d - You need to access a field of the %s structure!!\n", line_num, 
+		  hashtable_get_id(NULL, content->value.var.hkey));  
+	  return;
+	}
+
+	/* Recherche dans le prochain champ de la structure. */
+	content = syntax_tree_node_get_content(current);
+	structure = sym->index;
+
+	for(i = 0; i < structure->field_number; i++)
+	  /* Champ trouvé. */
+	  if(structure->field[i].hkey == content->value.var.hkey)
+	  {
+	    sym = structure->field[i].type;
+	    content->value.i = i;
+	    tree = current;
+	    break;
+	  }
+	
+	/* Champ non trouvé. */
+	if(i == structure->field_number)
+	{
+	  bad_compil = true;
+	  fprintf(stderr, "Line %d - Unable to find the %s field !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey)); 
+	  return;
+	}
+	break;
+
+      /* ------------------------------------------ */
+      /* TYPE TABLEAU                               */
+      /* ------------------------------------------ */
+
+      case SYMBOL_TYPE_ARRAY:
+	
+	break;
+	
+      /* ------------------------------------------ */
+      /* DEFAULT                                    */
+      /* ------------------------------------------ */
+
+      default:
+	bad_compil = true;
+	fprintf(stderr, "Line %d - Bad declaration : %s\n", 
+		line_num, hashtable_get_id(NULL, content->value.var.hkey));  
+	break;
+    }     
+  } 
+}
+                         
