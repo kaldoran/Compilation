@@ -183,7 +183,7 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
   
   /* Non trouvé. */
   bad_compil = true;
-  fprintf(stderr, "Line %d - Unable to find the declaration of %s\n", line_num, 
+  fprintf(stderr, "Line %d - Unable to find the declaration of \"%s\"\n", line_num, 
 	  hashtable_get_id(table, hkey));
 
   return NULL;
