@@ -1,5 +1,16 @@
 %PROGRAM%
 
+var coucoucoucou, i, x : int;
+var continuer : bool;
+
+proc appel (arg : int) 
+    var i:int;
+
+    start{
+        i = arg; /* arg est dit comme non trouvé alors qu'il est passé en paramètre */
+        write("%d", i);
+    };
+
 start { 
   while (continuer) do {
     coucoucoucou = 7;
@@ -10,7 +21,7 @@ start {
     }
 
     do {
-      appel();
+      appel(100000);
     } while(i > 6);
     
   }
