@@ -81,11 +81,11 @@ start{
   a.lala[4] = 3;                    
   c[10] = 0;                        
   a.test_char = 0;                  
-  coucou = d[10].zzzz + 10;          /* Segmentation sans le kkk */
+  coucou = d[10].zzzz + 10;          /* Segmentation sans le zzzz */
   coucou = 5 * 9 + 6 + d[10].k * 9; 
   d[10].abc = 3;                     /* Segmentation sans le abc */ 
   coucou = 5;                 
   coucou = d[10].bbb[5];             /* Segmentation sans le [5] */
-  coucou = 5 / 4 + d[4].bbb[4] * 6;        
+  coucou = 5 / 4 + d[4].bbb[4] * 6;  /* Segmentation sans le [4] */   
 }
  

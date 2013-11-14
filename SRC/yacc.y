@@ -715,6 +715,7 @@ void test_variable(Syntax_tree *tree)
 	   (!root && (current = tree_node_get_brother(tree)) == NULL))
 	{
 	  bad_compil = true;
+	  if(content->value.var.hkey != NULL)
 	  fprintf(stderr, "Line %d - You need to access a field of the \"%s\" structure !\n", line_num, 
 		  hashtable_get_id(NULL, content->value.var.hkey));  
 	  return;
@@ -800,7 +801,6 @@ void test_variable(Syntax_tree *tree)
 
 	sym = array->type;
 	tree = current;
-
 	break;
        	
       /* ------------------------------------------ */
