@@ -530,7 +530,7 @@ appel: IDF liste_arguments {
                                 j = sym->type == SYMBOL_TYPE_PROCEDURE ? ((Procedure *)sym->index)->param_number :
 				                                         ((Function *)sym->index)->param_number;
                                 tree = tree_node_get_son(tree);
-                              
+				
 				/* Comptage des noeuds. */
 				for(i = 0; tree != NULL; i++, tree = tree_node_get_brother(tree));
 				
@@ -538,7 +538,7 @@ appel: IDF liste_arguments {
 				if(j != i)
 				{
                                   bad_compil = true;
-				  fprintf(stderr, "Line %d - Function \"%s\" has %u arguments. (No %u...)\n", 
+				  fprintf(stderr, "Line %d - Function/Procedure \"%s\" has %u arguments. (No %u...)\n", 
                                           line_num, hashtable_get_id(NULL, content->value.var.hkey), i, j);  
                                 }
                               }
@@ -552,7 +552,7 @@ appel: IDF liste_arguments {
                            }
      ;
           
-liste_arguments: PARENTHESE_OUVRANTE PARENTHESE_FERMANTE            {$$ = syntax_tree_node_new(AT_EMPTY);}
+liste_arguments: PARENTHESE_OUVRANTE PARENTHESE_FERMANTE            {$$ = NULL;}
                | PARENTHESE_OUVRANTE liste_args PARENTHESE_FERMANTE {$$ = $2;}
                ;
 
