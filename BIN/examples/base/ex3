@@ -19,11 +19,14 @@ proc proc_1 (arg:int, arg2:char)
 
 function pipi (arg3:int, arg4:string[10]) return int 
   var coucou : char;
+  var x : int;
     
   start {
     x = 7; /* Erreur, mauvaise déclaration. */
     return 1;
   };
+
+var x : int;
 
 start{x=3;}
 
