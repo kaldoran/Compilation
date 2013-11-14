@@ -220,7 +220,7 @@ void syntax_tree_print_node(Syntax_tree *node)
 	printf(" (%f)", snode->value.f);
 	break; 
       case AT_CST_BOOL:
-	printf(snode->value.c ? "true" : "false");
+	printf(snode->value.c ? " (true)" : " (false)");
 	break;
       case AT_CST_CHAR:
 	printf(" (%c)", snode->value.c);

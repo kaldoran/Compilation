@@ -73,7 +73,7 @@
 #define AT_CTL_BREAK    40 /* break */
 #define AT_CTL_CONTINUE 41 /* continue */
 #define AT_CTL_TERNAIRE 42 /* ternaire */
-#define AT_CTL_CALL     43 /* appel */
+#define AT_CTL_CALL     43 /* call */
 
 /** Constantes. */
 #define AT_CST_STRING 44 /* string */

@@ -128,6 +128,8 @@ int main(int argc, char *argv[])
     /* Sauvegarde. */
     if(!(ret = yyparse()))
     {
+          PRINT_LOG();
+
       if(!bad_compil)
       {
 	index_array_new(hashtable);

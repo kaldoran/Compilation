@@ -180,7 +180,7 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
   for(origin = start; origin != NULL; origin = origin->next)
     if(origin->region == -1)
       return origin; /* Trouvé ! */
-  
+ 
   /* Non trouvé. */
   bad_compil = true;
   fprintf(stderr, "Line %d - Unable to find the declaration of \"%s\"\n", line_num, 
