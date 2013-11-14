@@ -20,7 +20,7 @@ proc prem_proc(arg : type_tableau, arg_2 : type_normal)
     }
   };
 
-var coudcou : char;
+var coucou : char;
 
 proc abcd()
   var coucou : char;

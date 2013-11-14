@@ -17,30 +17,35 @@ var tab : type_tableau;
 var var_struct : type_normal;
 
 function prem_fun (arg:type_tableau, arg_2:type_normal) return int
-var i : int;
-var variable_carac : char;
-var tab : type_tableau;
-var var_struct : type_normal;
-var annee : int;
+    var i : int;
+    var variable_carac : char;
+    var tab : type_tableau;
+    var var_struct : type_normal;
+    var annee : int;
+    var c : int;
 
-var c : int;
+    start{
 
-start{
+        while (1 > 2) do { 
+            write ("coucou les amis"); 
+        }
+    };
 
-  while (1 > 2) do { 
-    write ("coucou les amis"); 
-  }
-};
+function fun (arg1:int) return int
+    start{
+        write("coucou les amis");
+    };
 
-var coucou:char;
+var coucou,hello:char;
 var annee: int;
 var p :type_normal;
+var heu : char; 
 
 start {
 
   coucou = p.test_char.test_int;
-  prem_fun(5, 3, 48, 6, 9, fun(5, 8, 7, 6), 3);
-  read(annee, chaine[50]);
-  write("J'ai %d ans et toutes mes %s !\n", annee, chaine[50]);
+  prem_fun(5, fun(5));
+  read(annee, heu);
+  write("J'ai %d ans et toutes mes %s !\n", annee, heu);
 }
 

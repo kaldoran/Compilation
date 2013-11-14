@@ -9,7 +9,7 @@ proc proc_1 ()
   start
   {
     if ( x == 6) then {
-      x = 3;
+      x = 5;
     }
     else if (y == 4) then {
       write("Héhé ! HAHA!");
