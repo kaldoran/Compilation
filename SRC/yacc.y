@@ -527,8 +527,8 @@ appel: IDF liste_arguments {
 			    {
                               if(sym->type == SYMBOL_TYPE_PROCEDURE || sym->type == SYMBOL_TYPE_FUNCTION)
 			      {
-                                  j = sym->type == SYMBOL_TYPE_PROCEDURE ? ((Procedure *)sym->index)->param_number :
-			                                                   ((Function *)sym->index)->param_number;
+                                j = sym->type == SYMBOL_TYPE_PROCEDURE ? ((Procedure *)sym->index)->param_number :
+				                                         ((Function *)sym->index)->param_number;
                                 tree = tree_node_get_son(tree);
                               
 				/* Comptage des noeuds. */
@@ -537,15 +537,15 @@ appel: IDF liste_arguments {
 				/* Comparaison... */
 				if(j != i)
 				{
-                                    bad_compil = true;
-				    fprintf(stderr, "Line %d - Function %s has %u arguments. (No %u...)\n", 
-                                            line_num, hashtable_get_id(NULL, content->value.var.hkey), i, j);  
+                                  bad_compil = true;
+				  fprintf(stderr, "Line %d - Function \"%s\" has %u arguments. (No %u...)\n", 
+                                          line_num, hashtable_get_id(NULL, content->value.var.hkey), i, j);  
                                 }
                               }
 			      else
 			      {
                                 bad_compil = true;
-				fprintf(stderr, "Line %d - %s is not a procedure or function.\n", 
+				fprintf(stderr, "Line %d - \"%s\" is not a procedure or function.\n", 
                                         line_num, hashtable_get_id(NULL, content->value.var.hkey));
                               }
                             }
@@ -643,6 +643,13 @@ test_comp: INFERIEUR         {$$ = AT_CMP_L;}
 
 %%
 
+#define BAD_COMPIL(LEXEME, MSG)			                     \
+  if(1) {                                                            \
+    bad_compil = true;                                               \
+    fprintf(stderr, "Line %d - \"%s\" - %s\n", line_num, LEXEME, MSG); \
+    return;                                                          \
+  }
+
 void test_variable(Syntax_tree *tree)
 {
   Syntax_node_content *content;
@@ -652,29 +659,26 @@ void test_variable(Syntax_tree *tree)
   Structure *structure;
   Array *array;
   bool root = true;
- 
+  const char *lexeme;
+
   /* Récupération du contenu de l'arbre. */
   content = syntax_tree_node_get_content(tree);
 			      
   /* Si association de noms échouée. */
-  if(content->value.var.type == NULL)
-    return;
+  if(content->value.var.type == NULL) return;
 
+  /* Ligne de déclaration du type de l'IDF. */
   sym = content->value.var.type;
+  lexeme = lexeme_table_get(hashtable, content->value.var.hkey);
 
-  /* Erreur  : Passage de fonction au lieu de variable.
-     Exemple : fun = fun + 3, si fun est une fonction. */
+  /* ERREUR : Passage d'une fonction au lieu d'une variable. */
   if(sym->type != SYMBOL_TYPE_VAR)
-  {
-    bad_compil = true;
-    fprintf(stderr, "Line %d - \"%s\" is not a variable !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey));  
-    return;
-  }
+    BAD_COMPIL(lexeme, "It's not a variable");
   
   /* Récupération du type de la variable. */
   sym = sym->index;
 
-  for(;; root = false)
+  for(;;)
   { 
     /* Parcours des champs. */
     switch(sym->type)
@@ -688,18 +692,11 @@ void test_variable(Syntax_tree *tree)
 	{	  
 	  content = syntax_tree_node_get_content(tree);
 
-	  /* Erreur  : Passage de variable simple mais où on tente d'imposer le type structure ou tableau.
-	     Exemple : a[15], a.machin alors que a est une variable de type de base. */
+	  /* Erreur  : Passage de variable simple mais où on tente d'imposer le type structure ou tableau. */
 	  if(content->type == AT_HKEY_INDEX)
-	  {
-	    bad_compil = true;
-	    fprintf(stderr, "Line %d - \"%s\" is not a structure !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey)); 
-	  } 
-	  else if(content->type == AT_ARRAY_INDEX)
-	  {
-	    bad_compil = true;
-	    fprintf(stderr, "Line %d - This var is not an array !\n", line_num); 
-	  } 
+	    BAD_COMPIL(lexeme, "It's not a structure !");
+	  if(content->type == AT_ARRAY_INDEX)
+	    BAD_COMPIL(lexeme, "It's not an array !");
 	}
 	return; /* Type de base, plus rien à vérifier. */
 	
@@ -708,18 +705,9 @@ void test_variable(Syntax_tree *tree)
       /* ------------------------------------------ */
 	
       case SYMBOL_TYPE_STRUCT:
-	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base.
-	   Exemple : a.b où b est un nouveau type comme (b : (x, y)), dans ce cas :
-	             a.b.x marcherait. */
-	if((root && (current = tree_node_get_son(tree)) == NULL) ||
-	   (!root && (current = tree_node_get_brother(tree)) == NULL))
-	{
-	  bad_compil = true;
-	  if(content->value.var.hkey != NULL)
-	  fprintf(stderr, "Line %d - You need to access a field of the \"%s\" structure !\n", line_num, 
-		  hashtable_get_id(NULL, content->value.var.hkey));  
-	  return;
-	}
+	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base mais une structure. */
+	if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
+	  BAD_COMPIL(lexeme, "You need to access a field !");
 
 	/* Recherche dans le prochain champ de la structure. */
 	content = syntax_tree_node_get_content(current);
@@ -727,11 +715,7 @@ void test_variable(Syntax_tree *tree)
 
 	/* Erreur : Si on essaye d'utiliser un champ de structure comme un tableau... */
 	if(content->type == AT_ARRAY_INDEX)
-	{
-	  bad_compil = true;
-	  fprintf(stderr, "Line %d - It's a structure, not an array !\n", line_num); 
-	  return;
-	}
+	  BAD_COMPIL(lexeme, "It's a structure, not an array !");
 
 	for(i = 0; i < structure->field_number; i++)
 	  /* Champ trouvé. */
@@ -745,11 +729,7 @@ void test_variable(Syntax_tree *tree)
 	
 	/* Erreur : Champ non trouvé. Utilisation d'un champ inexistant. */
 	if(i == structure->field_number)
-	{
-	  bad_compil = true;
-	  fprintf(stderr, "Line %d - Unable to find the \"%s\" field !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey)); 
-	  return;
-	}
+	  BAD_COMPIL(lexeme, "Unable to find the last field !");
 	break;
 
       /* ------------------------------------------ */
@@ -757,17 +737,9 @@ void test_variable(Syntax_tree *tree)
       /* ------------------------------------------ */
 
       case SYMBOL_TYPE_ARRAY:
-	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base.
-	   Exemple : a[10] où a est un nouveau type comme (a : (x, y)), dans ce cas :
-	             a[10].x marcherait. */
-	if((root && (current = tree_node_get_son(tree)) == NULL) ||
-	   (!root && (current = tree_node_get_brother(tree)) == NULL))
-	{
-	  bad_compil = true;
-	  fprintf(stderr, "Line %d - You need to access a field of the \"%s\" array !\n", line_num, 
-		  hashtable_get_id(NULL, content->value.var.hkey));  
-	  return;
-	}
+	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base. */
+	if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
+	  BAD_COMPIL(lexeme, "You need to access a data of the array !");
  
 	/* Recherche dans le prochain champ du tableau. */
 	content = syntax_tree_node_get_content(current);
@@ -775,11 +747,7 @@ void test_variable(Syntax_tree *tree)
        
 	/* Erreur : Si on essaye d'utiliser une structure comme un tableau... */
 	if(content->type == AT_HKEY_INDEX)
-	{
-	  bad_compil = true;
-	  fprintf(stderr, "Line %d - It's an array, not a structure !\n", line_num); 
-	  return;
-	}
+	  BAD_COMPIL(lexeme, "It's an array, not a structure !");
 
 	/* Erreur : Mauvais nombre de champs. */
 	for(i = 1, temp = current; tree_node_get_brother(temp) != NULL; i++)
@@ -793,10 +761,8 @@ void test_variable(Syntax_tree *tree)
 
 	if(array->dimension_number != i)
 	{
-          bad_compil = true;
-	  fprintf(stderr, "Line %d - Bad dimension number ! (%u of %u)\n", 
-                  line_num, i, array->dimension_number);  
-	  return;
+	  fprintf(stderr, "Line %d - Bad dimension number ! (%u of %u) ( ", line_num, i, array->dimension_number);  
+	  BAD_COMPIL(lexeme, ")");
         }
 
 	sym = array->type;
@@ -808,11 +774,10 @@ void test_variable(Syntax_tree *tree)
       /* ------------------------------------------ */
 
       default:
-	bad_compil = true;
-	fprintf(stderr, "Line %d - Bad declaration : \"%s\"\n", 
-		line_num, hashtable_get_id(NULL, content->value.var.hkey));  
-	break;
-    }     
+	BAD_COMPIL(lexeme, "Bad declaration !");
+    }
+
+    root = false;
   } 
 }
                          
