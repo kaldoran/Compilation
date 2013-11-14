@@ -22,8 +22,11 @@
 /* Données internes (privées)                                             */
 /* ---------------------------------------------------------------------- */
 
-/** Tableau temporaire contenant les adresses mémoires des déclarations. */
+/** Tableau contenant les adresses mémoires des déclarations. */
 static Index_t *index_array = NULL;
+
+/** Nombre de déclarations dans le tableau. */
+static unsigned int n_symbols = 0;
 
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
@@ -40,12 +43,6 @@ void count_symbol(void *value, void *cvalue);
 /* %param value : Une Déclaration. */
 /* %param cvalue : Compteur de déclarations. */
 void fill_index_array(void *value, void *cvalue);
-
-/** Obtenir l'id d'un index de la table de déclarations. */
-/* %param index : Index sur un champ de déclaration. */
-/* %param n_symbols : Nombre de symboles dans la table. */
-/* %return : L'id ou -1 si il n'existe pas. */
-int index_array_get(Index_t index, int n_symbols);
 
 /* ---------------------------------------------------------------------- */
 
@@ -69,23 +66,12 @@ void fill_index_array(void *value, void *cvalue)
   return;
 }
 
-int index_array_get(Index_t index, int n_symbols)
-{
-  int i;
-
-  for(i = 0; i < n_symbols; i++)
-    if(index_array[i] == index)
-      return i;
-
-  return -1;
-}
-
 /* ---------------------------------------------------------------------- */
 
 void save(const char *filename, Hashtable *h)
 {
   FILE *file;
-  unsigned int n_symbols = 0, i = 0, j;
+  unsigned int i = 0, j;
   List_node *ln;
   Symbol *s;
 
@@ -102,37 +88,22 @@ void save(const char *filename, Hashtable *h)
   fprintf(file, "%u\n", hashtable_get_size_max(h));
   fprintf(file, "%u\n", hashtable_get_size(h));
 
-  /* Création de l'index_array. */
-  hashtable_foreach_value(h, count_symbol, &n_symbols);
-  
-  if(n_symbols > 0 && (index_array = malloc(n_symbols * sizeof *index_array)) == NULL)
-    fatal_error("save");
-
-  /* Remplissage de l'index_array. */
-  hashtable_foreach_value(h, fill_index_array, &i);
-
   /* Print : Nombre de déclarations. */
   fprintf(file, "%u\n", n_symbols);
 
   /* Parcours des lexèmes. */
-  i = 0;
-
   for(ln = h->hvalues->start; ln != NULL; ln = ln->next)
   {
     /* Print : Lexème et première déclaration suivante. */
     fprintf(file, "L %s ", HNVALUE(ln)->id);
-
-    if(HNVALUE(ln)->value != NULL)
-      fprintf(file, "%u\n", i);
-    else
-      fprintf(file, "-1\n");
+    HNVALUE(ln)->value != NULL ? fprintf(file, "%u\n", i) : fprintf(file, "-1\n");
 
     /* Parcours des déclarations. */
     for(s = HNVALUE(ln)->value; s != NULL; i++, s = s->next)
     {
       /* Print : Déclaration de variable (TYPE, REGION, ID, EXEC). */
       if(s->type == SYMBOL_TYPE_VAR)
-        fprintf(file, "S %d %d %d %lu\n", s->type, s->region, index_array_get(s->index, n_symbols), 
+        fprintf(file, "S %d %d %d %lu\n", s->type, s->region, index_array_get_id(s->index), 
                 (unsigned long int)s->exec);
       else
       {
@@ -145,13 +116,13 @@ void save(const char *filename, Hashtable *h)
             fprintf(file, "%u\n", structure->field_number);
             
             for(j = 0; j < structure->field_number; j++)
-              fprintf(file, "%d %s\n", index_array_get(structure->field[j].type, n_symbols), 
+              fprintf(file, "%d %s\n", index_array_get_id(structure->field[j].type), 
                       lexeme_table_get(h, structure->field[j].hkey));
             break;
             
           case SYMBOL_TYPE_ARRAY:
             array = s->index;
-            fprintf(file, "%u %d\n", array->dimension_number, index_array_get(array->type, n_symbols));
+            fprintf(file, "%u %d\n", array->dimension_number, index_array_get_id(array->type));
             
             for(j = 0; j < array->dimension_number; j++)
               fprintf(file, "%u %u\n", array->dimension[j].bound_lower, array->dimension[j].bound_upper);
@@ -159,10 +130,10 @@ void save(const char *filename, Hashtable *h)
           
           case SYMBOL_TYPE_FUNCTION:
             function = s->index;
-            fprintf(file, "%u %d\n", function->param_number, index_array_get(function->return_type, n_symbols));
+            fprintf(file, "%u %d\n", function->param_number, index_array_get_id(function->return_type));
 
             for(j = 0; j < function->param_number; j++)
-              fprintf(file, "%d %s\n", index_array_get(function->params[j].type, n_symbols), 
+              fprintf(file, "%d %s\n", index_array_get_id(function->params[j].type), 
                       lexeme_table_get(h, function->params[j].hkey));
             break;
 
@@ -171,7 +142,7 @@ void save(const char *filename, Hashtable *h)
             fprintf(file, "%u\n", procedure->param_number);
 
             for(j = 0; j < procedure->param_number; j++)
-              fprintf(file, "%d %s\n", index_array_get(procedure->params[j].type, n_symbols), 
+              fprintf(file, "%d %s\n", index_array_get_id(procedure->params[j].type), 
                       lexeme_table_get(h, procedure->params[j].hkey));
             break;
         }
@@ -179,7 +150,6 @@ void save(const char *filename, Hashtable *h)
     }
   }
   
-  free(index_array);
   fclose(file);
  
   return;
@@ -189,7 +159,7 @@ Hashtable *load(const char *filename)
 {
   Hashtable *h;
   FILE *file;
-  unsigned int n_symbols = 0, i = 0;
+  unsigned int i = 0;
   Symbol *s, *origin = NULL;
   List_node *ln;
   unsigned int j, k;
@@ -350,10 +320,51 @@ Hashtable *load(const char *filename)
         }
       }
  
-  free(index_array);
   fclose(file);
 
   return h;
 }
 
+void index_array_new(Hashtable *h)
+{
+  int i = 0;
 
+  /* Création de l'index_array. */
+  hashtable_foreach_value(h, count_symbol, &n_symbols);
+  
+  if(n_symbols > 0 && (index_array = malloc(n_symbols * sizeof *index_array)) == NULL)
+    fatal_error("index_array_new");
+
+  /* Remplissage de l'index_array. */
+  hashtable_foreach_value(h, fill_index_array, &i);
+
+  return;
+}
+
+void index_array_free(void)
+{
+  free(index_array);
+  index_array = NULL;
+  n_symbols = 0;
+}
+
+Index_t index_array_get(void)
+{
+  return index_array;
+}
+
+unsigned int index_array_get_size(void)
+{
+  return n_symbols;
+}
+
+int index_array_get_id(Index_t index)
+{
+  int i;
+
+  for(i = 0; i < n_symbols; i++)
+    if(index_array[i] == index)
+      return i;
+
+  return -1;
+}

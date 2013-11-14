@@ -648,7 +648,7 @@ void test_variable(Syntax_tree *tree)
   Syntax_node_content *content;
   Syntax_tree *current, *temp;
   Symbol *sym;
-  unsigned int i, j;
+  unsigned int i;
   Structure *structure;
   Array *array;
   bool root = true;
@@ -781,14 +781,13 @@ void test_variable(Syntax_tree *tree)
 	}
 
 	/* Erreur : Mauvais nombre de champs. */
-	for(i = 1, temp = current; tree_node_get_brother(temp) != NULL; )
+	for(i = 1, temp = current; tree_node_get_brother(temp) != NULL; i++)
 	{
 	  temp = tree_node_get_brother(temp);
           content = syntax_tree_node_get_content(temp);
 
 	  if(content->type != AT_ARRAY_INDEX)
             break;
-	  i++;
         }
 
 	if(array->dimension_number != i)

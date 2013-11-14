@@ -64,10 +64,10 @@ int main(int argc, char *argv[])
 { 
   int optch;
 
-  extern FILE *yyin;
-  extern char *optarg;
-  extern Hashtable *hashtable;
-  extern bool bad_compil;
+  extern FILE *yyin;           /* getopt */
+  extern char *optarg;         /* getopt */
+  extern Hashtable *hashtable; /* yacc */
+  extern bool bad_compil;      /* symbol_table */
 
   int ret = 0;
   int options = 0;
@@ -102,6 +102,7 @@ int main(int argc, char *argv[])
   {
     hashtable = load(input);
     regions_table_load(hashtable, strcat(output, ".reg"));
+    index_array_free(); /* Crée par load */
 
     if((options & OPT_A) != 0)
       PRINT_LOG();
@@ -127,12 +128,12 @@ int main(int argc, char *argv[])
     /* Sauvegarde. */
     if(!(ret = yyparse()))
     {
-          PRINT_LOG();
-
       if(!bad_compil)
       {
+	index_array_new(hashtable);
         save(output, hashtable);
         regions_table_save(strcat(output, ".reg"));
+	index_array_free();
 
         if((options & OPT_A) != 0)
           PRINT_LOG();

@@ -12,6 +12,8 @@
 #include "syntax_tree.h"
 #include "error.h"
 #include "mystring.h"
+#include "string.h"
+#include "save.h"
 
 /** Accès aux valeurs d'un noeud. */
 #define STVALUE(TREE) ((Syntax_node_content *)TREE->value)
@@ -35,28 +37,33 @@ static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tre
 {
   Syntax_node_content *content = tree->value;
   static char buffer[255] = "";
-  
+  int i = 0;
+  Index_t *index_array = index_array_get();
+
   switch(content->type)
   {
+    /* Constantes. */
     case AT_CST_STRING: fgets(buffer, 255, stream);
       if((content->value.s = mystrdup(buffer)) == NULL)
         fatal_error("syntax_tree_read_value");
+      content->value.s[strlen(buffer) - 1] = '\0';
       break;
-      
     case AT_CST_FLOAT: fscanf(stream, "%f ", &content->value.f); break;
     case AT_CST_BOOL:  fscanf(stream, "%c ", &content->value.c); break;
     case AT_CST_CHAR:  fscanf(stream, "%c ", &content->value.c); break;
     case AT_CST_INT:   fscanf(stream, "%d ", &content->value.i); break;
     
-    case AT_HKEY_INDEX: 
+    /* IDF. */
     case AT_VAR:       
     case AT_CTL_CALL:
-      fscanf(stream, "%s ", buffer);
+      fscanf(stream, "%d %s ", &i, buffer);
       content->value.var.hkey = hashtable_get_key(table, buffer);
-
-      /* TYPE ??? */
+      content->value.var.type = index_array[i];
       break;
-      
+
+    /* Numéro de champ de structure. */
+    case AT_HKEY_INDEX: fscanf(stream, "%d ", &content->value.i); break;
+     
     default: break;
   }
 
@@ -263,14 +270,20 @@ void syntax_tree_save(FILE *stream, Syntax_tree *node)
 
       switch(content->type)
       {
+	/* Constantes. */
         case AT_CST_STRING: fprintf(stream, "\n%s\n", content->value.s); break;
         case AT_CST_FLOAT:  fprintf(stream, "%f ", content->value.f);    break;
         case AT_CST_BOOL:   fprintf(stream, "%c ", content->value.c);    break;
         case AT_CST_CHAR:   fprintf(stream, "%c ", content->value.c);    break;
         case AT_CST_INT:    fprintf(stream, "%d ", content->value.i);    break;
-        case AT_HKEY_INDEX:
+
+	/* IDF */ 
         case AT_VAR:        
-        case AT_CTL_CALL: fprintf(stream, "%s ", hashtable_get_id(NULL, content->value.var.hkey)); break;
+        case AT_CTL_CALL: fprintf(stream, "%d %s ", index_array_get_id(content->value.var.type), 
+				  hashtable_get_id(NULL, content->value.var.hkey)); break;
+
+	/* Numéro de champ de structure. */
+        case AT_HKEY_INDEX: fprintf(stream, "%d ", content->value.i); break;
 
         default: break;
       }
@@ -307,8 +320,7 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
     fscanf(stream, "%d ", &type);
 
     /* Fin de l'arbre. */
-    if(type == -2)
-      break;
+    if(type == -2) break;
 
     /* Fils. */
     if(type != -1)
@@ -318,7 +330,7 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
       syntax_tree_add_son(node, child);
 
       if(list_push_node(queue, child) == NULL)
-        fatal_error("syntax_tree_save");
+        fatal_error("syntax_tree_load");
     }
  
     /* Frère. */
@@ -331,7 +343,7 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
       syntax_tree_add_brother(node, brother);
 
       if(list_push_node(queue, brother) == NULL)
-        fatal_error("syntax_tree_save");
+        fatal_error("syntax_tree_load");
     }
   }
   
