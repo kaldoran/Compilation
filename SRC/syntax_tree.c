@@ -228,6 +228,9 @@ void syntax_tree_print_node(Syntax_tree *node)
       case AT_CST_INT:
 	printf(" (%d)", snode->value.i);
 	break;
+      case AT_HKEY_INDEX:
+	printf(" (Field: %d)", snode->value.i);
+	break;
       default: break;
     }
 
