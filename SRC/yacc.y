@@ -245,7 +245,7 @@ un_champ: IDF DEUX_POINTS nom_type {
 /* Déclarations : VARIABLES                            */
 /* -----------------------------------------------------*/     
 
-declaration_variable: VARIABLE declaration_suite_variable 
+ declaration_variable: VARIABLE declaration_suite_variable
                     ;
 
 declaration_suite_variable: IDF DEUX_POINTS nom_type               
@@ -255,7 +255,7 @@ declaration_suite_variable: IDF DEUX_POINTS nom_type
     $$ = $3;
    }
 
-   | IDF VIRGULE declaration_suite_variable 
+   | IDF VIRGULE declaration_suite_variable
    {
     if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), SYMBOL_OF($3), 0))
       fatal_error("symbol_table_add");
@@ -268,16 +268,29 @@ declaration_suite_variable: IDF DEUX_POINTS nom_type
 /* -----------------------------------------------------*/
 
 declaration_procedure: PROCEDURE IDF liste_parametres {
+                                                       unsigned int i, j;
+						       Variable *variable;
+
                                                        if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
                                                          fatal_error("regions_table_add");
                                                        if(regions_stack_push(region) == -1)
                                                          fatal_error("regions_stack_push");
-                                                      } corps
-
-                     {
-                      Procedure *procedure;
-                      unsigned int i;
   		      
+						       variables_buffer_set_offset(-$3);
+						       j = variables_buffer_get_size();
+						       variable = variables_buffer_get_current();
+
+						       for(i = 0; i < j; i++)
+							 if(!symbol_table_add(hashtable, variable[i].hkey, SYMBOL_TYPE_VAR, 
+                                                            regions_stack_top(), variable[i].type, 0))
+							   fatal_error("symbol_table_add");
+
+						       variables_buffer_set_offset($3);
+
+                                                      } corps
+                     {
+  		      Procedure *procedure;
+
 		      variables_buffer_set_offset(-$3);
 		      
 		      if((procedure = procedure_new(variables_buffer_get_size())) == NULL)
@@ -285,11 +298,6 @@ declaration_procedure: PROCEDURE IDF liste_parametres {
 		      
 		      variables_buffer_copy(procedure->params);
 		      variables_buffer_reset();
-                      
-		      for(i = 0; i < procedure->param_number; i++)
-			if(!symbol_table_add(hashtable, procedure->params[i].hkey, SYMBOL_TYPE_VAR, regions_stack_top(), 
-                           procedure->params[i].type, 0))
-			  fatal_error("symbol_table_add");
 		      
 		      region = regions_stack_top();
 		      regions_table_set_tree(region, tree_get_root($5));
@@ -297,20 +305,33 @@ declaration_procedure: PROCEDURE IDF liste_parametres {
 		      regions_stack_pop();
 
 		      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_PROCEDURE, regions_stack_top(), procedure, region))
-			fatal_error("symbol_table_add");
+		       fatal_error("symbol_table_add");
                     }
                     ;
       
 declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
-                                                                          if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
-                                                                            fatal_error("regions_table_add");
-                                                                          if(regions_stack_push(region) == -1)
-                                                                            fatal_error("regions_stack_push");
+                                                                          unsigned int i, j;
+									  Variable *variable;
+									  
+									  if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
+									    fatal_error("regions_table_add");
+									  if(regions_stack_push(region) == -1)
+									    fatal_error("regions_stack_push");
+  		      
+									  variables_buffer_set_offset(-$3);
+									  j = variables_buffer_get_size();
+									  variable = variables_buffer_get_current();
+									  
+									  for(i = 0; i < j; i++)
+									    if(!symbol_table_add(hashtable, variable[i].hkey, 
+                                                                               SYMBOL_TYPE_VAR, regions_stack_top(), variable[i].type, 0))
+									      fatal_error("symbol_table_add");
+
+									  variables_buffer_set_offset($3);
                                                                          } corps
                     {
                      Function *function;
-                     unsigned int i;
-		     /* void add_function(Hashkey hashkey, Syntax_tree *params, Symbol *sym, Syntax_tree *root); */
+
 		     variables_buffer_set_offset(-$3);
 		     
 		     if((function = function_new(SYMBOL_OF($5), variables_buffer_get_size())) == NULL)
@@ -318,11 +339,6 @@ declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
 		     
 		     variables_buffer_copy(function->params);
 		     variables_buffer_reset();
-		     
-		     for(i = 0; i < function->param_number; i++)
-		       if(!symbol_table_add(hashtable, function->params[i].hkey, SYMBOL_TYPE_VAR, regions_stack_top(), 
-                          function->params[i].type, 0))
-			 fatal_error("symbol_table_add");
 		     
 		     region = regions_stack_top();
 		     regions_table_set_tree(region, tree_get_root($7));

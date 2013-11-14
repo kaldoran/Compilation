@@ -15,7 +15,10 @@
 #include "save.h"
 #include "error.h"
 
+/** Longueur max d'un lexeme. */
 #define LEXEME_SIZE 255
+
+/** Taille max d'une ligne lu dans un fichier de compilation. */
 #define BUFFER_SIZE 1024
 
 /* ---------------------------------------------------------------------- */
@@ -159,15 +162,14 @@ Hashtable *load(const char *filename)
 {
   Hashtable *h;
   FILE *file;
-  unsigned int i = 0;
+  unsigned int i = 0, j, k;
   Symbol *s, *origin = NULL;
   List_node *ln;
-  unsigned int j, k;
 
   /* Lexeme. */
   Hashkey hkey = NULL;
 
-  /* Buffer. */
+  /* Buffer(Lexeme). */
   char buffer[BUFFER_SIZE];
   char lexeme[LEXEME_SIZE];
 

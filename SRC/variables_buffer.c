@@ -63,3 +63,8 @@ unsigned int variables_buffer_get_size(void)
 {
   return (buffer_size - buffer_offset);
 }
+
+Variable *variables_buffer_get_current(void)
+{
+  return (buffer + buffer_offset);
+}

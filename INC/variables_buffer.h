@@ -36,4 +36,8 @@ Variable *variables_buffer_copy(Variable *variables);
 /* %return : Taille du buffer. */
 unsigned int variables_buffer_get_size(void);
 
+/** Retourne un pointeur sur l'emplacement courant du buffer. */
+/* %return : Buffer courant. */
+Variable *variables_buffer_get_current(void);
+
 #endif /* _VARIABLES_BUFFER_ INCLUDED */
