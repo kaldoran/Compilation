@@ -1,6 +1,7 @@
 %PROGRAM%
 
-var x,y:entier;
+var x,y,i,coucoucoucou:int;
+var continuer:bool;
 
 type personne : struct
   test_int : int;
@@ -8,7 +9,9 @@ type personne : struct
   test_string : string[10];
 end struct;
 
-function appel(x:entier, y:entier, z:char, a:string[10]) return string[36]
+var p : personne;
+
+function appel(x:int, y:int, z:char, a:string[10]) return string[36]
   var i:int;
     
   start {
@@ -19,11 +22,12 @@ function appel(x:entier, y:entier, z:char, a:string[10]) return string[36]
   };
 
 start { 
+    
   while continuer do {
     coucoucoucou = 7;
            
     do {
-      appel();
+      p.test_string = appel(4, 4, 4, 4);
     } while(i > 6);  
   }
 }
