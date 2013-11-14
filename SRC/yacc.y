@@ -646,11 +646,13 @@ test_comp: INFERIEUR         {$$ = AT_CMP_L;}
 void test_variable(Syntax_tree *tree)
 {
   Syntax_node_content *content;
-  Syntax_tree *current;
+  Syntax_tree *current, *temp;
   Symbol *sym;
-  unsigned int i;
+  unsigned int i, j;
   Structure *structure;
-  
+  Array *array;
+  bool root = true;
+ 
   /* Récupération du contenu de l'arbre. */
   content = syntax_tree_node_get_content(tree);
 			      
@@ -660,19 +662,20 @@ void test_variable(Syntax_tree *tree)
 
   sym = content->value.var.type;
 
-  /* Si le contenu n'est pas une variable. */
+  /* Erreur  : Passage de fonction au lieu de variable.
+     Exemple : fun = fun + 3, si fun est une fonction. */
   if(sym->type != SYMBOL_TYPE_VAR)
   {
     bad_compil = true;
-    fprintf(stderr, "Line %d - %s is not a variable !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey));  
+    fprintf(stderr, "Line %d - \"%s\" is not a variable !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey));  
     return;
   }
   
   /* Récupération du type de la variable. */
   sym = sym->index;
 
-  for(;;)
-  {
+  for(;; root = false)
+  { 
     /* Parcours des champs. */
     switch(sym->type)
     {
@@ -681,10 +684,22 @@ void test_variable(Syntax_tree *tree)
       /* ------------------------------------------ */
       
       case SYMBOL_TYPE_BASE:
-	if(tree_node_get_son(tree) != NULL)
-	{
-	  bad_compil = true;
-	  fprintf(stderr, "Line %d - %s is not a structure !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey));  
+	if((tree = tree_node_get_son(tree)) != NULL)
+	{	  
+	  content = syntax_tree_node_get_content(tree);
+
+	  /* Erreur  : Passage de variable simple mais où on tente d'imposer le type structure ou tableau.
+	     Exemple : a[15], a.machin alors que a est une variable de type de base. */
+	  if(content->type == AT_HKEY_INDEX)
+	  {
+	    bad_compil = true;
+	    fprintf(stderr, "Line %d - \"%s\" is not a structure !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey)); 
+	  } 
+	  else if(content->type == AT_ARRAY_INDEX)
+	  {
+	    bad_compil = true;
+	    fprintf(stderr, "Line %d - This var is not an array !\n", line_num); 
+	  } 
 	}
 	return; /* Type de base, plus rien à vérifier. */
 	
@@ -693,10 +708,14 @@ void test_variable(Syntax_tree *tree)
       /* ------------------------------------------ */
 	
       case SYMBOL_TYPE_STRUCT:
-	if((current = tree_node_get_brother(tree)) == NULL && (current = tree_node_get_son(tree)) == NULL)
+	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base.
+	   Exemple : a.b où b est un nouveau type comme (b : (x, y)), dans ce cas :
+	             a.b.x marcherait. */
+	if((root && (current = tree_node_get_son(tree)) == NULL) ||
+	   (!root && (current = tree_node_get_brother(tree)) == NULL))
 	{
 	  bad_compil = true;
-	  fprintf(stderr, "Line %d - You need to access a field of the %s structure!!\n", line_num, 
+	  fprintf(stderr, "Line %d - You need to access a field of the \"%s\" structure !\n", line_num, 
 		  hashtable_get_id(NULL, content->value.var.hkey));  
 	  return;
 	}
@@ -704,6 +723,14 @@ void test_variable(Syntax_tree *tree)
 	/* Recherche dans le prochain champ de la structure. */
 	content = syntax_tree_node_get_content(current);
 	structure = sym->index;
+
+	/* Erreur : Si on essaye d'utiliser un champ de structure comme un tableau... */
+	if(content->type == AT_ARRAY_INDEX)
+	{
+	  bad_compil = true;
+	  fprintf(stderr, "Line %d - It's a structure, not an array !\n", line_num); 
+	  return;
+	}
 
 	for(i = 0; i < structure->field_number; i++)
 	  /* Champ trouvé. */
@@ -715,11 +742,11 @@ void test_variable(Syntax_tree *tree)
 	    break;
 	  }
 	
-	/* Champ non trouvé. */
+	/* Erreur : Champ non trouvé. Utilisation d'un champ inexistant. */
 	if(i == structure->field_number)
 	{
 	  bad_compil = true;
-	  fprintf(stderr, "Line %d - Unable to find the %s field !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey)); 
+	  fprintf(stderr, "Line %d - Unable to find the \"%s\" field !\n", line_num, hashtable_get_id(NULL, content->value.var.hkey)); 
 	  return;
 	}
 	break;
@@ -729,16 +756,61 @@ void test_variable(Syntax_tree *tree)
       /* ------------------------------------------ */
 
       case SYMBOL_TYPE_ARRAY:
-	
+	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base.
+	   Exemple : a[10] où a est un nouveau type comme (a : (x, y)), dans ce cas :
+	             a[10].x marcherait. */
+	if((root && (current = tree_node_get_son(tree)) == NULL) ||
+	   (!root && (current = tree_node_get_brother(tree)) == NULL))
+	{
+	  bad_compil = true;
+	  fprintf(stderr, "Line %d - You need to access a field of the \"%s\" array !\n", line_num, 
+		  hashtable_get_id(NULL, content->value.var.hkey));  
+	  return;
+	}
+ 
+	/* Recherche dans le prochain champ du tableau. */
+	content = syntax_tree_node_get_content(current);
+	array = sym->index;
+       
+	/* Erreur : Si on essaye d'utiliser une structure comme un tableau... */
+	if(content->type == AT_HKEY_INDEX)
+	{
+	  bad_compil = true;
+	  fprintf(stderr, "Line %d - It's an array, not a structure !\n", line_num); 
+	  return;
+	}
+
+	/* Erreur : Mauvais nombre de champs. */
+	for(i = 1, temp = current; tree_node_get_brother(temp) != NULL; )
+	{
+	  temp = tree_node_get_brother(temp);
+          content = syntax_tree_node_get_content(temp);
+
+	  if(content->type != AT_ARRAY_INDEX)
+            break;
+	  i++;
+        }
+
+	if(array->dimension_number != i)
+	{
+          bad_compil = true;
+	  fprintf(stderr, "Line %d - Bad dimension number ! (%u of %u)\n", 
+                  line_num, i, array->dimension_number);  
+	  return;
+        }
+
+	sym = array->type;
+	tree = current;
+
 	break;
-	
+       	
       /* ------------------------------------------ */
       /* DEFAULT                                    */
       /* ------------------------------------------ */
 
       default:
 	bad_compil = true;
-	fprintf(stderr, "Line %d - Bad declaration : %s\n", 
+	fprintf(stderr, "Line %d - Bad declaration : \"%s\"\n", 
 		line_num, hashtable_get_id(NULL, content->value.var.hkey));  
 	break;
     }     

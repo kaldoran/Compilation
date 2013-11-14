@@ -1,20 +1,25 @@
 %PROGRAM% 
 
+type type_tableau : array[1 .. 3] of int;
+
 type omg : struct
      ppp : char;
      ggg : int;
      k : char;
      abc : int;
      zzzz : int;
+     bbb : type_tableau;
 end struct;
+
+type type_tableau2 : array[1 .. 3] of omg;
+type type_tableau3 : array[1 .. 3, 4 .. 6] of int;
 
 type type_normal : struct
   test_int : int;
   test_char : char;
   test_omg : omg;
+  lala : type_tableau;
 end struct;
-
-type type_tableau : array[1 .. 3] of int;
 
 var variable_carac : char;
 var variable_chaine : chaine; /* Erreur : Chaine n'existe pas. */
@@ -32,16 +37,27 @@ proc prem_proc(arg:int, arg_2:int)
 
 var coucou : char;
 var a : type_normal;
+var c : type_tableau;
+var d : type_tableau2;
+var lo : type_tableau3;
 
 start{
-  a.test_omg.abc = 18; /* Réussi, les champ existent. */
-  a = 18;              /* Erreur : Il faut accéder à un champ. */
-  a.b = 3;             /* Erreur : Champ b n'existe pas. */
-  coucou.p = 8;        /* Erreur : coucou est un type de base, pas une structure. */
-  prem_proc = 5;       /* Erreur : Impossible de donner une valeur à une procedure. */
-  prem_proc(4, 10); /* Erreur : Mauvais nombre d'arguments. */
-
-
+  a.test_omg.abc = 18;              /* Réussi, les champ existent. */
+  coucou = 3 + a + 18;              /* Erreur : Il faut accéder à un champ. */
+  c = a.b + 3;                      /* Erreur : Champ b n'existe pas. */
+  coucou.p = 8;                     /* Erreur : coucou est un type de base, pas une structure. */
+  prem_proc = 5;                    /* Erreur : Impossible de donner une valeur à une procedure. */
+  prem_proc(4, 10, 27);             /* Erreur : Mauvais nombre d'arguments. */
+  prem_proc(5, 2);                  /* Réussi : Bon nombre d'arguments. */
+  a.test_omg[10].bbb = 10;          /* Erreur : test_omg n'est pas un tableau. */
+  a.lala[4] = 3;                    /* Réussi : a est un tableau contenant des */
+  c[10] = 0;                        /* Réussi : c est un tableau. */
+  a.test_char = 0;                  /* Réussi : test_char est un champ de a. */
+  coucou = d[10].der + 10;          /* Erreur : Le champ der n'existe pas. */
+  coucou = 5 * 9 + 6 + d[10].k * 9; /* Réussi : d est un tableau à 1 dimension qui possède un champ k. */
+  d[10][47] = 3;                    /* Erreur : d est un tableau à 1 dimension, on lui en donne deux. */ 
+  coucou[11] = 5;                   /* Erreur : coucou est une variable, on essaye de l'utiliser comme un tableau. */
+  coucou = d.lo[4][3][6];           /* Erreur : On essaye d'accéder à un champ lo alors que d est un tableau. */
+  coucou = 5 / 4 + d * 6;           /* Erreur : d est un tableau qui ne contient pas de type de base, il faut accéder à un des champs. */
 }
-
-
+ 
