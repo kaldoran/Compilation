@@ -35,31 +35,15 @@ var moncarnet : carnet;
 var datetime : date;
 
 proc init_adresse (adr : adresse)
-start {
-	adr.numero = 0;
-	adr.estrue = 0;
-	adr.estchemin = 0;
-	adr.boulevard = 0;
-	adr.estautre = 1;
-	adr.adresse = "";
-	adr.codePostal = 0;
-};
-
-proc init(moncarnet : carnet)
-var i : int;
-start {
-	for ( i=0 ; i == 100 ; i++) do {
-		moncarnet.carnet[i].nom = "";
-		moncarnet.carnet[i].prenom = "";
-		init_date(moncarnet.carnet[i].date_naissance);
-		moncarnet.carnet[i].marier = 0;
-		init_date(moncarnet.carnet[i].dateajout);
-	 	moncarnet.carnet[i].email = "";
-		moncarnet.carnet[0][i] = "";
-		moncarnet.carnet[1][i] = "";
-		init_adresse(moncarnet.carnet[i].adresse_contact);
-	}
-};
+    start {
+        adr.numero = 0;
+        adr.estrue = 0;
+        adr.estchemin = 0;
+        adr.estboulevard = 0;
+        adr.estautre = 1;
+        adr.adresse = "";
+        adr.codePostal = 0;
+    };
 
 proc init_date(datetime : date) 
 start {
@@ -68,13 +52,28 @@ start {
 	datetime.annee = 0;
 };
 
+proc init(moncarnet : carnet)
+    var i : int;
+    start {
+        for ( i=0 ; i == 100 ; i++) do {
+            moncarnet[i][0].nom = "";
+            moncarnet[i][0].prenom = "";
+            init_date(moncarnet[i][0].date_naissance.jour);
+            moncarnet[i][0].marier = 0;
+            init_date(moncarnet[i][0].dateajout);
+            moncarnet[i][0].email = "";
+            init_adresse(moncarnet[i][0].adresse_contact);
+        }
+    };
+
+
 function existe(prenom : string[30],nom : string[50],moncarnet : carnet) return bool
 var i : int;
 var existe : bool;
 start {
 	existe = false;
 	while ( i <= 100) do {
-		if ( moncarnet.prenom == prenom	and moncarnet.carnet[i].dateajout  and moncarnet.nom == nom ) then {
+		if ( moncarnet[i][0].prenom == prenom and moncarnet[i][0].dateajout  and moncarnet[i][0].nom == nom ) then {
 			existe = !existe;
 			return existe;
 		}
@@ -88,13 +87,13 @@ var i : int;
 start {
 	while( i <= 100) do {
 		/* la fonction vide existe pas mais on suppose qu'elle existe */
-		if(prenom == "" or nom == "" or zero(moncarnet.date) ) then {
+		if(prenom == "" or nom == "" or init_date(moncarnet[i][0].date_naissance) ) then {
 			write("Erreur !");
 			return 0;
 		}
-		if ( moncarnet.prenom == "" or moncarnet.nom == "") then {
-			moncarnet[i].prenom = prenom;
-			moncarnet[i].nom = nom;
+		if ( moncarnet[i][0].prenom == "" or moncarnet[i][0].nom == "") then {
+			moncarnet[i][0].prenom = prenom;
+			moncarnet[i][0].nom = nom;
 			
 			return i;
 		}
@@ -107,7 +106,6 @@ proc mariage(moncarnet : carnet, homme : contact , femme : contact )
 var i : int;
 
 start {
-	fonctioninutilequifait(homme[0].date_naissance.jours.casequiexistepas[0][5]);
 	if ( i = existe ( homme.prenom , homme.nom , moncarnet ) != 0 ) then {
 		moncarnet[1][i] = femme;
 	}
