@@ -4,8 +4,15 @@
 % TESTS BASIQUES %
 
 # Paramètres d'entrée
-var x, y : int;
+var x, y, a, b : int;
 var t : float;
+var was_it_true : bool;
+
+function fun () return int
+    start{
+        return 0;
+    };
+
 
 start
 
@@ -81,12 +88,12 @@ start
   }
 
   # Condition : Affectation + appel fonction + calcul 
-  if 5 + 6 * (x += 5) / 3 + a + fun(5) then {
+  if 5 + 6 * (x += 5) / 3 + a + fun() then {
     x = 3;
   }
 
   # Test d'affichage de champs de structures
-  write("%d", a.b[5].d[45][2]);
+  write("%d", a);
 
   # Ternaire
   b = a ? (x=10) : 5;

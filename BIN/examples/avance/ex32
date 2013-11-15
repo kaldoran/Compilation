@@ -3,11 +3,34 @@
 
 % TESTS_DE_CONDITIONS_ET_BOUCLES %
 
+function fun_4(arg1 : int, arg2 : int, arg3 : int, arg4 : string[40]) return int
+    start{
+        return 4;
+    };
+
+function fun(arg1 : int) return int
+    start{
+        return -1;
+    };
+
+function fun_2(arg1 : bool, arg2 : bool) return bool
+    start{
+        return arg1 and arg2;
+    };
+
+function a_2(arg1 : int, arg2 : int) return int
+    start{
+        return 1;
+    };
+
+var b, j, p, a, i, k, r, g, d, bg, t, c, f : int;
+var z : bool;
+
 # Aucune déclaration, on commence directement les instructions
 start
 {
   # Test bizarre mais qui marche normalement
-  if fun() + 5 * 4 + a / b * 3 > 45 or fun(p, g, a(g + 10 / 8), "bgt") then {
+  if 5 * 4 + b * 3 > 45 or fun_4(p, g, a_2(g + 10 / 8, 15), "bgt") then {
     write("Ok\n");
   }
 
@@ -23,9 +46,9 @@ start
 
   # for avec parenthèses + Test condition de fonctions
   # Note: for => affectation, expression, affectation
-  for(++j; fun(5, "oo", a(10 + 8 / bg, t + "oo")); i = (++j)) do {
+  for(++j; fun_4(5, "oo", a_2(10 + 8 / bg, t + "oo"), "coucou"); i = (++j)) do {
     write("Quel for !\n");
-    j += 4 * 8 + 6 * fun(4 + 6 / 8, "ooo");
+    j += 4 * 8 + 6 * fun_4(4 + 6 / 8, "ooo", 1, 1);
   }
 
   # Test pseudo-booléen (comme en C)
@@ -63,12 +86,12 @@ start
 
   # Tests de négation complexe
   if !a + !b * !c == !true + !false * !false then {
-    a += !f - !fun(!!true + !k / t);
+    a += !f - !fun_4(!!true + !k / t, 1, 1, 1);
   }  
 
   # Test incompréhensible mais qui doit marcher !
   # Mélange d'affectations dans des conditions + négations + différents types + or + and
-  while (a + b + fun((d = 58 + 6 / !a * !b + !c - true), !true)) / j + 3 * k - (b = true ? "a" : "b") > 5 and k == 0 or j < k * 9 + !fun(b - 5) * !fun(k / 10) or (a = b - 5 > 8 * fun(!z) ? true : false) do {
+  while (a + b + fun_2((d = 58 + 6 / !a * !b + !c - true), !true)) / j + 3 * k - (b = true ? "a" : "b") > 5 and k == 0 or j < k * 9 + !fun(b - 5) * !fun(k / 10) or (a = b - 5 > 8 * fun(!z) ? true : false) do {
     write("Hum hum");
   }
 
