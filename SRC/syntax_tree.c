@@ -39,14 +39,15 @@ static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tre
   static char buffer[255] = "";
   int i = 0;
   Index_t *index_array = index_array_get();
+  static int j = 0;
 
   switch(content->type)
   {
     /* Constantes. */
     case AT_CST_STRING: fgets(buffer, 255, stream);
-      if((content->value.s = mystrdup(buffer)) == NULL)
+      if((content->value.s = mystrdup(buffer + 1)) == NULL)
         fatal_error("syntax_tree_read_value");
-      content->value.s[strlen(buffer) - 1] = '\0';
+      content->value.s[strlen(buffer + 1) - 1] = '\0';
       break;
     case AT_CST_FLOAT: fscanf(stream, "%f ", &content->value.f); break;
     case AT_CST_BOOL:  fscanf(stream, "%c ", &content->value.c); break;
@@ -274,7 +275,7 @@ void syntax_tree_save(FILE *stream, Syntax_tree *node)
       switch(content->type)
       {
 	/* Constantes. */
-        case AT_CST_STRING: fprintf(stream, "\n%s\n", content->value.s); break;
+        case AT_CST_STRING: fprintf(stream, "\n#%s\n", content->value.s); break;
         case AT_CST_FLOAT:  fprintf(stream, "%f ", content->value.f);    break;
         case AT_CST_BOOL:   fprintf(stream, "%c ", content->value.c);    break;
         case AT_CST_CHAR:   fprintf(stream, "%c ", content->value.c);    break;

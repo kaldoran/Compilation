@@ -693,6 +693,10 @@ void test_variable(Syntax_tree *tree)
   
   /* Récupération du type de la variable. */
   sym = sym->index;
+  
+  /* Type inconnu. */
+  if(sym == NULL)
+    BAD_COMPIL(lexeme, "Unknown type !");
 
   for(;;)
   { 
