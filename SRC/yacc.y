@@ -469,10 +469,10 @@ tant_que: TANT_QUE expression FAIRE liste_instructions {$$ = syntax_tree_add_son
                                                                                  syntax_tree_add_brother($2, $4));}
         ;
     
-pour: POUR pour_cont FAIRE liste_instructions                                        {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR),
-                                                                                           syntax_tree_add_brother($2, $4));}
-    | POUR PARENTHESE_OUVRANTE pour_cont PARENTHESE_FERMANTE FAIRE liste_instructions{$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR),
-                                                                                           syntax_tree_add_brother($3, $6));}
+pour: POUR pour_cont FAIRE liste_instructions    
+      {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR), syntax_tree_add_brother($2, $4));}
+    | POUR PARENTHESE_OUVRANTE pour_cont PARENTHESE_FERMANTE FAIRE liste_instructions
+      {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CTL_FOR), syntax_tree_add_brother($3, $6));}
     ;
 
 pour_cont: pour_a POINT_VIRGULE pour_e POINT_VIRGULE pour_a {$$ = syntax_tree_add_brother(syntax_tree_add_brother($1, $3), $5);}
@@ -723,7 +723,7 @@ void test_variable(Syntax_tree *tree)
       case SYMBOL_TYPE_STRUCT:
 	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base mais une structure. */
 	if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-	  BAD_COMPIL(lexeme, "You need to access a field !");
+	  /* BAD_COMPIL(lexeme, "You need to access a field !"); */ return;
 
 	/* Recherche dans le prochain champ de la structure. */
 	content = syntax_tree_node_get_content(current);
@@ -755,7 +755,7 @@ void test_variable(Syntax_tree *tree)
       case SYMBOL_TYPE_ARRAY:
 	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base. */
 	if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-	  BAD_COMPIL(lexeme, "You need to access a data of the array !");
+	  /* BAD_COMPIL(lexeme, "You need to access a data of the array !"); */ return;
  
 	/* Recherche dans le prochain champ du tableau. */
 	content = syntax_tree_node_get_content(current);
