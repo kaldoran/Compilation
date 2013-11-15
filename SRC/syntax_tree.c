@@ -15,11 +15,14 @@
 #include "string.h"
 #include "save.h"
 
-/** Accès aux valeurs d'un noeud. */
+/** Accès à la valeur d'un noeud. */
 #define STVALUE(TREE) ((Syntax_node_content *)TREE->value)
 
 /** Profondeur max d'affichage de l'arbre. */
 #define MAX_DEPTH 1000
+
+/** Longueur d'une chaine lu. */
+#define STR_BUFFER_SIZE 255
 
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
@@ -36,23 +39,22 @@ static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tre
 static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tree *tree)
 {
   Syntax_node_content *content = tree->value;
-  static char buffer[255] = "";
+  static char buffer[STR_BUFFER_SIZE] = "";
   int i = 0;
   Index_t *index_array = index_array_get();
-  static int j = 0;
 
   switch(content->type)
   {
     /* Constantes. */
-    case AT_CST_STRING: fgets(buffer, 255, stream);
+    case AT_CST_STRING: fgets(buffer, STR_BUFFER_SIZE, stream);
       if((content->value.s = mystrdup(buffer + 1)) == NULL)
         fatal_error("syntax_tree_read_value");
       content->value.s[strlen(buffer + 1) - 1] = '\0';
       break;
-    case AT_CST_FLOAT: fscanf(stream, "%f ", &content->value.f); break;
-    case AT_CST_BOOL:  fscanf(stream, "%c ", &content->value.c); break;
-    case AT_CST_CHAR:  fscanf(stream, "%c ", &content->value.c); break;
-    case AT_CST_INT:   fscanf(stream, "%d ", &content->value.i); break;
+    case AT_CST_FLOAT: fscanf(stream, "%f ", &content->value.f);        break;
+    case AT_CST_BOOL:  fscanf(stream, "%c ", &content->value.c);        break;
+    case AT_CST_CHAR:  fscanf(stream, "%d ", (int *)&content->value.c); break;
+    case AT_CST_INT:   fscanf(stream, "%d ", &content->value.i);        break;
     
     /* IDF. */
     case AT_VAR:       
@@ -275,11 +277,11 @@ void syntax_tree_save(FILE *stream, Syntax_tree *node)
       switch(content->type)
       {
 	/* Constantes. */
-        case AT_CST_STRING: fprintf(stream, "\n#%s\n", content->value.s); break;
-        case AT_CST_FLOAT:  fprintf(stream, "%f ", content->value.f);    break;
-        case AT_CST_BOOL:   fprintf(stream, "%c ", content->value.c);    break;
-        case AT_CST_CHAR:   fprintf(stream, "%c ", content->value.c);    break;
-        case AT_CST_INT:    fprintf(stream, "%d ", content->value.i);    break;
+        case AT_CST_STRING: fprintf(stream, "\n#%s\n", content->value.s);  break;
+        case AT_CST_FLOAT:  fprintf(stream, "%f ", content->value.f);      break;
+        case AT_CST_BOOL:   fprintf(stream, "%c ", content->value.c);      break;
+        case AT_CST_CHAR:   fprintf(stream, "%d ", (int)content->value.c); break;
+        case AT_CST_INT:    fprintf(stream, "%d ", content->value.i);      break;
 
 	/* IDF */ 
         case AT_VAR:        
