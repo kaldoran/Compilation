@@ -18,9 +18,7 @@ type munition :
 		balle : int;
 		grenade : int;
 	end struct;
-						/***********************************************
-								PLAYER !
-						************************************************/
+		
 type Player : 
 	struct 
 		nom : string[200];
@@ -29,9 +27,6 @@ type Player :
 		munition : munition;
 	end struct;
 
-				----------------------------------------------------------------
-				--			FONCTION  			      --
-				----------------------------------------------------------------
 function positionPlayerX (P : Player) return float 
     var posX : float;
     start { 
@@ -58,8 +53,10 @@ function nbMunition(p : Player) return int
         return p.munition.balle; 
     };
 
+var map : map;
+
 proc item (coord : coordonnee)
-    var i:int;
+    var i : int;
 
     start {
         for i=0; ( i < MAX_X and i < MAX_Y); i++ do {
@@ -111,22 +108,25 @@ start {
 
 var newplayer : Player;
 var jump : int;
+var was_it_true : bool;
+var map : map;
 
 start { 
+	map = 10;
 	newplayer.nom = "Kaldoran";
-	if ( (jump = (newplayer.position.coordonnee.z)) > 0) then {
+	if ( (jump = (newplayer.position.z)) > 0) then {
 		write("jump height : %d",jump);
 		;
 	}
-	else if (map[newplayer.position.coordonnee.x + newplayer.munition + jump % MAX_Y]) then {
+	else if(map[newplayer.position.x + newplayer.munition + jump % MAX_Y]) then {
 		jump = 0;
-		newplayer.x = 0;
-		newplayer.y = 0;
-		newplayer.z = 0;
+		newplayer.position.x = 0;
+		newplayer.position.y = 0;
+		newplayer.position.z = 0;
 		newplayer.score = -1;
-		newplayer.name = "Cheateur";
+		newplayer.nom = "Cheateur";
 		write("Cheat detected !");
-		read (was_it_true);
+		read(was_it_true);
 		was_it_true = (was_it_true == false) ? "Menteur" : "Meuteur quand même";
 		write("%s",was_it_true);
 	}

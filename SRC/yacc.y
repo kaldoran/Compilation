@@ -687,7 +687,7 @@ void test_variable(Syntax_tree *tree)
   sym = content->value.var.type;
   lexeme = lexeme_table_get(hashtable, content->value.var.hkey);
 
-  /* ERREUR : Passage d'une fonction au lieu d'une variable. */
+  /* ERREUR : Passage d'une fonction/procedure/type au lieu d'une variable. */
   if(sym->type != SYMBOL_TYPE_VAR)
     BAD_COMPIL(lexeme, "It's not a variable");
   
@@ -773,6 +773,8 @@ void test_variable(Syntax_tree *tree)
 
 	  if(content->type != AT_ARRAY_INDEX)
             break;
+
+	  current = temp;
         }
 
 	if(array->dimension_number != i)

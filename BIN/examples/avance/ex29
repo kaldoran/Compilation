@@ -67,7 +67,7 @@ function genere_idee(id : idee) return string[50]
 		    id[1][cpt].uneidee = "ok";
 		    id[2][cpt].uneidee = tmp;
 		    write("Tu as plein d'idée maintenant");
-		    id[3*florian-ronan][id[5][10].idee.uneidee] = 1;
+		    id[3*florian-ronan][id[5][10].uneidee] = 1;
 		}
 	};
 
