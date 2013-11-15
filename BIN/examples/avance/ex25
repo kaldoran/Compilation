@@ -2,12 +2,30 @@
 
 -- Seulement des instructions sans déclaration --
 
+function sand(b : bool) return bool
+    start{
+        return true;
+    };
+
+function funct(f : bool) return bool
+    start{
+        if(f) then { /* La fonction n'arrive pas à trouver f */
+            return true;
+        }
+        else{
+            return false;
+        }
+    };
+
+var x, ual : int;
+var a, c, d : bool;
+
 start {
 	; #on commence par un truc inutile
 
 	x = 7 * ( 7 + 7 ) * ( 5 + 5 <= 5 and "chaine" or 5 * 5);
 
-	switch sand() # et un sand switch
+	switch sand(true) # et un sand switch
 	{
 		case ual : ;
 		case ual : 
@@ -18,10 +36,10 @@ start {
 		# switch sans default
 	}
 	
-	switch sand() 
+	switch sand(false) 
 	{
 		case ( a and c) or c: 
-			if ((c = funct()) == d) then {
+			if ((c = funct(a)) == d) then {
 				write("Dans C");
 			}
 			else { 

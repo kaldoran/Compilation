@@ -7,10 +7,23 @@ start {
 	return;
 };
 
+function this (arg : int) return int
+    start{
+        return 1;
+    };
+
+function function_immonde(arg1 : int, arg2 : int, arg3 : int, arg4 : int, arg5 : int, arg6 : int, arg7 : int, arg8 : int ) return int
+    start{
+        return 1;
+    };
+
+var x, y, a, b, i, c, d, e, f, g, h : int;
+var tab : tab_ultra;
+
 start {
 	do {
-		switch tab_ultra[this() - 1 + (x--) * tab[this() % 5 + (x %= this() - 5) - x ]] {
-			case tab["Jean Bonnot"] : ;
+		switch tab[this(1) - 1 + (x--) * tab[this(1) % 5 + (x %= this(1) - 5) - x ][2][3]][2][3] {
+			case tab["Jean Bonnot"][2][3] : ;
 			default : write("En fait non");
 		}
 		
@@ -20,17 +33,17 @@ start {
 		i = ! i;
 	}
 
-	y = y + 1 ? function_immonde("heu")  : ! (x == 8);
+	y = y + 1 ? function_immonde("heu", 2, 3, 4, 5, 6, 7, 8)  : ! (x == 8);
 
-	if (! tab_ultra[function_immonde(y) + function_immonde(a / b + 5 % 5 - b * a , function_immonde("moi meme") , "kaldoran")]) then {
+	if (! tab[function_immonde(y, 2, 3, 4, 5, 6, 7, 8) + function_immonde(a / b + 5 % 5 - b * a , function_immonde("moi meme", 2, 3, 4, 5, 6, 7, 8) , "kaldoran", 4, 5, 6, 7, 8)][2][3]) then {
 		write("C'est parfait tout ca");
 	}
-	else if (! tab_ultra[tab[tab[function_immonde(a,b,c,d,e,f,g,h)]]]) then{
+	else if (! tab[tab[tab[function_immonde(a,b,c,d,e,f,g,h)][2][3]][2][3]][2][3]) then{
 		write("C'est parfait tout ca");
 	}
 	else {
 		read(x);
-		function_immonde();
+		function_immonde(1, 2, 3, 4, 5, 6, 7, 8);
 	}
 	
 }

@@ -8,6 +8,7 @@ type Point :
   struct
     x : int;
     y : int;
+    size : int;
   end struct;
 
 # Une liste de 50 points
@@ -25,16 +26,17 @@ type ensemble :
 var valeurs : ensemble;
 
 # Remplir aléatoirement un type ensemble
-proc remplir(ensemble : v)
+proc remplir(ensemble : Point)
   var i : int;
+  var v : List;
   start
   {
-    v.size = 0;
+    v[0].size = 0;
 
     for(i = 0; i < 50; i++) do {
       v[i].x = rand() * 101;
       v[i].y = rand() * 101;
-      v.size += sqrt(v[i].x * v[i].x + v[i].y * v[i].y);
+      v[0].size += v[i].x * v[i].x + v[i].y * v[i].y;
     }
  
     return;
@@ -43,9 +45,10 @@ proc remplir(ensemble : v)
 # Affichage de l'ensemble
 proc afficher()
   var i : int;
+  var v : List;
   start
   { 
-    write("Size: %d\n", v.size);
+    write("Size: %d\n", v[i].size);
 
     for(i = 0; i < 50;) do {
       write("(%d, %d)", v[i].x, v[i].y); 
@@ -59,7 +62,8 @@ proc afficher()
 
 # Recherche une coordonnée
 function search_point(x : int, y : int) return bool
-  var i : int;
+  var i,x, y : int;
+  var v : List;
   start
   {
     for(i = 0; i < 50;) do {
@@ -74,7 +78,7 @@ function search_point(x : int, y : int) return bool
 # Je cherche moi-même l'utilité de cette fonction...
 function machin_bidule(x : int) return int
   proc truc(y : int)
-    var k : int;
+    var k, y, x : int;
    
     proc mise_k()
       start
@@ -93,14 +97,14 @@ function machin_bidule(x : int) return int
       write("%d\n", y);
       
       if y then {
-        mise_k_0();
+        mise_k(); /* on me dit qu'elle a un parametre ! */
       }
       else {
-        get_k();
+        get_k(); /* Pareil */
       }
     };
   
-  var p : int;
+  var p,x : int;
 
   start
   {
