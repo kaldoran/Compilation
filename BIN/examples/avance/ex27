@@ -36,7 +36,7 @@ proc procemon()
           #Ternaire ? : ; 
           x = (x - x > x) ? "oui" : "non !";
 
-          for x = x or x * x; "XD" ; x = ( 5 / proce()  ) do {
+          for x = x or x * x; "XD" ; x = ( 5 / procemon()  ) do {
                write("",x);
                ;
                ;
@@ -65,8 +65,9 @@ proc procemon()
 ICI ON EST BIEN AUSSI 
 */
 proc proception() 
+    # var j_aime_bien_y : int;
 	start {
-               read (x, y , j_aime_bien_y);
+               read (x, y , j_aime_bien_y); /* Problème l'erreur est à la mauvaise ligne */
 };
 
 function fonction_avec_le_nom_le_plus_original_du_monde_mais_un_peu_long_au_final (x :int, y:string[250], x:float, y :char) return char 
@@ -104,6 +105,8 @@ var __________________ : string[99999999];
                                   -- DEBUT DU PROGRAMME --
 
 ------------------------------------------------------------------------------------------------------
+
+var i : string[50];
 start { 
 	write("Le programme le plus cool du monde");
 	// "commentaire"
