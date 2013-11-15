@@ -1,11 +1,4 @@
-# ---------------------------------------------------------------------- */
-# Filename: error.h                                                      */
-# Author: REYNAUD Nicolas                                                */
-# Date: 2013-09-17 - 11:19:22                                            */
-#                                                                        */
-# ---------------------------------------------------------------------- */
-
-#!/bin/perl
+#!/usr/bin/perl
      
 # les noms dans le tableau sont ceux des commentaires a coté des defines. Si vous les changer pensez a changer la valeur dans le .h
 $total = 0;

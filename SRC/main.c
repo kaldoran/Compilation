@@ -130,10 +130,10 @@ int main(int argc, char *argv[])
     {
       if(!bad_compil)
       {
-	index_array_new(hashtable);
+        index_array_new(hashtable);
         save(output, hashtable);
         regions_table_save(strcat(output, ".reg"));
-	index_array_free();
+        index_array_free();
 
         if((options & OPT_A) != 0)
           PRINT_LOG();

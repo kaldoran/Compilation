@@ -1,6 +1,5 @@
 
 MAJ TODO :
-	-> Gestion string (Sauvegarde des tailles des chaines + modif yacc)
-	-> Sauvegarde arbres
-	-> Exemples divers (Voir avec prof)
-	-> 
+	-> Gestion string (Sauvegarde des tailles des chaines, Trouver comment faire !)
+	-> Exemples divers (Faire de vrais algos, utiliser un peu les tableaux et structures
+	                    et surtout : Ne pas nommer une variable avec un nom de type existant !)
