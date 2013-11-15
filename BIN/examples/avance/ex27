@@ -65,7 +65,7 @@ proc procemon()
 ICI ON EST BIEN AUSSI 
 */
 proc proception() 
-    # var j_aime_bien_y : int;
+    var j_aime_bien_y : int;
 	start {
                read (x, y , j_aime_bien_y); /* Problème l'erreur est à la mauvaise ligne */
 };
