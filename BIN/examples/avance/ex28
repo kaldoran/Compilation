@@ -109,10 +109,10 @@ start {
 var newplayer : Player;
 var jump : int;
 var was_it_true : bool;
-var map : map;
+var var_map : map;
 
 start { 
-	map = 10;
+	map[10].x = 10; /* Le compilo ne bronche pas, alors que map est un type */
 	newplayer.nom = "Kaldoran";
 	if ( (jump = (newplayer.position.z)) > 0) then {
 		write("jump height : %d",jump);
