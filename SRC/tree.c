@@ -10,9 +10,9 @@
 #include <string.h>
 #include <stdarg.h>
 #include "private_tree.h"
-#include "tree.h"
 #include "list.h"
 #include "error.h"
+#include "tree.h"
 
 /** Définit le premier frère d'un noeud. (D -> G) */
 #define FIRST_BROTHER(NODE) for(; NODE->prev != NULL; NODE = NODE->prev)

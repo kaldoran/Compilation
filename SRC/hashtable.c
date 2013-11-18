@@ -11,8 +11,8 @@
 #include "private_list.h"
 #include "list.h"
 #include "private_hashtable.h"
-#include "hashtable.h"  
 #include "error.h"
+#include "hashtable.h"  
 
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
@@ -280,12 +280,12 @@ Hashkey hashtable_add_value(Hashtable *h, const char *id, void *value)
   return hvalue;
 }
  
-void hashtable_foreach_key(Hashtable *h, void (*fun)(const char *key, void *value), void *value)
+void hashtable_foreach_key(Hashtable *h, void (*fun)(const char *key, void *value), void *cvalue)
 {
   List_node *ln;
 
   for(ln = h->hvalues->start; ln != NULL; ln = ln->next)
-    fun(HNVALUE(ln)->id, value);
+    fun(HNVALUE(ln)->id, cvalue);
 
   return;
 }

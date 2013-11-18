@@ -7,14 +7,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "symbol_table.h"
 #include "list.h"
 #include "description_table.h"
 #include "regions_stack.h"
 #include "error.h"
+#include "symbol_table.h"
 
-/* Nombre de types de bases. (int, float, char, bool) */
-#define SYMBOL_BASIC_MAX 4
+/** Nombre de types de bases. (int, float, bool, char, string) */
+#define SYMBOL_BASIC_MAX 5
 
 /* ---------------------------------------------------------------------- */
 /* Données internes (privées)                                             */
@@ -23,7 +23,7 @@
 /** Déclarations des types de bases. */
 static Symbol *symbol_basic[SYMBOL_BASIC_MAX];
 
-/** Mauvaise compilation lié aux données. */
+/** Mauvaise compilation liée aux données. */
 bool bad_compil = false;
 
 /* ---------------------------------------------------------------------- */
@@ -85,7 +85,7 @@ Symbol *symbol_new(char type, int region, Index_t index, size_t exec)
 void symbol_table_init(Symbol_table *table)
 {
   Symbol *sym;
-  const char *type[] = {"int", "float", "bool", "char"};
+  const char *type[] = {"int", "float", "bool", "char", "string"};
   int i;
   
   for(i = 0; i < SYMBOL_BASIC_MAX; i++)

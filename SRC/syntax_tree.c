@@ -9,11 +9,11 @@
 #include <stdlib.h>
 #include "list.h"
 #include "private_tree.h"
-#include "syntax_tree.h"
 #include "error.h"
 #include "mystring.h"
 #include "string.h"
 #include "save.h"
+#include "syntax_tree.h"
 
 /** Accès à la valeur d'un noeud. */
 #define STVALUE(TREE) ((Syntax_node_content *)TREE->value)
@@ -152,7 +152,7 @@ void syntax_node_free(void *value)
 {
   Syntax_node_content *n = value;
 
-  if(n->type == AT_CST_STRING)
+  if(n->type == AT_CST_STRING)            
     free(n->value.s);
   free(n);
 

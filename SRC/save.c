@@ -8,12 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
-#include "lexeme_table.h"
 #include "private_list.h"
+#include "lexeme_table.h"
 #include "private_hashtable.h"
 #include "description_table.h"
-#include "save.h"
 #include "error.h"
+#include "save.h"
 
 /** Longueur max d'un lexeme. */
 #define LEXEME_SIZE 255

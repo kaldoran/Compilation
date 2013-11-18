@@ -63,6 +63,11 @@ int regions_table_add(size_t size, unsigned int level, Syntax_tree *tree)
   return depth++;
 }
 
+int regions_table_get_size(void)
+{
+  return depth;
+}
+
 int regions_table_set_tree(int region, Syntax_tree *tree)
 {
   if(region < 0 || region >= depth)

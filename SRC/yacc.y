@@ -20,8 +20,8 @@
   /* Données. */
   static unsigned int level = 0;
   static int region;
+  static int length = 0;
 %}
-
 
 %union
 {
@@ -183,7 +183,7 @@ declaration_type:
     dimensions_buffer_copy(array->dimension);
     dimensions_buffer_reset();
     
-    if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, regions_stack_top(), array, 0))
+    if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, regions_stack_top(), array, array_get_size(array)))
       fatal_error("symbol_table_add");
    }
 
@@ -197,7 +197,7 @@ declaration_type:
     variables_buffer_copy(structure->field);
     variables_buffer_reset();
    
-    if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, regions_stack_top(), structure, 0))
+    if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, regions_stack_top(), structure, structure_get_size(structure)))
       fatal_error("symbol_table_add");
    }
    ;
@@ -242,24 +242,26 @@ un_champ: IDF DEUX_POINTS nom_type {
         ;
      
 /* -----------------------------------------------------*/
-/* Déclarations : VARIABLES                            */
+/* Déclarations : VARIABLES                             */
 /* -----------------------------------------------------*/     
 
- declaration_variable: VARIABLE declaration_suite_variable
+declaration_variable: VARIABLE declaration_suite_variable
                     ;
 
 declaration_suite_variable: IDF DEUX_POINTS nom_type               
    {
-    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), SYMBOL_OF($3), 0))
+    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), SYMBOL_OF($3), length))
       fatal_error("symbol_table_add");
     $$ = $3;
+    length = 0;
    }
 
    | IDF VIRGULE declaration_suite_variable
    {
-    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), SYMBOL_OF($3), 0))
+    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), SYMBOL_OF($3), length))
       fatal_error("symbol_table_add");
     $$ = $3;
+    length = 0;
    }
    ;
 
@@ -373,7 +375,7 @@ type_simple: ENTIER                                              {$$ = LBASIC_IN
            | REEL                                                {$$ = LBASIC_FLOAT;}
            | BOOLEEN                                             {$$ = LBASIC_BOOL;}
            | CARACTERE                                           {$$ = LBASIC_CHAR;}
-           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = LBASIC_CHAR;}
+   | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = (void *)-$3;}
            ;
 
 /* -----------------------------------------------------*/

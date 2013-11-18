@@ -120,11 +120,13 @@ Hashkey hashtable_add_value(Hashtable *h, const char *key, void *value);
 /** Execute une fonction sur chaque clef d'une table de Hachage. */
 /* %param h : Hashtable à traiter. */
 /* %param fun : Fonction appellée pour chaque clef. */
-void hashtable_foreach_key(Hashtable *h, void (*fun)(const char *key, void *value), void *value);
+/* %param cvalue : Paramètre supplémentaire utilisé ou non par fun. */
+void hashtable_foreach_key(Hashtable *h, void (*fun)(const char *key, void *value), void *cvalue);
 
 /** Execute une fonction sur chaque valeur d'une table de Hachage. */
 /* %param h : Hashtable à traiter. */
 /* %param fun : Fonction appellée pour chaque valeur. */
+/* %param cvalue : Paramètre supplémentaire utilisé ou non par fun. */
 void hashtable_foreach_value(Hashtable *h, void (*fun)(void *value, void *cvalue), void *cvalue);
 
 /** Affiche le contenu d'une table de Hachage. */
