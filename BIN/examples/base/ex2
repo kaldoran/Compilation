@@ -28,6 +28,13 @@ function func_1 () return int
   };
 
 # Corps du Programme
+  var k : int;
+  var l : int;
+  var m : int;
+  var n : int;
+  var o : int;
+  var p : int;
+
 start
 { ; }
 

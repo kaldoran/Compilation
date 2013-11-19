@@ -63,6 +63,13 @@ int regions_table_add(size_t size, unsigned int level, Syntax_tree *tree)
   return depth++;
 }
 
+Region *region_table_get(int region)
+{
+  if(region >= depth || region < 0)
+    return NULL;
+  return r_table[region];
+}
+
 int regions_table_get_size(void)
 {
   return depth;

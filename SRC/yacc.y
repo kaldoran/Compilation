@@ -20,7 +20,6 @@
   /* Données. */
   static unsigned int level = 0;
   static int region;
-  static int length = 0;
 %}
 
 %union
@@ -214,6 +213,12 @@ liste_dimensions: une_dimension
                 ;
                                                  
 une_dimension: CSTE_ENTIERE POINT_ET_POINT CSTE_ENTIERE {
+                                                         if($3 - $1 <= 0)
+							 {
+                                                           bad_compil = true;
+							   fprintf(stderr, "Line %d - Bad dimension ! (%d, %d) \n", line_num, $1, $3);
+                                                         }
+
                                                          if(dimensions_buffer_push($1, $3) == -1)
                                                          {
                                                            fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
@@ -250,18 +255,16 @@ declaration_variable: VARIABLE declaration_suite_variable
 
 declaration_suite_variable: IDF DEUX_POINTS nom_type               
    {
-    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), SYMBOL_OF($3), length))
+    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), SYMBOL_OF($3), 0))
       fatal_error("symbol_table_add");
     $$ = $3;
-    length = 0;
    }
 
    | IDF VIRGULE declaration_suite_variable
    {
-    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), SYMBOL_OF($3), length))
+    if(!symbol_table_add(hashtable, $1, SYMBOL_TYPE_VAR, regions_stack_top(), SYMBOL_OF($3), 0))
       fatal_error("symbol_table_add");
     $$ = $3;
-    length = 0;
    }
    ;
 
@@ -291,7 +294,7 @@ declaration_procedure: PROCEDURE IDF liste_parametres {
 
                                                       } corps
                      {
-                        Procedure *procedure;
+                      Procedure *procedure;
 
                       variables_buffer_set_offset(-$3);
                       
@@ -375,7 +378,7 @@ type_simple: ENTIER                                              {$$ = LBASIC_IN
            | REEL                                                {$$ = LBASIC_FLOAT;}
            | BOOLEEN                                             {$$ = LBASIC_BOOL;}
            | CARACTERE                                           {$$ = LBASIC_CHAR;}
-   | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = (void *)-$3;}
+           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = LBASIC_STRING;}
            ;
 
 /* -----------------------------------------------------*/

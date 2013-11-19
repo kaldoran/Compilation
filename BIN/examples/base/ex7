@@ -1,6 +1,6 @@
  %PROGRAM%
 
-var x,i,prem_fun,annee :int; 
+var x, i, prem_fun, annee : int; 
 
 proc prem_proc () 
     start{
@@ -10,7 +10,7 @@ proc prem_proc ()
 start{
   if x > i then {
     prem_proc(); /* erreur alors que pourtant tout est juste. On me dit aussi pour signaler l'erreur que prem_proc est une fonction, alors que c'est une procédure */
-  } 
+  }
   else if(x) then {
     ;
   }

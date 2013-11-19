@@ -17,16 +17,20 @@ proc proc_1 (arg:int, arg2:char)
     }
   };
 
-function pipi (arg3:int, arg4:string[10]) return int 
+function joujou (arg3:int, arg4:string[10]) return int 
   var coucou : char;
   var x : int;
-    
+
   start {
-    x = 7; /* Erreur, mauvaise déclaration. */
+    x = 7;
     return 1;
   };
 
 var x : int;
+var chaine : string[10];
 
-start{x=3;}
+start{
+ x = 3;
+ joujou(x, chaine);
+}
 
