@@ -1,5 +1,9 @@
 %PROGRAM3%
 
+type aaaa : struct
+  b : int;
+end struct;
+
 proc proc_1 (arg:int, arg2:char) 
   var coucou : char;
   var x : int;
@@ -22,15 +26,17 @@ function joujou (arg3:int, arg4:string[10]) return int
   var x : int;
 
   start {
-    x = 7;
+    x += 7;
     return 1;
   };
 
 var x : int;
 var chaine : string[10];
+var k : aaaa;
 
 start{
- x = 3;
+ x += 3 + joujou(30, "ooooo");
+ k = 223;
  joujou(x, chaine);
 }
 

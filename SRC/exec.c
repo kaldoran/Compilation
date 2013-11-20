@@ -113,6 +113,16 @@ static Symbol **exec_get_variables(Symbol_table *table, int region);
 /** Définir le déplacement à l'execution des variables du tableau de tableau sym. */
 static void exec_set_variables_move(void);
 
+/** Déplace la position dans la pile.
+    Met à jour le chainage dynamique et statique. 
+    %param n : Numéro de région à ajouter sur la pile. */
+void push_position(int n);
+
+/** Evalue un arbre. */
+/* %param tree : Arbre à évaluer. */
+/* %return : Le résultat de l'évaluation. */
+Data region_eval(Syntax_tree *tree);
+
 /* ---------------------------------------------------------------------- */
 
 static void exec_count_variables_ap(void *value, void *cvalue)
@@ -199,11 +209,6 @@ static void exec_set_variables_move(void)
       region->size = region->level;
 }
 
-/* ---------------------------------------------------------------------- */
-
-Data region_eval(Syntax_tree *tree);
-
-/** Déplace la position dans la pile. */
 void push_position(int n)
 {
   Region *n_region = REGION_TABLE_GET(n);                  /* Nouvelle région. */
@@ -294,16 +299,28 @@ Data region_eval(Syntax_tree *tree)
 
     /* Affectations. */
     case AT_EQUAL:
+      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
+  
       break;
     case AT_OPR_PLUSE: 
+      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
+
       break;
     case AT_OPR_MINE:
+      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
+
       break;
     case AT_OPR_MULTE:
+      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
+
       break;
     case AT_OPR_DIVE:
+      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
+
       break;
     case AT_OPR_MODE:
+      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
+
       break;
 
     /* Incrémentations/Décrémentations. */
@@ -364,9 +381,9 @@ Data region_eval(Syntax_tree *tree)
       break;
 
 
-    case AT_VAR       :
-    case AT_ARRAY_INDEX :
-    case AT_HKEY_INDEX  :
+    case AT_VAR:
+    case AT_ARRAY_INDEX:
+    case AT_HKEY_INDEX:
       break;
 
     /* Appel de fonction/procédure. */
@@ -429,7 +446,7 @@ void exec(Symbol_table *table)
 
   exec_set_variables_move();
 
-  if((data_stack = malloc(DATA_STACK_SIZE * sizeof *data_stack)) == NULL)
+  if((data_stack = calloc(DATA_STACK_SIZE, sizeof *data_stack)) == NULL)
     fatal_error("exec");
 
   /* Execution. */
@@ -446,3 +463,4 @@ void exec(Symbol_table *table)
 
   return;
 }
+

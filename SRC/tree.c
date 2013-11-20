@@ -21,11 +21,11 @@
 #define LAST_BROTHER(NODE) for(; NODE->next != NULL; NODE = NODE->next)
 
 /** Met à jours le père des noeuds. */
-#define SET_FATHER(NODE, FATHER)                                         \
-  if(1)                                                                  \
-  {                                                                      \
-    for(; NODE->next != NULL; NODE->father = FATHER, NODE = NODE->next); \
-    NODE->father = FATHER;                                               \
+#define SET_FATHER(NODE, FATHER)                                                              \
+  if(1)                                                                                       \
+  {                                                                                           \
+    for(; NODE->next != NULL; NODE->father = FATHER, NODE = NODE->next);                      \
+    NODE->father = FATHER;                                                                    \
   }
 
 /** Racine d'un arbre. */
@@ -173,7 +173,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
   FIRST_BROTHER(node);
   cp_node = node;
   SET_FATHER(node, parent);
-  
+
   /* Aucun fils. */
   if(children == NULL)
     parent->children = cp_node;

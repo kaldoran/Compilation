@@ -11,10 +11,10 @@
 #include "symbol_table.h"
 
 /** Lexèmes de bases. */
-#define LEXEME_BASIC_INT   1
-#define LEXEME_BASIC_FLOAT 2
-#define LEXEME_BASIC_BOOL  3
-#define LEXEME_BASIC_CHAR  4
+#define LEXEME_BASIC_BOOL    1
+#define LEXEME_BASIC_CHAR    2
+#define LEXEME_BASIC_INT     3
+#define LEXEME_BASIC_FLOAT   4
 #define LEXEME_BASIC_STRING  5
 
 /** Structure d'une table de lexèmes. */
@@ -42,10 +42,10 @@ void lexeme_table_init(Lexeme_table *table);
 /* %return : Retourne une clef de Hachage ou NULL si basic_num n'est pas bon. */
 Hashkey lexeme_table_get_basic(int basic_num);
 
-#define LBASIC_INT    lexeme_table_get_basic(LEXEME_BASIC_INT)    /* Type 1 */
-#define LBASIC_FLOAT  lexeme_table_get_basic(LEXEME_BASIC_FLOAT)  /* Type 2 */
-#define LBASIC_BOOL   lexeme_table_get_basic(LEXEME_BASIC_BOOL)   /* Type 3 */
-#define LBASIC_CHAR   lexeme_table_get_basic(LEXEME_BASIC_CHAR)   /* Type 4 */
+#define LBASIC_BOOL   lexeme_table_get_basic(LEXEME_BASIC_BOOL)   /* Type 1 */
+#define LBASIC_CHAR   lexeme_table_get_basic(LEXEME_BASIC_CHAR)   /* Type 2 */
+#define LBASIC_INT    lexeme_table_get_basic(LEXEME_BASIC_INT)    /* Type 3 */
+#define LBASIC_FLOAT  lexeme_table_get_basic(LEXEME_BASIC_FLOAT)  /* Type 4 */
 #define LBASIC_STRING lexeme_table_get_basic(LEXEME_BASIC_STRING) /* Type 5 */
 
 /** Affiche la table des lexèmes. */

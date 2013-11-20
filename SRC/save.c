@@ -119,8 +119,9 @@ void save(const char *filename, Hashtable *h)
             fprintf(file, "%u\n", structure->field_number);
             
             for(j = 0; j < structure->field_number; j++)
-              fprintf(file, "%d %s\n", index_array_get_id(structure->field[j].type), 
-                      lexeme_table_get(h, structure->field[j].hkey));
+              fprintf(file, "%d %lu %s\n", index_array_get_id(structure->field[j].type),
+		      (unsigned long int)structure->exec[i], 
+		      lexeme_table_get(h, structure->field[j].hkey));
             break;
             
           case SYMBOL_TYPE_ARRAY:
@@ -271,7 +272,7 @@ Hashtable *load(const char *filename)
 
               for(k = 0; k < i; k++)
               {
-                fscanf(file, "%u %s", &j, lexeme); 
+                fscanf(file, "%u %lu %s", &j, &structure->exec[k], lexeme); 
                 structure->field[k].type = index_array[j];
                 structure->field[k].hkey = hashtable_get_key(h, lexeme);
               }

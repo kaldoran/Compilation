@@ -1,5 +1,6 @@
 %{
   #include "kernel.h"
+  #include "list.h"
 
   extern int yylex(void);
   extern void yyerror(const char *str);
@@ -9,7 +10,10 @@
 
   /** Teste si une variable est bien formée. */
   /* %param tree : Arbre contenant la variable. */
-  void test_variable(Syntax_tree *tree);
+  /* %return : 0 si c'est bien une a variable,
+              -1 si ce n'est pas une variable,
+	       1 si c'est une variable mais où le dernier champ n'est pas un type de base. */ 
+  int test_variable(Syntax_tree *tree);
 
   /* Retourne un champ de déclaration d'une Hashkey */
   #define SYMBOL_OF(HKEY) symbol_table_get(hashtable, HKEY)
@@ -19,7 +23,7 @@
 
   /* Données. */
   static unsigned int level = 0;
-  static int region;
+  static int region;  
 %}
 
 %union
@@ -128,7 +132,7 @@
 
 /* Opérateurs/Affectations/Comparaisons. */
 %type <val_i> op_rac test_comp
-%type <node> incr_bin affectation affectation_base ternaire
+%type <node> incr_bin affectation affectation_base affectation_base_d ternaire
 
 /* Fonctions préféfinies. */
 %type <node> instr_pre format suite_ecriture liste_variables
@@ -189,13 +193,20 @@ declaration_type:
    | TYPE IDF DEUX_POINTS STRUCT liste_champs FSTRUCT   
    {
     Structure *structure;
-    
+    int i;
+
     if((structure = structure_new(variables_buffer_get_size())) == NULL)
       fatal_error("structure_new");
    
     variables_buffer_copy(structure->field);
     variables_buffer_reset();
-   
+
+    /* Taille à l'execution. */
+    structure->exec[0] = 0;
+
+    for(i = 1; i < structure->field_number; i++)
+      structure->exec[i] = ((Symbol *)structure->field[i - 1].type)->exec + structure->exec[i - 1];
+
     if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, regions_stack_top(), structure, structure_get_size(structure)))
       fatal_error("symbol_table_add");
    }
@@ -420,10 +431,13 @@ affectation: affectation_base {$$ = $1;}
            | incr_bin         {$$ = $1;}
            ; 
 
-affectation_base: variable OPAFF expression  {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother($1, $3));}
-                | variable OPAFF ternaire    {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother($1, $3));} 
-                | variable op_rac expression {$$ = syntax_tree_add_son(syntax_tree_node_new($2), syntax_tree_add_brother($1, $3));}
-                ;
+affectation_base: affectation_base_d {$$ = $1;}
+               ;
+
+affectation_base_d: variable OPAFF expression {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother($1, $3));}
+                  | variable OPAFF ternaire  {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother($1, $3));} 
+                  | variable op_rac expression {$$ = syntax_tree_add_son(syntax_tree_node_new($2), syntax_tree_add_brother($1, $3));}
+                  ;
  
 incr_bin: variable PLUS_ET_PLUS   {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OB_INC), $1);}
         | variable MOINS_ET_MOINS {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OB_DEC), $1);}
@@ -664,14 +678,14 @@ test_comp: INFERIEUR         {$$ = AT_CMP_L;}
 
 %%
 
-#define BAD_COMPIL(LEXEME, MSG)                                             \
-  if(1) {                                                            \
-    bad_compil = true;                                               \
+#define BAD_COMPIL(LEXEME, MSG)                                        \
+  if(1) {                                                              \
+    bad_compil = true;                                                 \
     fprintf(stderr, "Line %d - \"%s\" - %s\n", line_num, LEXEME, MSG); \
-    return;                                                          \
+    return -1;                                                         \
   }
 
-void test_variable(Syntax_tree *tree)
+int test_variable(Syntax_tree *tree)
 {
   Syntax_node_content *content;
   Syntax_tree *current, *temp;
@@ -686,7 +700,7 @@ void test_variable(Syntax_tree *tree)
   content = syntax_tree_node_get_content(tree);
                               
   /* Si association de noms échouée. */
-  if(content->value.var.type == NULL) return;
+  if(content->value.var.type == NULL) return -1;
 
   /* Ligne de déclaration du type de l'IDF. */
   sym = content->value.var.type;
@@ -723,7 +737,7 @@ void test_variable(Syntax_tree *tree)
           if(content->type == AT_ARRAY_INDEX)
             BAD_COMPIL(lexeme, "It's not an array !");
         }
-        return; /* Type de base, plus rien à vérifier. */
+        return 0; /* Type de base, plus rien à vérifier. */
         
       /* ------------------------------------------ */
       /* TYPE STRUCTURE                             */
@@ -732,7 +746,7 @@ void test_variable(Syntax_tree *tree)
       case SYMBOL_TYPE_STRUCT:
         /* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base mais une structure. */
         if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-          /* BAD_COMPIL(lexeme, "You need to access a field !"); */ return;
+	  return 1;
 
         /* Recherche dans le prochain champ de la structure. */
         content = syntax_tree_node_get_content(current);
@@ -764,7 +778,7 @@ void test_variable(Syntax_tree *tree)
       case SYMBOL_TYPE_ARRAY:
         /* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base. */
         if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-          /* BAD_COMPIL(lexeme, "You need to access a data of the array !"); */ return;
+          /* BAD_COMPIL(lexeme, "You need to access a data of the array !"); */ return 1;
  
         /* Recherche dans le prochain champ du tableau. */
         content = syntax_tree_node_get_content(current);
@@ -806,5 +820,7 @@ void test_variable(Syntax_tree *tree)
 
     root = false;
   } 
+  
+  return 0;
 }
                          

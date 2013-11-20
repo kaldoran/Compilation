@@ -20,10 +20,10 @@
 #define SYMBOL_TYPE_FUNCTION   5
 
 /** Types de bases. */
-#define SYMBOL_BASIC_INT    3
-#define SYMBOL_BASIC_FLOAT  4
 #define SYMBOL_BASIC_BOOL   1
 #define SYMBOL_BASIC_CHAR   2
+#define SYMBOL_BASIC_INT    3
+#define SYMBOL_BASIC_FLOAT  4
 #define SYMBOL_BASIC_STRING 5
 
 /** Index sur table */
@@ -87,10 +87,10 @@ Symbol *symbol_table_get(Symbol_table *table, Hashkey hkey);
 /* %return : Retourne un index sur le champ correspondant ou NULL si basic_num n'est pas bon. */
 Index_t symbol_table_get_basic(int basic_num);
 
-#define SBASIC_INT    symbol_table_get_basic(SYMBOL_BASIC_INT)    /* Type 1 */
-#define SBASIC_FLOAT  symbol_table_get_basic(SYMBOL_BASIC_FLOAT)  /* Type 2 */
-#define SBASIC_BOOL   symbol_table_get_basic(SYMBOL_BASIC_BOOL)   /* Type 3 */
-#define SBASIC_CHAR   symbol_table_get_basic(SYMBOL_BASIC_CHAR)   /* Type 4 */
+#define SBASIC_BOOL   symbol_table_get_basic(SYMBOL_BASIC_BOOL)   /* Type 1 */
+#define SBASIC_CHAR   symbol_table_get_basic(SYMBOL_BASIC_CHAR)   /* Type 2 */
+#define SBASIC_INT    symbol_table_get_basic(SYMBOL_BASIC_INT)    /* Type 3 */
+#define SBASIC_FLOAT  symbol_table_get_basic(SYMBOL_BASIC_FLOAT)  /* Type 4 */
 #define SBASIC_STRING symbol_table_get_basic(SYMBOL_BASIC_STRING) /* Type 5 */
 
 /** Affiche la table des déclarations. */
