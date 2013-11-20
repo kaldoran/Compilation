@@ -1,0 +1,14 @@
+% PROGRAMME DE FIBONACCI %
+
+function fibo (n : int) return int
+    start{
+        return ((n < 2) ? n : (fibo(n-1) + fibo(n-2)));
+    };
+
+var i : int;
+start{
+    read(i);
+
+    write ("Résultat de fibo(%d) : %d\n", i, fibo(i));
+}
+
