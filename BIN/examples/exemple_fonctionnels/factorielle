@@ -1,0 +1,21 @@
+% PROGRAMME DE FACTORIELLE %
+
+/* Fonction prenant un entier en paramètre et retournant la factorielle de celui-ci */
+function factorielle(n : int) return int
+    start{
+        if(n == 1) then {
+            return 1;
+        }
+        else{
+            return n * factorielle(n-1);
+        }
+    };
+
+# Variable permettant de récupérer le chiffre qu'a saisi l'utilisateur
+var i : int;
+start{
+    read(i);
+
+    write("Résultat de la factorielle de %d : %d\n", i, factorielle(i));
+}
+
