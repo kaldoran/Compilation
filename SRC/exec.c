@@ -218,6 +218,17 @@ void push_position(int n)
   data_stack[stack_position].value.i = current_region; 
   
   /* Mise à jour du chainage statique. */
+  if(n_region->level > o_region->level)
+  {
+    data_stack[stack_position + 1].value.i = current_region; 
+     
+    for(i = 2; i <= n_region->level; i++)
+      data_stack[stack_position + i].value.i = stack_position - o_region->size + i - 1; 
+  }
+  else
+    for(i = 1; i <= n_region->level; i++)
+      data_stack[stack_position + i].value.i = stack_position - o_region->size + i + 
+	o_region->level - n_region->level; 
 
   /* Nouvelle région. */                          
   current_region = n - 1;

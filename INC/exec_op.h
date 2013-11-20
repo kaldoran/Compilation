@@ -93,7 +93,7 @@
       break;						  \
  }
 
-/** Divise  2 valeurs. */
+/** Divise 2 valeurs. */
 #define OP_DIV(RES, RES_A, RES_B)			  \
   switch(RES.type = RES_A.type)				  \
   {							  \
