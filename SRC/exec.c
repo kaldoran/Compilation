@@ -116,12 +116,12 @@ static void exec_set_variables_move(void);
 /** Déplace la position dans la pile.
     Met à jour le chainage dynamique et statique. 
     %param n : Numéro de région à ajouter sur la pile. */
-void push_position(int n);
+static void push_position(int n);
 
 /** Evalue un arbre. */
 /* %param tree : Arbre à évaluer. */
 /* %return : Le résultat de l'évaluation. */
-Data region_eval(Syntax_tree *tree);
+static Data region_eval(Syntax_tree *tree);
 
 /* ---------------------------------------------------------------------- */
 
@@ -209,7 +209,7 @@ static void exec_set_variables_move(void)
       region->size = region->level;
 }
 
-void push_position(int n)
+static void push_position(int n)
 {
   Region *n_region = REGION_TABLE_GET(n);                  /* Nouvelle région. */
   Region *o_region = REGION_TABLE_GET(current_region + 1); /* Ancienne région. */
@@ -222,7 +222,7 @@ void push_position(int n)
   /* Mise à jour du chainage dynamique. */
   data_stack[stack_position + o_region->size].value.i = stack_position; 
   DBG_PRINTF(("Chainage dynamique: data_stack[%d] = %d\n", stack_position + o_region->size, 
-	      stack_position));
+              stack_position));
 
   /* Déplacement dans la pile de la taille de l'ancienne région. */                   
   stack_position += o_region->size;                 
@@ -232,26 +232,26 @@ void push_position(int n)
   {
     data_stack[stack_position + 1].value.i = data_stack[stack_position].value.i; 
     DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + 1, 
-		data_stack[stack_position].value.i));
+                data_stack[stack_position].value.i));
 
     for(i = 2; i <= n_region->level; i++)
     {
       data_stack[stack_position + i].value.i = data_stack[stack_position - o_region->size + i - 1].value.i;
       DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + i, 
-		  data_stack[stack_position + i].value.i));
+                  data_stack[stack_position + i].value.i));
     }
   }
   else
     for(i = 1; i <= n_region->level; i++)
     {
       data_stack[stack_position + i].value.i = 
-	data_stack[stack_position - o_region->size + i + o_region->level - n_region->level].value.i;
+        data_stack[stack_position - o_region->size + i + o_region->level - n_region->level].value.i;
  
       DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + i, 
-		  data_stack[stack_position + i].value.i));
+                  data_stack[stack_position + i].value.i));
     }
 
-  DBG_PRINTF(("\n"));
+  DBG_PRINTF(("%d case(s) de données\n\n", n_region->size - n_region->level * 2));
 
   /* Nouvelle région. */                          
   current_region = n - 1;
@@ -266,7 +266,7 @@ void push_position(int n)
   return;
 }
 
-size_t get_variable_position(Syntax_tree *tree)
+static size_t get_variable_position(Syntax_tree *tree)
 {
   Syntax_node_content *content;
   Syntax_tree *current, *temp;
@@ -304,7 +304,7 @@ size_t get_variable_position(Syntax_tree *tree)
         
       case SYMBOL_TYPE_STRUCT:
         if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-	  return size;
+          return size;
 
         /* Recherche dans le prochain champ de la structure. */
         content = syntax_tree_node_get_content(current);
@@ -327,7 +327,7 @@ size_t get_variable_position(Syntax_tree *tree)
 
       case SYMBOL_TYPE_ARRAY:
         if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-	  return size;
+          return size;
 
         /* Recherche dans le prochain champ du tableau. */
         content = syntax_tree_node_get_content(current);
@@ -354,7 +354,7 @@ size_t get_variable_position(Syntax_tree *tree)
       /* ------------------------------------------ */
 
       default:
-	break;
+        break;
     }
 
     root = false;
@@ -363,7 +363,7 @@ size_t get_variable_position(Syntax_tree *tree)
   return 0;
 }
              
-Data region_eval(Syntax_tree *tree)
+static Data region_eval(Syntax_tree *tree)
 {
   Data result;
   Syntax_node_content *content; 
@@ -546,6 +546,8 @@ Data region_eval(Syntax_tree *tree)
 
   return result;
 }
+
+/* ---------------------------------------------------------------------- */
 
 void exec(Symbol_table *table)
 {

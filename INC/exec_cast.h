@@ -14,22 +14,22 @@
 
 /** Cast de int en un autre type. */
 #define CAST_INT(RES, TYPE)          \
-  switch(TYPE)			     \
-  {				     \
-    case SYMBOL_BASIC_FLOAT:	     \
+  switch(TYPE)                       \
+  {                                  \
+    case SYMBOL_BASIC_FLOAT:         \
       RES.value.f = RES.value.i;     \
       RES.type = SYMBOL_BASIC_FLOAT; \
-      break;			     \
-    case SYMBOL_BASIC_BOOL:	     \
+      break;                         \
+    case SYMBOL_BASIC_BOOL:          \
       RES.value.c = !!RES.value.i;   \
       RES.type = SYMBOL_BASIC_BOOL;  \
-      break;		             \
-    case SYMBOL_BASIC_CHAR:	     \
+      break;                         \
+    case SYMBOL_BASIC_CHAR:          \
       RES.value.c = RES.value.i;     \
       RES.type = SYMBOL_BASIC_CHAR;  \
-      break;			     \
-    case SYMBOL_BASIC_STRING:	     \
-      break;			     \
+      break;                         \
+    case SYMBOL_BASIC_STRING:        \
+      break;                         \
   } 
 
 /** Cast de float en un autre type. */
@@ -98,11 +98,11 @@
   {                                           \
     case SYMBOL_BASIC_INT:                    \
       RES.value.i = atoi(RES.value.s);        \
-      RES.type = SYMBOL_BASIC_INT;    	      \
+      RES.type = SYMBOL_BASIC_INT;            \
       break;                                  \
     case SYMBOL_BASIC_FLOAT:                  \
       RES.value.f = atof(RES.value.s);        \
-      RES.type = SYMBOL_BASIC_FLOAT;	      \
+      RES.type = SYMBOL_BASIC_FLOAT;          \
       break;                                  \
     case SYMBOL_BASIC_BOOL:                   \
       RES.value.c = strlen(RES.value.s) != 0; \
@@ -120,8 +120,8 @@
 
 /** Cast en un autre type. Détecte le type d'entrée. */
 #define CAST(RES, TYPE)       \
-  switch(RES.type)	      \
-  {			      \
+  switch(RES.type)            \
+  {                           \
     case SYMBOL_BASIC_INT:    \
       CAST_INT(RES, TYPE);    \
       break;                  \
@@ -136,7 +136,7 @@
       break;                  \
     case SYMBOL_BASIC_STRING: \
       CAST_STRING(RES, TYPE); \
-      break;		      \
+      break;                  \
   }
 
 #endif /* _EXEC_CAST_ INCLUDED */
