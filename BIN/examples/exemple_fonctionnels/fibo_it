@@ -1,0 +1,24 @@
+% PROGRAMME DE FIBONACCI %
+
+# Attention, je ne suis pas sûr de l'algorithme, il faudra vérifier à l'exécution
+function fibo(n : int) return int
+    var f1, f2, fn, i : int;
+    start{
+        f1 = 0;
+        f2 = 1;
+
+        for ( i = 2; i < n; i++ ) do {
+            fn = f1 + f2;
+            f1 = f2;
+            f2 = fn;
+        }
+    };
+
+var i : int;
+start{
+    read(i);
+
+    write ("Résultat de fibo(%d) : %d\n", i, fibo(i));
+}
+
+
