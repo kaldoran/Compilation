@@ -8,7 +8,7 @@ end struct;
 var variable_int : int;
 var po : type_normal;
 
-start{ variable_int = 30 + 23.14 -105.378 * 96 + true; 
+start{ variable_int = variable_int + 30 + 23.14 -105.378 * 96 + true; 
        po = 10;
 }
 

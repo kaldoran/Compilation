@@ -1,5 +1,21 @@
 % PROGRAM %
 
+# Func 1
+function func_1 () return int 
+  var coucou : char;
+  
+  function func_2 () return int 
+    var test : int;
+    
+    start
+    { test = 5; };
+
+  start    
+  {
+    func_2();
+    return 1;
+  };
+
 # Proc 1
 proc proc_1 () 
   var coucou : char;
@@ -8,6 +24,7 @@ proc proc_1 ()
 
   start
   {
+    func_1();
     if ( x == 6) then {
       x = 5;
     }
@@ -19,13 +36,7 @@ proc proc_1 ()
     }
   };
 
-# Func 1
-function func_1 () return int 
-  var coucou : char;
-  start    
-  {
-    return 1;
-  };
+
 
 # Corps du Programme
   var k : int;
@@ -36,5 +47,5 @@ function func_1 () return int
   var p : int;
 
 start
-{ ; }
+{ proc_1(); }
 

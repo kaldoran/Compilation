@@ -120,7 +120,7 @@ void save(const char *filename, Hashtable *h)
             
             for(j = 0; j < structure->field_number; j++)
               fprintf(file, "%d %lu %s\n", index_array_get_id(structure->field[j].type),
-		      (unsigned long int)structure->exec[i], 
+		      (unsigned long int)structure->exec[j], 
 		      lexeme_table_get(h, structure->field[j].hkey));
             break;
             

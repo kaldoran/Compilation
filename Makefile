@@ -25,7 +25,7 @@ CXXFLAGS = -Wall -pedantic -ansi
 LDFLAGS = -ly -lfl
 
 ifeq ($(DEBUG), yes)
-	CXXFLAGS += -g
+	CXXFLAGS += -g -DDEBUG
 else
 	CXXFLAGS += -O2 -s
 endif

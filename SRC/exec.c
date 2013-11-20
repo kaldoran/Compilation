@@ -216,24 +216,42 @@ void push_position(int n)
   int old_region = current_region;
   int i;
 
+  DBG_PRINTF(("Ajout de la région: %d\n", n - 1));
+  DBG_PRINTF(("Déplacement de la base courante de %lu\n", (unsigned long int)o_region->size));
+
+  /* Mise à jour du chainage dynamique. */
+  data_stack[stack_position + o_region->size].value.i = stack_position; 
+  DBG_PRINTF(("Chainage dynamique: data_stack[%d] = %d\n", stack_position + o_region->size, 
+	      stack_position));
+
   /* Déplacement dans la pile de la taille de l'ancienne région. */                   
   stack_position += o_region->size;                 
-  
-  /* Mise à jour du chainage dynamique. */
-  data_stack[stack_position].value.i = current_region; 
-  
+
   /* Mise à jour du chainage statique. */
   if(n_region->level > o_region->level)
   {
-    data_stack[stack_position + 1].value.i = current_region; 
-     
+    data_stack[stack_position + 1].value.i = data_stack[stack_position].value.i; 
+    DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + 1, 
+		data_stack[stack_position].value.i));
+
     for(i = 2; i <= n_region->level; i++)
-      data_stack[stack_position + i].value.i = stack_position - o_region->size + i - 1; 
+    {
+      data_stack[stack_position + i].value.i = data_stack[stack_position - o_region->size + i - 1].value.i;
+      DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + i, 
+		  data_stack[stack_position + i].value.i));
+    }
   }
   else
     for(i = 1; i <= n_region->level; i++)
-      data_stack[stack_position + i].value.i = stack_position - o_region->size + i + 
-	o_region->level - n_region->level; 
+    {
+      data_stack[stack_position + i].value.i = 
+	data_stack[stack_position - o_region->size + i + o_region->level - n_region->level].value.i;
+ 
+      DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + i, 
+		  data_stack[stack_position + i].value.i));
+    }
+
+  DBG_PRINTF(("\n"));
 
   /* Nouvelle région. */                          
   current_region = n - 1;
@@ -242,16 +260,115 @@ void push_position(int n)
   region_eval(n_region->tree);
 
   /* Reset de la région. */
+  DBG_PRINTF(("Depilement de la région %d.\nRégion courante = %d\n", current_region, old_region));
   current_region = old_region;
 
   return;
 }
 
+size_t get_variable_position(Syntax_tree *tree)
+{
+  Syntax_node_content *content;
+  Syntax_tree *current, *temp;
+  Symbol *sym;
+  unsigned int i;
+  Structure *structure;
+  Array *array;
+  bool root = true;
+  size_t size = 0;
+
+  /* Récupération du contenu de l'arbre. */
+  content = syntax_tree_node_get_content(tree);
+                              
+  /* Ligne de déclaration du type de l'IDF. */
+  sym = content->value.var.type;
+
+  /* Récupération du type de la variable. */
+  sym = sym->index;
+  
+  for(;;)
+  { 
+    /* Parcours des champs. */
+    switch(sym->type)
+    {
+      /* ------------------------------------------ */
+      /* TYPE BASE                                  */
+      /* ------------------------------------------ */
+      
+      case SYMBOL_TYPE_BASE:
+        return size;
+        
+      /* ------------------------------------------ */
+      /* TYPE STRUCTURE                             */
+      /* ------------------------------------------ */
+        
+      case SYMBOL_TYPE_STRUCT:
+        if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
+	  return size;
+
+        /* Recherche dans le prochain champ de la structure. */
+        content = syntax_tree_node_get_content(current);
+        structure = sym->index;
+
+        for(i = 0; i < structure->field_number; i++)
+          if(structure->field[i].hkey == content->value.var.hkey)
+          {
+            sym = structure->field[i].type;
+            content->value.i = i;
+            tree = current;
+            break;
+          }
+        
+        break;
+
+      /* ------------------------------------------ */
+      /* TYPE TABLEAU                               */
+      /* ------------------------------------------ */
+
+      case SYMBOL_TYPE_ARRAY:
+        if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
+	  return size;
+
+        /* Recherche dans le prochain champ du tableau. */
+        content = syntax_tree_node_get_content(current);
+        array = sym->index;
+       
+        /* Erreur : Mauvais nombre de champs. */
+        for(i = 1, temp = current; tree_node_get_brother(temp) != NULL; i++)
+        {
+          temp = tree_node_get_brother(temp);
+          content = syntax_tree_node_get_content(temp);
+
+          if(content->type != AT_ARRAY_INDEX)
+            break;
+
+          current = temp;
+        }
+
+        sym = array->type;
+        tree = current;
+        break;
+               
+      /* ------------------------------------------ */
+      /* DEFAULT                                    */
+      /* ------------------------------------------ */
+
+      default:
+	break;
+    }
+
+    root = false;
+  } 
+  
+  return 0;
+}
+             
 Data region_eval(Syntax_tree *tree)
 {
   Data result;
   Syntax_node_content *content; 
   Data res_a, res_b;
+  size_t size = 0;
 
   result.value.i = 0;
 
@@ -382,6 +499,8 @@ Data region_eval(Syntax_tree *tree)
 
 
     case AT_VAR:
+      size = get_variable_position(tree);
+      printf("%lu\n", size);
     case AT_ARRAY_INDEX:
     case AT_HKEY_INDEX:
       break;
