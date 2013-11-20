@@ -85,7 +85,7 @@ Symbol *symbol_new(char type, int region, Index_t index, size_t exec)
 void symbol_table_init(Symbol_table *table)
 {
   Symbol *sym;
-  const char *type[] = {"int", "float", "bool", "char", "string"};
+  const char *type[] = {"bool", "char", "int", "float", "string"};
   int i;
   
   for(i = 0; i < SYMBOL_BASIC_MAX; i++)

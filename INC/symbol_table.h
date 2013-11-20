@@ -20,10 +20,10 @@
 #define SYMBOL_TYPE_FUNCTION   5
 
 /** Types de bases. */
-#define SYMBOL_BASIC_INT    1
-#define SYMBOL_BASIC_FLOAT  2
-#define SYMBOL_BASIC_BOOL   3
-#define SYMBOL_BASIC_CHAR   4
+#define SYMBOL_BASIC_INT    3
+#define SYMBOL_BASIC_FLOAT  4
+#define SYMBOL_BASIC_BOOL   1
+#define SYMBOL_BASIC_CHAR   2
 #define SYMBOL_BASIC_STRING 5
 
 /** Index sur table */

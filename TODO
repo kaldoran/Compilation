@@ -1,5 +1,6 @@
 
 MAJ TODO :
-	-> Gestion string (Sauvegarde des tailles des chaines, Trouver comment faire !)
 	-> Exemples divers (Faire de vrais algos, utiliser un peu les tableaux et structures
-	                    et surtout : Ne pas nommer une variable avec un nom de type existant !)
+	                    et surtout : Ne pas nommer une variable avec un nom de type existant)
+        -> Gestion des casts (Sauf pour les string (A voir à la fin du projet))
+        -> Gestion des opérations entres types différents (Idem pour string, à voir plus tard)
