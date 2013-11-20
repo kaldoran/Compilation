@@ -40,6 +40,15 @@ void regions_table_free(void);
    Celle-ci symbolise une erreur d'allocation ou un dépassement de pile. */
 int regions_table_add(size_t size, unsigned int level, Syntax_tree *tree);
 
+/** Obtenir une région de la table. */
+/* %param region : Numéro de la région. */
+/* %return : NULL si non trouvé, la région sinon. */
+Region *region_table_get(int region);
+
+/** Obtenir le nombre de régions. */
+/* %return : Nombre de régions. */
+int regions_table_get_size(void);
+
 /** Définit l'arbre d'une région. */
 /* %param region : Numéro de la région. */
 /* %param tree : Arbre source. */

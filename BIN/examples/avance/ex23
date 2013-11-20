@@ -87,6 +87,7 @@ function machin_bidule(x : int) return int
       };
 
     proc get_k ()
+      var ooooo : char;
       start
       {
         read(k);

@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include "lexeme_table.h"
 
-/* Nombre de lexemes de bases. (int, float, char, bool) */
-#define LEXEME_BASIC_MAX 4
+/* Nombre de lexemes de bases. (int, float, char, bool, string) */
+#define LEXEME_BASIC_MAX 5
 
 /* ---------------------------------------------------------------------- */
 /* Données internes (privées)                                             */
@@ -26,6 +26,7 @@ void lexeme_table_init(Lexeme_table *table)
   lexeme_basic[1] = hashtable_get_key(table, "float");
   lexeme_basic[2] = hashtable_get_key(table, "bool");
   lexeme_basic[3] = hashtable_get_key(table, "char");
+  lexeme_basic[4] = hashtable_get_key(table, "string");
 
   return;
 }

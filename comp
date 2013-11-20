@@ -2,37 +2,39 @@
 # REYNAUD NICOLAS 
 # jeudi 31 octobre 2013, 01:06:03 (UTC+0100)
 
+# Compile chaque programme du dossier BIN/examples puis sauvegarde le log de la compilation.
+# Le programme compilé est ensuite chargé en mémoire puis comparé à la sauvegarde du log.
+# Cela permet de savoir si la sauvegarde des tables + arbres est fonctionnelle.
+# Enfin, on peut aussi vérifier que l'ensemble des programmes compilent.
 
 function changepointer() {
-     i=0
-     #echo -e "\t\tFile : $1\n";
-     for j in $(grep -o "0x[^,) ]*" $1); do
-  	#echo "$j -> $i";
-	sed -i "s/$j/$i/g" $1
-	i=$(( i + 1 ));   
-     done
+    i=0
+    #echo -e "\t\tFile : $1\n";
+    for j in $(grep -o "0x[^,) ]*" $1); do
+        #echo "$j -> $i";
+        sed -i "s/$j/$i/g" $1
+        i=$(( i + 1 ));   
+    done
 }
 
 function sub() {
-     echo -e  "\nDifférence(s) pour $1:"
-     (./BIN/prog -a -c "$1" > out) |& sed "s/ATTENTION.*//g" | tr -s '\n'
-     changepointer out
-     ./BIN/prog -a -s myout > out2
-     changepointer out2
- 
-     if [[ $(diff out out2 | grep "^>" | sed '1,4d' | wc -l) == 0 ]]; then
-	echo -e "\tAucune différence";
-     else 
-	echo -e "\tLes fichiers ne sont pas identiques ou Erreur lors de la compilation";
-     fi
+    echo -e  "\nDifférence(s) pour $1:"
+    (./BIN/prog -a -c "$1" > out) |& sed "s/ATTENTION.*//g" | tr -s '\n'
+    changepointer out
+    ./BIN/prog -a -s myout > out2
+    changepointer out2
+    
+    if [[ $(diff out out2 | grep "^>" | sed '1,4d' | wc -l) == 0 ]]; then
+        echo -e "\tAucune différence";
+    else 
+        echo -e "\tLes fichiers ne sont pas identiques ou Erreur lors de la compilation";
+    fi
 }
 
-
 for i in $(find "./BIN/examples" -type f ! -path "*/marche_pas/*"); do
-		sub "$i"
-		rm out
-		rm out2
-		sleep 1
-
-done	
+    sub "$i"
+    rm out
+    rm out2
+    sleep 1
+done        
 

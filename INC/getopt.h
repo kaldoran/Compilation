@@ -30,4 +30,4 @@
  * in the public domain.
  */
 
-int getopt (int argc, char *argv[], char *opts);
+int getopt(int argc, char *argv[], char *opts);

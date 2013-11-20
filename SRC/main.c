@@ -11,6 +11,7 @@
 #include "kernel.h"
 #include "save.h"
 #include "getopt.h"
+#include "exec.h"
 
 /** Fichier de sortie par défaut du programme. */
 #define OUTPUT_FILENAME "myout"
@@ -102,12 +103,13 @@ int main(int argc, char *argv[])
   {
     hashtable = load(input);
     regions_table_load(hashtable, strcat(output, ".reg"));
-    index_array_free(); /* Crée par load */
+    index_array_free(); /* array crée par load */
 
     if((options & OPT_A) != 0)
       PRINT_LOG();
 
     /* Execution */;
+    exec(hashtable);
   }
   
   /* Compilation. */
@@ -130,19 +132,20 @@ int main(int argc, char *argv[])
     {
       if(!bad_compil)
       {
-	index_array_new(hashtable);
+        index_array_new(hashtable);
         save(output, hashtable);
         regions_table_save(strcat(output, ".reg"));
-	index_array_free();
+        index_array_free();
 
         if((options & OPT_A) != 0)
           PRINT_LOG();
+
+	/* Execution */
+	if((options & OPT_E) != 0)
+	  exec(hashtable);
       }
       else
         fprintf(stderr, "ATTENTION : Compilation aborted.\n");
-
-      /* if((options & OPT_E) != 0)
-         Execution ; */
     }
 
     fclose(yyin);

@@ -35,6 +35,7 @@ typedef struct Structure
 {
   unsigned int field_number; /* Nombre de champs de la structure. */
   Field *field;              /* Tableau des champs de la structure. */
+  size_t *exec;              /* Déplacements à l'execution à l'intérieur d'une structure. */ 
 } Structure;
 
 /** Structure d'un tableau. */
@@ -69,6 +70,11 @@ Structure *structure_new(unsigned int field_number);
 /* %param *s : Pointeur sur la structure à libérer. */
 void structure_free(Structure *s);
 
+/** Obtenir la taille d'une structure. */
+/* %param s : Structure à tester. */
+/* %return : Taille d'une structure à l'exécution. */
+size_t structure_get_size(Structure *s);
+
 /** Alloue un tableau avec un nombre de dimensions et un type spécifiés. */
 /* %param dimension_number : Nombre de dimension du tableau à créer. */
 /* %param type : Type du tableau à créer. */
@@ -78,6 +84,11 @@ Array *array_new(unsigned int dimension_number, Index_t type);
 /* Libère un tableau. */
 /* %param *a : Tableau à libérer. */
 void array_free(Array *a);
+
+/** Obtenir la taille d'un tableau. */
+/* %param s : Tableau à tester. */
+/* %return : Taille d'un tableau à l'exécution. */
+size_t array_get_size(Array *a);
 
 /** Alloue une fonction avec un type à retourner et le nombre de paramètres spécifiés. */
 /* %param return_type : Type de retour de la fonction. */

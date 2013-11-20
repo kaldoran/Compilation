@@ -7,18 +7,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "description_table.h"
 #include "lexeme_table.h"
+#include "description_table.h"
 
 Structure *structure_new(unsigned int field_number)
 {
   Structure *s;
 
-  if((s = malloc(sizeof *s)) == NULL)
+  if((s = calloc(1, sizeof *s)) == NULL)
     return NULL;
 
-  if((s->field = calloc(field_number, sizeof *s->field)) == NULL)
+  if((s->field = calloc(field_number, sizeof *s->field)) == NULL ||
+     (s->exec = calloc(field_number, sizeof *s->exec)) == NULL)
   {
+    free(s->field);
     free(s);
     return NULL;
   }
@@ -34,9 +36,22 @@ void structure_free(Structure *s)
     return;
 
   free(s->field);
+  free(s->exec);
   free(s);
 
   return;
+}
+
+size_t structure_get_size(Structure *s)
+{
+  unsigned int i;
+  size_t size = 0;
+
+  for(i = 0; i < s->field_number; i++)
+    if(s->field[i].type != NULL)
+      size += ((Symbol *)s->field[i].type)->exec;
+
+  return size;
 }
 
 Array *array_new(unsigned int dimension_number, Index_t type)
@@ -67,6 +82,23 @@ void array_free(Array *a)
   free(a);
 
   return;
+}
+
+size_t array_get_size(Array *a)
+{
+  unsigned int i;
+  size_t size = 0;
+  size_t base;
+
+  if(a->type == NULL)
+    return 0;
+
+  base = ((Symbol *)a->type)->exec;
+
+  for(i = 0; i < a->dimension_number; i++)
+    size += base * (a->dimension[i].bound_upper - a->dimension[i].bound_lower);
+
+  return size;
 }
 
 Function *function_new(Index_t return_type, unsigned int param_number)
@@ -135,7 +167,8 @@ void structure_print(Structure *structure)
   printf("\n\tStructure (%d)\n", structure->field_number);
 
   for(i = 0; i < structure->field_number; i++) 
-    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, structure->field[i].type, structure->field[i].hkey, lexeme_table_get(NULL, structure->field[i].hkey) );
+    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, structure->field[i].type,
+           structure->field[i].hkey, lexeme_table_get(NULL, structure->field[i].hkey));
 
   printf("\tEnd structure\n    ");
 
@@ -145,43 +178,45 @@ void structure_print(Structure *structure)
 void procedure_print(Procedure *procedure) 
 {
   unsigned int i;
-	
+        
   printf("\n\tProcedure (%d)\n", procedure->param_number);
-	
+        
   for(i = 0; i < procedure->param_number; i++) 
-    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, procedure->params[i].type, procedure->params[i].hkey, lexeme_table_get(NULL, procedure->params[i].hkey) );
-		
+    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, procedure->params[i].type, 
+           procedure->params[i].hkey, lexeme_table_get(NULL, procedure->params[i].hkey));
+                
   printf("\tEnd procedure\n    ");
-	
+        
   return;
 }
 
 void function_print(Function *function) 
 {
   unsigned int i;
-	
+        
   printf("\n\tFunction (%d) - Return (%p)\n", function->param_number, function->return_type);
-	
+        
   for(i = 0; i < function->param_number; i++) 
-    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, function->params[i].type, function->params[i].hkey, lexeme_table_get(NULL, function->params[i].hkey) );
-		
+    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, function->params[i].type, 
+           function->params[i].hkey, lexeme_table_get(NULL, function->params[i].hkey));
+                
   printf("\tEnd function\n    ");
-	
+        
   return;
 }
 
 void array_print(Array *array) 
 {
   unsigned int i;
-	
+        
   printf("\n\tArray (%d) - Type (%p)\n", array->dimension_number,array->type);
-	
+        
   for (i = 0; i < array->dimension_number; i++) 
     printf("\t   [%d] Start : %d - End : %d (%d)\n", i, array->dimension[i].bound_lower,
-	   array->dimension[i].bound_upper,
-	   array->dimension[i].bound_upper - array->dimension[i].bound_lower );
-		
+           array->dimension[i].bound_upper,
+           array->dimension[i].bound_upper - array->dimension[i].bound_lower );
+                
   printf("\tEnd array\n    ");
-	
+        
   return;
 }

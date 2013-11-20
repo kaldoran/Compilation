@@ -22,7 +22,6 @@
   static int region;
 %}
 
-
 %union
 {
   int val_i; 
@@ -183,7 +182,7 @@ declaration_type:
     dimensions_buffer_copy(array->dimension);
     dimensions_buffer_reset();
     
-    if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, regions_stack_top(), array, 0))
+    if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_ARRAY, regions_stack_top(), array, array_get_size(array)))
       fatal_error("symbol_table_add");
    }
 
@@ -197,7 +196,7 @@ declaration_type:
     variables_buffer_copy(structure->field);
     variables_buffer_reset();
    
-    if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, regions_stack_top(), structure, 0))
+    if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_STRUCT, regions_stack_top(), structure, structure_get_size(structure)))
       fatal_error("symbol_table_add");
    }
    ;
@@ -214,6 +213,12 @@ liste_dimensions: une_dimension
                 ;
                                                  
 une_dimension: CSTE_ENTIERE POINT_ET_POINT CSTE_ENTIERE {
+                                                         if($3 - $1 <= 0)
+							 {
+                                                           bad_compil = true;
+							   fprintf(stderr, "Line %d - Bad dimension ! (%d, %d) \n", line_num, $1, $3);
+                                                         }
+
                                                          if(dimensions_buffer_push($1, $3) == -1)
                                                          {
                                                            fprintf(stderr, "Error: The buffer has reached its limit (%d)\n", 
@@ -242,10 +247,10 @@ un_champ: IDF DEUX_POINTS nom_type {
         ;
      
 /* -----------------------------------------------------*/
-/* Déclarations : VARIABLES                            */
+/* Déclarations : VARIABLES                             */
 /* -----------------------------------------------------*/     
 
- declaration_variable: VARIABLE declaration_suite_variable
+declaration_variable: VARIABLE declaration_suite_variable
                     ;
 
 declaration_suite_variable: IDF DEUX_POINTS nom_type               
@@ -269,84 +274,84 @@ declaration_suite_variable: IDF DEUX_POINTS nom_type
 
 declaration_procedure: PROCEDURE IDF liste_parametres {
                                                        unsigned int i, j;
-						       Variable *variable;
+                                                       Variable *variable;
 
                                                        if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
                                                          fatal_error("regions_table_add");
                                                        if(regions_stack_push(region) == -1)
                                                          fatal_error("regions_stack_push");
-  		      
-						       variables_buffer_set_offset(-$3);
-						       j = variables_buffer_get_size();
-						       variable = variables_buffer_get_current();
+                        
+                                                       variables_buffer_set_offset(-$3);
+                                                       j = variables_buffer_get_size();
+                                                       variable = variables_buffer_get_current();
 
-						       for(i = 0; i < j; i++)
-							 if(!symbol_table_add(hashtable, variable[i].hkey, SYMBOL_TYPE_VAR, 
+                                                       for(i = 0; i < j; i++)
+                                                         if(!symbol_table_add(hashtable, variable[i].hkey, SYMBOL_TYPE_VAR, 
                                                             regions_stack_top(), variable[i].type, 0))
-							   fatal_error("symbol_table_add");
+                                                           fatal_error("symbol_table_add");
 
-						       variables_buffer_set_offset($3);
+                                                       variables_buffer_set_offset($3);
 
                                                       } corps
                      {
-  		      Procedure *procedure;
+                      Procedure *procedure;
 
-		      variables_buffer_set_offset(-$3);
-		      
-		      if((procedure = procedure_new(variables_buffer_get_size())) == NULL)
-			fatal_error("procedure_new");
-		      
-		      variables_buffer_copy(procedure->params);
-		      variables_buffer_reset();
-		      
-		      region = regions_stack_top();
-		      regions_table_set_tree(region, tree_get_root($5));
-		      level--;
-		      regions_stack_pop();
+                      variables_buffer_set_offset(-$3);
+                      
+                      if((procedure = procedure_new(variables_buffer_get_size())) == NULL)
+                        fatal_error("procedure_new");
+                      
+                      variables_buffer_copy(procedure->params);
+                      variables_buffer_reset();
+                      
+                      region = regions_stack_top();
+                      regions_table_set_tree(region, tree_get_root($5));
+                      level--;
+                      regions_stack_pop();
 
-		      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_PROCEDURE, regions_stack_top(), procedure, region))
-		       fatal_error("symbol_table_add");
+                      if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_PROCEDURE, regions_stack_top(), procedure, region))
+                       fatal_error("symbol_table_add");
                     }
                     ;
       
 declaration_fonction: FONCTION IDF liste_parametres RETOURNE type_simple {
                                                                           unsigned int i, j;
-									  Variable *variable;
-									  
-									  if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
-									    fatal_error("regions_table_add");
-									  if(regions_stack_push(region) == -1)
-									    fatal_error("regions_stack_push");
-  		      
-									  variables_buffer_set_offset(-$3);
-									  j = variables_buffer_get_size();
-									  variable = variables_buffer_get_current();
-									  
-									  for(i = 0; i < j; i++)
-									    if(!symbol_table_add(hashtable, variable[i].hkey, 
+                                                                          Variable *variable;
+                                                                          
+                                                                          if((region = regions_table_add(0, ++level, NULL)) == BAD_REGION)
+                                                                            fatal_error("regions_table_add");
+                                                                          if(regions_stack_push(region) == -1)
+                                                                            fatal_error("regions_stack_push");
+                        
+                                                                          variables_buffer_set_offset(-$3);
+                                                                          j = variables_buffer_get_size();
+                                                                          variable = variables_buffer_get_current();
+                                                                          
+                                                                          for(i = 0; i < j; i++)
+                                                                            if(!symbol_table_add(hashtable, variable[i].hkey, 
                                                                                SYMBOL_TYPE_VAR, regions_stack_top(), variable[i].type, 0))
-									      fatal_error("symbol_table_add");
+                                                                              fatal_error("symbol_table_add");
 
-									  variables_buffer_set_offset($3);
+                                                                          variables_buffer_set_offset($3);
                                                                          } corps
                     {
                      Function *function;
 
-		     variables_buffer_set_offset(-$3);
-		     
-		     if((function = function_new(SYMBOL_OF($5), variables_buffer_get_size())) == NULL)
-		       fatal_error("function_new");
-		     
-		     variables_buffer_copy(function->params);
-		     variables_buffer_reset();
-		     
-		     region = regions_stack_top();
-		     regions_table_set_tree(region, tree_get_root($7));
-		     level--;
-		     regions_stack_pop();
+                     variables_buffer_set_offset(-$3);
                      
-		     if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_FUNCTION, regions_stack_top(), function, region))
-		       fatal_error("symbol_table_add");
+                     if((function = function_new(SYMBOL_OF($5), variables_buffer_get_size())) == NULL)
+                       fatal_error("function_new");
+                     
+                     variables_buffer_copy(function->params);
+                     variables_buffer_reset();
+                     
+                     region = regions_stack_top();
+                     regions_table_set_tree(region, tree_get_root($7));
+                     level--;
+                     regions_stack_pop();
+                     
+                     if(!symbol_table_add(hashtable, $2, SYMBOL_TYPE_FUNCTION, regions_stack_top(), function, region))
+                       fatal_error("symbol_table_add");
                     }
                     ;
 
@@ -373,7 +378,7 @@ type_simple: ENTIER                                              {$$ = LBASIC_IN
            | REEL                                                {$$ = LBASIC_FLOAT;}
            | BOOLEEN                                             {$$ = LBASIC_BOOL;}
            | CARACTERE                                           {$$ = LBASIC_CHAR;}
-           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = LBASIC_CHAR;}
+           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = LBASIC_STRING;}
            ;
 
 /* -----------------------------------------------------*/
@@ -435,7 +440,7 @@ op_rac: PLUS_EGAL   {$$ = AT_OPR_PLUSE;}
 
 variable: IDF suite_variable {
                               $$ = syntax_tree_add_son(syntax_tree_node_var_new($1), $2);
-			      test_variable($$);
+                              test_variable($$);
                              }
         ;
 
@@ -529,39 +534,39 @@ default: DEFAULT DEUX_POINTS liste_instructions {$$ = syntax_tree_add_son(syntax
 
 appel: IDF liste_arguments {
                             unsigned int i, j;
-			    Syntax_node_content *content;
+                            Syntax_node_content *content;
                             Symbol *sym;
-			    Syntax_tree *tree;
+                            Syntax_tree *tree;
 
-			    $$ = tree = syntax_tree_add_son(syntax_tree_node_call_new($1), $2);
-			    content = syntax_tree_node_get_content($$);
+                            $$ = tree = syntax_tree_add_son(syntax_tree_node_call_new($1), $2);
+                            content = syntax_tree_node_get_content($$);
 
-			    /* VERIFICATION DE LA FIABILITE DE LA FONCTION : Son existence + Son nombre de paramètres. */
+                            /* VERIFICATION DE LA FIABILITE DE LA FONCTION : Son existence + Son nombre de paramètres. */
 
-			    /* Si la déclaration existe... */
-			    if((sym = content->value.var.type) != NULL)
-			    {
+                            /* Si la déclaration existe... */
+                            if((sym = content->value.var.type) != NULL)
+                            {
                               if(sym->type == SYMBOL_TYPE_PROCEDURE || sym->type == SYMBOL_TYPE_FUNCTION)
-			      {
+                              {
                                 j = sym->type == SYMBOL_TYPE_PROCEDURE ? ((Procedure *)sym->index)->param_number :
-				                                         ((Function *)sym->index)->param_number;
+                                                                         ((Function *)sym->index)->param_number;
                                 tree = tree_node_get_son(tree);
-				
-				/* Comptage des noeuds. */
-				for(i = 0; tree != NULL; i++, tree = tree_node_get_brother(tree));
-				
-				/* Comparaison... */
-				if(j != i)
-				{
+                                
+                                /* Comptage des noeuds. */
+                                for(i = 0; tree != NULL; i++, tree = tree_node_get_brother(tree));
+                                
+                                /* Comparaison... */
+                                if(j != i)
+                                {
                                   bad_compil = true;
-				  fprintf(stderr, "Line %d - Function/Procedure \"%s\" has %u arguments. (No %u...)\n", 
+                                  fprintf(stderr, "Line %d - Function/Procedure \"%s\" has %u arguments. (No %u...)\n", 
                                           line_num, hashtable_get_id(NULL, content->value.var.hkey), i, j);  
                                 }
                               }
-			      else
-			      {
+                              else
+                              {
                                 bad_compil = true;
-				fprintf(stderr, "Line %d - \"%s\" is not a procedure or function.\n", 
+                                fprintf(stderr, "Line %d - \"%s\" is not a procedure or function.\n", 
                                         line_num, hashtable_get_id(NULL, content->value.var.hkey));
                               }
                             }
@@ -659,7 +664,7 @@ test_comp: INFERIEUR         {$$ = AT_CMP_L;}
 
 %%
 
-#define BAD_COMPIL(LEXEME, MSG)			                     \
+#define BAD_COMPIL(LEXEME, MSG)                                             \
   if(1) {                                                            \
     bad_compil = true;                                               \
     fprintf(stderr, "Line %d - \"%s\" - %s\n", line_num, LEXEME, MSG); \
@@ -679,7 +684,7 @@ void test_variable(Syntax_tree *tree)
 
   /* Récupération du contenu de l'arbre. */
   content = syntax_tree_node_get_content(tree);
-			      
+                              
   /* Si association de noms échouée. */
   if(content->value.var.type == NULL) return;
 
@@ -708,95 +713,95 @@ void test_variable(Syntax_tree *tree)
       /* ------------------------------------------ */
       
       case SYMBOL_TYPE_BASE:
-	if((tree = tree_node_get_son(tree)) != NULL)
-	{	  
-	  content = syntax_tree_node_get_content(tree);
+        if((tree = tree_node_get_son(tree)) != NULL)
+        {          
+          content = syntax_tree_node_get_content(tree);
 
-	  /* Erreur  : Passage de variable simple mais où on tente d'imposer le type structure ou tableau. */
-	  if(content->type == AT_HKEY_INDEX)
-	    BAD_COMPIL(lexeme, "It's not a structure !");
-	  if(content->type == AT_ARRAY_INDEX)
-	    BAD_COMPIL(lexeme, "It's not an array !");
-	}
-	return; /* Type de base, plus rien à vérifier. */
-	
+          /* Erreur  : Passage de variable simple mais où on tente d'imposer le type structure ou tableau. */
+          if(content->type == AT_HKEY_INDEX)
+            BAD_COMPIL(lexeme, "It's not a structure !");
+          if(content->type == AT_ARRAY_INDEX)
+            BAD_COMPIL(lexeme, "It's not an array !");
+        }
+        return; /* Type de base, plus rien à vérifier. */
+        
       /* ------------------------------------------ */
       /* TYPE STRUCTURE                             */
       /* ------------------------------------------ */
-	
+        
       case SYMBOL_TYPE_STRUCT:
-	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base mais une structure. */
-	if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-	  /* BAD_COMPIL(lexeme, "You need to access a field !"); */ return;
+        /* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base mais une structure. */
+        if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
+          /* BAD_COMPIL(lexeme, "You need to access a field !"); */ return;
 
-	/* Recherche dans le prochain champ de la structure. */
-	content = syntax_tree_node_get_content(current);
-	structure = sym->index;
+        /* Recherche dans le prochain champ de la structure. */
+        content = syntax_tree_node_get_content(current);
+        structure = sym->index;
 
-	/* Erreur : Si on essaye d'utiliser un champ de structure comme un tableau... */
-	if(content->type == AT_ARRAY_INDEX)
-	  BAD_COMPIL(lexeme, "It's a structure, not an array !");
+        /* Erreur : Si on essaye d'utiliser un champ de structure comme un tableau... */
+        if(content->type == AT_ARRAY_INDEX)
+          BAD_COMPIL(lexeme, "It's a structure, not an array !");
 
-	for(i = 0; i < structure->field_number; i++)
-	  /* Champ trouvé. */
-	  if(structure->field[i].hkey == content->value.var.hkey)
-	  {
-	    sym = structure->field[i].type;
-	    content->value.i = i;
-	    tree = current;
-	    break;
-	  }
-	
-	/* Erreur : Champ non trouvé. Utilisation d'un champ inexistant. */
-	if(i == structure->field_number)
-	  BAD_COMPIL(lexeme, "Unable to find the last field !");
-	break;
+        for(i = 0; i < structure->field_number; i++)
+          /* Champ trouvé. */
+          if(structure->field[i].hkey == content->value.var.hkey)
+          {
+            sym = structure->field[i].type;
+            content->value.i = i;
+            tree = current;
+            break;
+          }
+        
+        /* Erreur : Champ non trouvé. Utilisation d'un champ inexistant. */
+        if(i == structure->field_number)
+          BAD_COMPIL(lexeme, "Unable to find the last field !");
+        break;
 
       /* ------------------------------------------ */
       /* TYPE TABLEAU                               */
       /* ------------------------------------------ */
 
       case SYMBOL_TYPE_ARRAY:
-	/* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base. */
-	if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-	  /* BAD_COMPIL(lexeme, "You need to access a data of the array !"); */ return;
+        /* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base. */
+        if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
+          /* BAD_COMPIL(lexeme, "You need to access a data of the array !"); */ return;
  
-	/* Recherche dans le prochain champ du tableau. */
-	content = syntax_tree_node_get_content(current);
-	array = sym->index;
+        /* Recherche dans le prochain champ du tableau. */
+        content = syntax_tree_node_get_content(current);
+        array = sym->index;
        
-	/* Erreur : Si on essaye d'utiliser une structure comme un tableau... */
-	if(content->type == AT_HKEY_INDEX)
-	  BAD_COMPIL(lexeme, "It's an array, not a structure !");
+        /* Erreur : Si on essaye d'utiliser une structure comme un tableau... */
+        if(content->type == AT_HKEY_INDEX)
+          BAD_COMPIL(lexeme, "It's an array, not a structure !");
 
-	/* Erreur : Mauvais nombre de champs. */
-	for(i = 1, temp = current; tree_node_get_brother(temp) != NULL; i++)
-	{
-	  temp = tree_node_get_brother(temp);
+        /* Erreur : Mauvais nombre de champs. */
+        for(i = 1, temp = current; tree_node_get_brother(temp) != NULL; i++)
+        {
+          temp = tree_node_get_brother(temp);
           content = syntax_tree_node_get_content(temp);
 
-	  if(content->type != AT_ARRAY_INDEX)
+          if(content->type != AT_ARRAY_INDEX)
             break;
 
-	  current = temp;
+          current = temp;
         }
 
-	if(array->dimension_number != i)
-	{
-	  fprintf(stderr, "Line %d - Bad dimension number ! (%u of %u) ( ", line_num, i, array->dimension_number);  
-	  BAD_COMPIL(lexeme, ")");
+        if(array->dimension_number != i)
+        {
+          fprintf(stderr, "Line %d - Bad dimension number ! (%u of %u) ( ", line_num, i, array->dimension_number);  
+          BAD_COMPIL(lexeme, ")");
         }
 
-	sym = array->type;
-	tree = current;
-	break;
-       	
+        sym = array->type;
+        tree = current;
+        break;
+               
       /* ------------------------------------------ */
       /* DEFAULT                                    */
       /* ------------------------------------------ */
 
       default:
-	BAD_COMPIL(lexeme, "Bad declaration !");
+        BAD_COMPIL(lexeme, "Bad declaration !");
     }
 
     root = false;

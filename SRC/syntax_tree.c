@@ -9,11 +9,11 @@
 #include <stdlib.h>
 #include "list.h"
 #include "private_tree.h"
-#include "syntax_tree.h"
 #include "error.h"
 #include "mystring.h"
 #include "string.h"
 #include "save.h"
+#include "syntax_tree.h"
 
 /** Accès à la valeur d'un noeud. */
 #define STVALUE(TREE) ((Syntax_node_content *)TREE->value)
@@ -152,7 +152,7 @@ void syntax_node_free(void *value)
 {
   Syntax_node_content *n = value;
 
-  if(n->type == AT_CST_STRING)
+  if(n->type == AT_CST_STRING)            
     free(n->value.s);
   free(n);
 
@@ -166,12 +166,12 @@ void syntax_tree_print_node(Syntax_tree *node)
 
   static const char *node_name[] = {"unknown", "plus", "minus", "mult", "div", "mod", "plus equal", 
                                     "minus equal", "mult equal", "div equal", "mod equal", "increment", 
-                                    "decrement", "pincrement", "pdecrement", "equal", "greater than",
-                                    "greater or equal",  "lower than", "lower or equal", "different", 
-                                    "and", "or", "not", "read", "write", "random", "if", "else", "while", 
+                                    "decrement", "pincrement", "pdecrement", "equal", "greater than", 
+                                    "greater or equal", "lower than", "lower or equal", "different", 
+                                    "and", "or", "not", "read", "write", "random", "if", "else", "while",
                                     "do while", "for", "array", "structure", "procedure", "function", 
                                     "return", "switch", "case", "default", "break", "continue", "ternaire", 
-                                    "appel", "string", "real", "boolean", "char", "integer", "set", "variable",
+                                    "call", "string", "real", "boolean", "char", "integer", "set", "variable", 
                                     "array index", "hkey index", "empty node"};
   
   static char arr_p[MAX_DEPTH] = {0};
@@ -214,26 +214,29 @@ void syntax_tree_print_node(Syntax_tree *node)
     switch(snode->type)
     {
       case AT_VAR: 
-	printf(" (%s)", lexeme_table_get(NULL, snode->value.var.hkey));
-	break;
+        printf(" (%s)", lexeme_table_get(NULL, snode->value.var.hkey));
+        break;
       case AT_CST_STRING:
-	printf(" (%s)", snode->value.s);
-	break;
+        printf(" (%s)", snode->value.s);
+        break;
       case AT_CST_FLOAT:
-	printf(" (%f)", snode->value.f);
-	break; 
+        printf(" (%f)", snode->value.f);
+        break; 
       case AT_CST_BOOL:
-	printf(snode->value.c ? " (true)" : " (false)");
-	break;
+        printf(snode->value.c ? " (true)" : " (false)");
+        break;
       case AT_CST_CHAR:
-	printf(" (%c)", snode->value.c);
-	break;
+        printf(" (%c)", snode->value.c);
+        break;
       case AT_CST_INT:
-	printf(" (%d)", snode->value.i);
+        printf(" (%d)", snode->value.i);
+        break;
+      case AT_CTL_CALL:
+        printf(" (%s)", lexeme_table_get(NULL, snode->value.var.hkey));
 	break;
       case AT_HKEY_INDEX:
-	printf(" (Field: %d)", snode->value.i);
-	break;
+        printf(" (Field: %d)", snode->value.i);
+        break;
       default: break;
     }
 
@@ -276,19 +279,19 @@ void syntax_tree_save(FILE *stream, Syntax_tree *node)
 
       switch(content->type)
       {
-	/* Constantes. */
+        /* Constantes. */
         case AT_CST_STRING: fprintf(stream, "\n#%s\n", content->value.s);  break;
         case AT_CST_FLOAT:  fprintf(stream, "%f ", content->value.f);      break;
         case AT_CST_BOOL:   fprintf(stream, "%c ", content->value.c);      break;
         case AT_CST_CHAR:   fprintf(stream, "%d ", (int)content->value.c); break;
         case AT_CST_INT:    fprintf(stream, "%d ", content->value.i);      break;
 
-	/* IDF */ 
+        /* IDF */ 
         case AT_VAR:        
         case AT_CTL_CALL: fprintf(stream, "%d %s ", index_array_get_id(content->value.var.type), 
-				  hashtable_get_id(NULL, content->value.var.hkey)); break;
+                                  hashtable_get_id(NULL, content->value.var.hkey)); break;
 
-	/* Numéro de champ de structure. */
+        /* Numéro de champ de structure. */
         case AT_HKEY_INDEX: fprintf(stream, "%d ", content->value.i); break;
 
         default: break;
