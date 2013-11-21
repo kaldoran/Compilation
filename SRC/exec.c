@@ -20,6 +20,12 @@
 /** Obtenir une région. */
 #define REGION_TABLE_GET(NUM) ((NUM == 0) ? region_table_get(n_regions - 1) : region_table_get(NUM - 1))
 
+/** Retourne la région d'un noeud de type variable. */
+#define VARIABLE_REGION(VAR) ((Symbol *)syntax_tree_node_get_content(VAR)->value.var.type)->region
+
+/** Retourne le lexeme d'un noeud de type variable. */
+#define VARIABLE_LEXEME(VAR) lexeme_table_get(hashtable, syntax_tree_node_get_content(VAR)->value.var.hkey)
+
 #include "exec_cast.h"
 #include "exec_op.h"
 
@@ -62,6 +68,8 @@ typedef struct A_symbols
 /* ---------------------------------------------------------------------- */
 /* Données internes (privées)                                             */
 /* ---------------------------------------------------------------------- */
+
+extern Hashtable *hashtable;
 
 /** Nombre de régions. */
 static int n_regions;
@@ -225,7 +233,10 @@ static void push_position(int n)
 
   /* En cas de dépassement de pile. */
   if(stack_position + o_region->size + 1 + n_region->level >= DATA_STACK_SIZE)
+  {    
+    fprintf(stderr, "Error : Stack overflow !\n");
     longjmp(jmp, 1); /* Retour au début du programme. */
+  }
 
   /* Mise à jour du chainage dynamique. */
   data_stack[stack_position + o_region->size].value.i = stack_position; 
@@ -277,19 +288,28 @@ static void push_position(int n)
 static size_t get_variable_position(Syntax_tree *tree)
 {
   Syntax_node_content *content;
-  Syntax_tree *current, *temp;
+  Syntax_tree *current;
   Symbol *sym;
   unsigned int i;
   Structure *structure;
   Array *array;
   bool root = true;
-  size_t size = 0;
+  size_t size, size_base;
+  Data result;
 
   /* Récupération du contenu de l'arbre. */
   content = syntax_tree_node_get_content(tree);
                               
   /* Ligne de déclaration du type de l'IDF. */
   sym = content->value.var.type;
+
+  /* Champ de la variable. */
+  if((i = current_region - sym->region) != 0)
+    i = data_stack[i + 1].value.i;
+  else
+    i = stack_position;
+
+  size = i + sym->exec; 
 
   /* Récupération du type de la variable. */
   sym = sym->index;
@@ -314,22 +334,18 @@ static size_t get_variable_position(Syntax_tree *tree)
         if((root && (current = tree_node_get_son(tree)) == NULL) || 
            (!root && (current = tree_node_get_brother(tree)) == NULL))
           return size;
-
-        /* Recherche dans le prochain champ de la structure. */
+        
+        /* Champ à utiliser. */
         content = syntax_tree_node_get_content(current);
         structure = sym->index;
 
-        for(i = 0; i < structure->field_number; i++)
-          if(structure->field[i].hkey == content->value.var.hkey)
-          {
-            sym = structure->field[i].type;
-            content->value.i = i;
-            tree = current;
-            break;
-          }
-        
-        break;
+        /* Mise a jour de la déclaration, arbre et taille. */
+        sym = structure->field[content->value.i].type;
+        tree = current;
+        size += structure->exec[content->value.i];
 
+        break;
+ 
       /* ------------------------------------------ */
       /* TYPE TABLEAU                               */
       /* ------------------------------------------ */
@@ -342,17 +358,37 @@ static size_t get_variable_position(Syntax_tree *tree)
         /* Recherche dans le prochain champ du tableau. */
         content = syntax_tree_node_get_content(current);
         array = sym->index;
-       
-        /* Erreur : Mauvais nombre de champs. */
-        for(i = 1, temp = current; tree_node_get_brother(temp) != NULL; i++)
-        {
-          temp = tree_node_get_brother(temp);
-          content = syntax_tree_node_get_content(temp);
+        size_base = sym->exec;
 
-          if(content->type != AT_ARRAY_INDEX)
+        /* Déplacement dans le tableau. */
+        for(i = 0; i < array->dimension_number; i++)
+        {
+          /* Calcul du déplacement de l'indicage courant. */
+          size_base /= array->dimension[i].bound_upper - array->dimension[i].bound_lower;
+          content = syntax_tree_node_get_content(current);
+
+          /* Indicage de la case du tableau. */
+          result = region_eval(tree_node_get_son(current));
+          CAST(result, SYMBOL_BASIC_INT);
+
+          /* Mauvais indicage. */
+          if(result.value.i < array->dimension[i].bound_lower ||
+             result.value.i >= array->dimension[i].bound_upper)
+          {
+            fprintf(stderr, "Exception : Index array is outside the limits!\n");
+            longjmp(jmp, 1);
+          } 
+          
+          /* Mise à 0 de l'indicage si besoin. */
+          result.value.i -= array->dimension[i].bound_lower;
+
+          /* Ajout du déplacement de l'indicage dans la taille courante. */
+          size += result.value.i * size_base;
+
+          if(tree_node_get_brother(current) == NULL)
             break;
 
-          current = temp;
+          current = tree_node_get_brother(current);        
         }
 
         sym = array->type;
@@ -376,7 +412,8 @@ static size_t get_variable_position(Syntax_tree *tree)
 static Data region_eval(Syntax_tree *tree)
 {
   Data result;
-  Syntax_node_content *content; 
+  Syntax_node_content *content;
+  Syntax_tree *son;
   Data res_a, res_b;
   size_t size = 0;
 
@@ -392,62 +429,85 @@ static Data region_eval(Syntax_tree *tree)
 
   switch(content->type)
   {
-    /* Opérations. */
+    /* ------------------------------------------ */
+    /* OPERATIONS                                 */
+    /* ------------------------------------------ */
+
     case AT_OP_PLUS:
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
       OP_ADD(result, res_a, res_b);
       break;
+
     case AT_OP_MINUS:
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
       OP_SUB(result, res_a, res_b);
       break;
+
     case AT_OP_MULT:
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
       OP_MUL(result, res_a, res_b);
       break;
+
     case AT_OP_DIV:
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
       OP_DIV(result, res_a, res_b);
       break;
+
     case AT_OP_MOD:
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
       OP_MOD(result, res_a, res_b);
       break;
+      
+    /* ------------------------------------------ */
+    /* AFFECTATIONS                               */
+    /* ------------------------------------------ */
 
-    /* Affectations. */
     case AT_EQUAL:
-      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-  
+      son = tree_node_get_son(tree);
+      res_a = region_eval(tree_node_get_brother(son));
+      printf("LOCA %lu\n", get_variable_position(son));
+      DBG_PRINTF(("Affectation = %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
       break;
-    case AT_OPR_PLUSE: 
-      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
 
+    case AT_OPR_PLUSE:
+      son = tree_node_get_son(tree);
+      res_a = region_eval(tree_node_get_brother(son));
+      printf("LOCA %lu\n", get_variable_position(son));
+      DBG_PRINTF(("Affectation += %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
       break;
+
     case AT_OPR_MINE:
-      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-
+      son = tree_node_get_son(tree);
+      res_a = region_eval(tree_node_get_brother(son));
+      DBG_PRINTF(("Affectation -= %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
       break;
+
     case AT_OPR_MULTE:
-      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-
+      son = tree_node_get_son(tree);
+      res_a = region_eval(tree_node_get_brother(son));
+      DBG_PRINTF(("Affectation *= %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
       break;
+    
     case AT_OPR_DIVE:
-      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-
+      son = tree_node_get_son(tree);
+      res_a = region_eval(tree_node_get_brother(son));
+      DBG_PRINTF(("Affectation /= %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
       break;
+    
     case AT_OPR_MODE:
-      res_a = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-
+      son = tree_node_get_son(tree);
+      res_a = region_eval(tree_node_get_brother(son));
+      DBG_PRINTF(("Affectation %= %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
       break;
 
     /* Incrémentations/Décrémentations. */
@@ -588,7 +648,9 @@ void exec(Symbol_table *table)
     region_eval(region->tree);
   /* Dépassement de pile. */
   else 
-    fprintf(stderr, "Error : Stack overflow !\n");
+  {
+
+  }
 
   /* Libération. */
   for(i = 0; i < n_regions; i++)

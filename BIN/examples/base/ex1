@@ -5,8 +5,9 @@ type type_normal : struct
   test_char : char;
 end struct;
 
-var variable_int : int;
 var po : type_normal;
+var variable_int : int;
+
 var machin : string[20];
 
 /* Notre langage gère les calculs entre tous les types possibles :
@@ -17,8 +18,8 @@ var machin : string[20];
 
    Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
  
-start{ variable_int = variable_int + 30 + 23.14 -105.378 * 96 + true; 
-       po = 10;
-       machin[5] = 'p';
+start{po.test_char = 10;
+      variable_int = variable_int + 30 + 23.14 -105.378 * 96 + true; 
+      machin[5] = 'p';
 }
 

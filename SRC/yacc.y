@@ -18,10 +18,10 @@
   /* Retourne un champ de déclaration d'une Hashkey */
   #define SYMBOL_OF(HKEY) symbol_table_get(hashtable, HKEY)
 
-  /* Table principale. */
+  /** Table principale. */
   Hashtable *hashtable;
 
-  /* Données. */
+  /** Données. */
   static unsigned int level = 0;
   static int region;  
 %}
@@ -152,8 +152,10 @@
 /* Programme général                                    */
 /* -----------------------------------------------------*/
 
-programme: PROG corps {if(regions_table_add(0, 0,  tree_get_root($2)) == BAD_REGION) 
-                         fatal_error("regions_table");}
+programme: PROG corps {
+                       if(regions_table_add(0, 0,  tree_get_root($2)) == BAD_REGION) 
+                         fatal_error("regions_table");
+                      }
          ;
           
 corps: liste_declarations START liste_instructions {$$ = $3;}
@@ -302,7 +304,6 @@ declaration_procedure: PROCEDURE IDF liste_parametres {
                                                            fatal_error("symbol_table_add");
 
                                                        variables_buffer_set_offset($3);
-
                                                       } corps
                      {
                       Procedure *procedure;
@@ -427,11 +428,12 @@ instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE                         
 /* Affectation                                          */
 /* -----------------------------------------------------*/
   
-affectation: affectation_base {$$ = $1;}
-           | incr_bin         {$$ = $1;}
-           ; 
+ affectation: affectation_base {$$ = $1;}
+            | incr_bin         {$$ = $1;}
+            ; 
 
 affectation_base: affectation_base_d {$$ = $1;}
+
                ;
 
 affectation_base_d: variable OPAFF expression {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_EQUAL), syntax_tree_add_brother($1, $3));}
