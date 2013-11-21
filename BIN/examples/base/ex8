@@ -5,8 +5,8 @@ var continuer : bool;
 
 proc appel (arg : int) 
     start{
-       arg += i; /* arg est dit comme non trouvé alors qu'il est passé en paramètre */
-        write("%d", arg);
+       arg += i; 
+       write("%d", arg);
     };
 
 start { 

@@ -98,10 +98,10 @@ function machin_bidule(x : int) return int
       write("%d\n", y);
       
       if y then {
-        mise_k(); /* on me dit qu'elle a un parametre ! */
+        mise_k(); 
       }
       else {
-        get_k(); /* Pareil */
+        get_k(); 
       }
     };
   

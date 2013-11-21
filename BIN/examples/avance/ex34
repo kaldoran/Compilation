@@ -86,7 +86,6 @@ function addcarnet(moncarnet : carnet,prenom : string[30],nom : string[50] , dat
 var i : int;
 start {
 	while( i <= 100) do {
-		/* la fonction vide existe pas mais on suppose qu'elle existe */
 		if(prenom == "" or nom == "" or init_date(moncarnet[i][0].date_naissance) ) then {
 			write("Erreur !");
 			return 0;

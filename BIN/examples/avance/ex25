@@ -9,7 +9,7 @@ function sand(b : bool) return bool
 
 function funct(f : bool) return bool
     start{
-        if(f) then { /* La fonction n'arrive pas à trouver f */
+        if(f) then { 
             return true;
         }
         else{

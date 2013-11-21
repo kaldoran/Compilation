@@ -143,7 +143,7 @@ proc traiter(salade : SaladeDeFruits)
 # Programme
 start
 {
-  traiter(ma_salade); /* Impossible de passer une structure à une fonction ? */
+  traiter(ma_salade);
 
   if !ma_salade.est_comestible then {
     ma_salade.oranges[0].nb_litres_de_jus = ma_salade.bananes[1].cm3_de_puree_de_banane;
