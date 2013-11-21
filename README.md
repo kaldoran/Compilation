@@ -35,6 +35,7 @@ UTILISATION
 
     ./prog -c filename [-oae]
     ./prog -s filename [-a]
+    ./prog -h
 
 OPTIONS
 -------
@@ -51,3 +52,8 @@ OPTIONS
 
     -h : Affiche l'aide
 
+AUTEURS
+-------
+ABHAMON Ronan
+BIGARD Florian
+REYNAUD Nicolas
