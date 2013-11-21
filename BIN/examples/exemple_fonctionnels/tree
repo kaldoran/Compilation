@@ -98,7 +98,7 @@ start {
 		phrase[n] = "@";
 	}
 
-	pile[0] = '\0';
+        pile[0] = '\n';
 	empiler("(", pile);
 	n = 0;
 	i = 0;

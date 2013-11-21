@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <setjmp.h>
 #include "list.h"
 #include "regions_table.h"
 #include "error.h"
@@ -80,6 +81,9 @@ static Data *data_stack;
 
 /** Position dans la pile à l'exécution. */
 static unsigned int stack_position = 0;
+
+/** Saut. Utilisé en cas de dépassement de pile. */
+static jmp_buf jmp;
 
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
@@ -219,6 +223,10 @@ static void push_position(int n)
   DBG_PRINTF(("Ajout de la région: %d\n", n - 1));
   DBG_PRINTF(("Déplacement de la base courante de %lu\n", (unsigned long int)o_region->size));
 
+  /* En cas de dépassement de pile. */
+  if(stack_position + o_region->size + 1 + n_region->level >= DATA_STACK_SIZE)
+    longjmp(jmp, 1); /* Retour au début du programme. */
+
   /* Mise à jour du chainage dynamique. */
   data_stack[stack_position + o_region->size].value.i = stack_position; 
   DBG_PRINTF(("Chainage dynamique: data_stack[%d] = %d\n", stack_position + o_region->size, 
@@ -303,7 +311,8 @@ static size_t get_variable_position(Syntax_tree *tree)
       /* ------------------------------------------ */
         
       case SYMBOL_TYPE_STRUCT:
-        if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
+        if((root && (current = tree_node_get_son(tree)) == NULL) || 
+           (!root && (current = tree_node_get_brother(tree)) == NULL))
           return size;
 
         /* Recherche dans le prochain champ de la structure. */
@@ -326,7 +335,8 @@ static size_t get_variable_position(Syntax_tree *tree)
       /* ------------------------------------------ */
 
       case SYMBOL_TYPE_ARRAY:
-        if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
+        if((root && (current = tree_node_get_son(tree)) == NULL) || 
+           (!root && (current = tree_node_get_brother(tree)) == NULL))
           return size;
 
         /* Recherche dans le prochain champ du tableau. */
@@ -573,7 +583,12 @@ void exec(Symbol_table *table)
   /* Execution. */
   current_region = -1;
   region = REGION_TABLE_GET(0);
-  region_eval(region->tree);
+
+  if(!setjmp(jmp)) 
+    region_eval(region->tree);
+  /* Dépassement de pile. */
+  else 
+    fprintf(stderr, "Error : Stack overflow !\n");
 
   /* Libération. */
   for(i = 0; i < n_regions; i++)

@@ -87,7 +87,7 @@ void array_free(Array *a)
 size_t array_get_size(Array *a)
 {
   unsigned int i;
-  size_t size = 0;
+  size_t size = 1;
   size_t base;
 
   if(a->type == NULL)
@@ -96,9 +96,9 @@ size_t array_get_size(Array *a)
   base = ((Symbol *)a->type)->exec;
 
   for(i = 0; i < a->dimension_number; i++)
-    size += base * (a->dimension[i].bound_upper - a->dimension[i].bound_lower);
+    size *= (a->dimension[i].bound_upper - a->dimension[i].bound_lower);
 
-  return size;
+  return size * base;
 }
 
 Function *function_new(Index_t return_type, unsigned int param_number)

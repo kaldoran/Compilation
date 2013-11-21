@@ -25,7 +25,16 @@ proc procemon()
           ; # On peut meme faire des procédures vides
 };
      
-# /* lolol */
+ /* lolol 
+
+
+
+
+
+
+
+*/
+
 proc procemon() 
      var x : string[15]; #un commentaire placé un peu n'importe ou
      start{
@@ -90,7 +99,7 @@ var _Variable_avec_un_9_est_assez_long_le_retour
 /* On arrive aux type */
 -- et on peut varier le type de commentaire --
 # Quel est le but ?  aucune idée 
-type trop_cool : array[1..2,8 .. 9,9 .. 0] of int;
+type trop_cool : array[1..2, 8 .. 9, 0 .. 1] of int;
 
 
 type encore_plus_cool : struct 

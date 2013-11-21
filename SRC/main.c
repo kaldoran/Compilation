@@ -108,8 +108,8 @@ int main(int argc, char *argv[])
     if((options & OPT_A) != 0)
       PRINT_LOG();
 
-    /* Execution */;
-    exec(hashtable);
+    /* Execution 
+       exec(hashtable); */
   }
   
   /* Compilation. */

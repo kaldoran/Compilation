@@ -6,11 +6,11 @@
   extern void yyerror(const char *str);
 
   extern int bad_compil; /* symbol_table. */
-  extern int line_num;   /* Voir lex. */
+  extern int line_num;   /* lex. */
 
   /** Teste si une variable est bien formée. */
   /* %param tree : Arbre contenant la variable. */
-  /* %return : 0 si c'est bien une a variable,
+  /* %return : 0 si c'est bien une variable,
               -1 si ce n'est pas une variable,
 	       1 si c'est une variable mais où le dernier champ n'est pas un type de base. */ 
   int test_variable(Syntax_tree *tree);
@@ -734,7 +734,7 @@ int test_variable(Syntax_tree *tree)
           /* Erreur  : Passage de variable simple mais où on tente d'imposer le type structure ou tableau. */
           if(content->type == AT_HKEY_INDEX)
             BAD_COMPIL(lexeme, "It's not a structure !");
-          if(content->type == AT_ARRAY_INDEX)
+          if(content->type == AT_ARRAY_INDEX && sym != SBASIC_STRING)
             BAD_COMPIL(lexeme, "It's not an array !");
         }
         return 0; /* Type de base, plus rien à vérifier. */
@@ -778,7 +778,7 @@ int test_variable(Syntax_tree *tree)
       case SYMBOL_TYPE_ARRAY:
         /* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base. */
         if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-          /* BAD_COMPIL(lexeme, "You need to access a data of the array !"); */ return 1;
+          return 1;
  
         /* Recherche dans le prochain champ du tableau. */
         content = syntax_tree_node_get_content(current);

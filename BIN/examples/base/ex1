@@ -7,8 +7,18 @@ end struct;
 
 var variable_int : int;
 var po : type_normal;
+var machin : string[20];
 
+/* Notre langage gère les calculs entre tous les types possibles :
+   true est transformé en int (1) puis en float (1.0), 
+   96 en float (96.0)
+   30 en float (30.0)
+   variable_int en float (variable_int n'est pas initialisé, résulat inconnu)
+
+   Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
+ 
 start{ variable_int = variable_int + 30 + 23.14 -105.378 * 96 + true; 
        po = 10;
+       machin[5] = 'p';
 }
 
