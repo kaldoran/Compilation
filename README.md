@@ -18,30 +18,36 @@ En cas de soucis essayer la commande :
 
 Si le soucis persiste, merci de contacter Reynaud Nicolas au 06 79 00...
 
-DÉSINSTALLATION
----------------
+NETTOYAGE
+---------
 Se déplacer à la racine du dossier (dans le répertoire du Makefile) puis exécuter la commande suivante :
 
     make mrproper
 
 Cette commande supprimera le contenu du fichier OBJ et l'exécutable "prog".
 	
+DÉSINSTALLATION
+---------------
+Supprimer simplement le dossier que vous aviez décompressé (ou cloné).
 	
 UTILISATION
 -----------
-Utiliser simplement la commande suivante pour exécuter un programme : 
 
-    ./prog < <prog source>
+    ./prog -c filename [-oae]
+    ./prog -s filename [-a]
 
-NOTE
-----
-La commande : 
+OPTIONS
+-------
 
-    ./prog < <prog source>
+    -c <filename> : Compile filename
 
-donne les détails du parsage et affiche les lexèmes, les symboles et les régions avec l'arbre correspondant.
+    -o <output filename> : Renomme la sortie (par défaut : myout)
 
+    -a : Affiche le log de compilation
 
-LISTING FICHIER 
----------------
-Voir le fichier README.
+    -e : Exécute le programme après compilation
+
+    -s <filename> : Exécute un programme compilé
+
+    -h : Affiche l'aide
+
