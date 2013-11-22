@@ -14,12 +14,13 @@ var machin : string[20];
    true est transformé en int (1) puis en float (1.0), 
    96 en float (96.0)
    30 en float (30.0)
-   variable_int en float (variable_int n'est pas initialisé, résulat inconnu)
+   variable_int en float (variable_int n'est pas initialisé, valeur = 0)
 
    Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
  
-start{po.test_char = 10;
-      variable_int = variable_int + 30 + 23.14 -105.378 * 96 + true; 
+start{
+      variable_int = 30 + 23.14 -105.378 * 96 + true; 
+po.test_char = 10;
       machin[5] = 'p';
 }
 

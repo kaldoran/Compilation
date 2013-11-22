@@ -375,7 +375,7 @@ liste_param: un_param                     {$$ = 1;}
            | liste_param VIRGULE un_param {$$ = $1 + 1;}
            ;
           
-un_param: IDF DEUX_POINTS nom_type {variables_buffer_push($1, SYMBOL_OF($3));}
+un_param: IDF DEUX_POINTS type_simple {variables_buffer_push($1, SYMBOL_OF($3));}
         ;
 
 /* -----------------------------------------------------*/

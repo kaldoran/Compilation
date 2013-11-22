@@ -13,9 +13,6 @@
 #include "error.h"
 #include "symbol_table.h"
 
-/** Nombre de types de bases. (int, float, bool, char, string) */
-#define SYMBOL_BASIC_MAX 5
-
 /* ---------------------------------------------------------------------- */
 /* Données internes (privées)                                             */
 /* ---------------------------------------------------------------------- */

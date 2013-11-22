@@ -26,6 +26,9 @@
 #define SYMBOL_BASIC_FLOAT  4
 #define SYMBOL_BASIC_STRING 5
 
+/** Nombre de types de bases. (int, float, bool, char, string) */
+#define SYMBOL_BASIC_MAX 5
+
 /** Index sur table */
 typedef void* Index_t;
 

@@ -25,7 +25,7 @@ proc abcd()
 
 start 
 {
-  tableau[1][2][0] = 18; /* Pile : 12 */
+  tableau[1][2][0] = 18  + (tableau[0][3][1] += 5); /* Pile : 12 et 7 */
   tableau[2][1][1] = 10; /* Pile : 19 */
 }
 

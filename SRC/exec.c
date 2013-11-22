@@ -26,6 +26,41 @@
 /** Retourne le lexeme d'un noeud de type variable. */
 #define VARIABLE_LEXEME(VAR) lexeme_table_get(hashtable, syntax_tree_node_get_content(VAR)->value.var.hkey)
 
+/** Affichage d'une valeur de la pile. */
+#define VARIABLE_PRINT(STREAM, STACK_VAR)       \
+  switch(STACK_VAR.type)                        \
+  {                                             \
+    case SYMBOL_BASIC_INT:                      \
+      fprintf(STREAM, "%d", STACK_VAR.value.i); \
+      break;                                    \
+    case SYMBOL_BASIC_FLOAT:                    \
+      fprintf(STREAM, "%f", STACK_VAR.value.f); \
+      break;                                    \
+    case SYMBOL_BASIC_BOOL:                     \
+      (STACK_VAR.value.c) ?                     \
+        fprintf(STREAM, "true") :               \
+        fprintf(STREAM, "false");               \
+        break;                                  \
+    case SYMBOL_BASIC_CHAR:                     \
+      fprintf(STREAM, "%c", STACK_VAR.value.c); \
+      break;                                    \
+    case SYMBOL_BASIC_STRING:                   \
+      fprintf(STREAM, "%s", STACK_VAR.value.s); \
+      break;                                    \
+  }
+
+/** Debug d'une affectation. */
+#ifdef DEBUG
+  #define DBG_SET(TREE)                                                                  \
+    do {                                                                                 \
+      DBG_PRINTF(("Region %d : %s=", VARIABLE_REGION((TREE)), VARIABLE_LEXEME((TREE)))); \
+      VARIABLE_PRINT(stderr, result);                                                    \
+      fprintf(stderr, "\n");                                                             \
+    } while(0)
+#else
+  #define DBG_SET(TREE)
+#endif
+
 #include "exec_cast.h"
 #include "exec_op.h"
 
@@ -125,10 +160,14 @@ static Symbol **exec_get_variables(Symbol_table *table, int region);
 /** Définir le déplacement à l'execution des variables du tableau de tableau sym. */
 static void exec_set_variables_move(void);
 
+/** Met à 0 les données de la région courante. */
+static void reset_stack(void);
+
 /** Déplace la position dans la pile.
-    Met à jour le chainage dynamique et statique. 
-    %param n : Numéro de région à ajouter sur la pile. */
-static void push_position(int n);
+    Met à jour le chainage dynamique et statique. */
+/* %param n : Numéro de région à ajouter sur la pile. */
+/* %return : Le résultat de l'appel de fonction/procédure. */
+static Data push_position(int n);
 
 /** Evalue un arbre. */
 /* %param tree : Arbre à évaluer. */
@@ -221,10 +260,28 @@ static void exec_set_variables_move(void)
       region->size = region->level;
 }
 
-static void push_position(int n)
+static void reset_stack(void)
+{
+  Region *region = REGION_TABLE_GET(current_region + 1);
+  int i, num;
+    
+  i = !(region->level == 0); 
+
+  for(i += region->level; i < region->size; i++)
+  {
+    num = i + stack_position;
+    memset(&data_stack[num], 0, sizeof(Data));
+    data_stack[num].type = SYMBOL_BASIC_CHAR;    
+  }
+   
+  return;
+}
+
+static Data push_position(int n)
 {
   Region *n_region = REGION_TABLE_GET(n);                  /* Nouvelle région. */
   Region *o_region = REGION_TABLE_GET(current_region + 1); /* Ancienne région. */
+  Data result;
   int old_region = current_region;
   int i;
 
@@ -275,14 +332,17 @@ static void push_position(int n)
   /* Nouvelle région. */                          
   current_region = n - 1;
 
+  /* Mise à 0 des valeurs de la nouvelle région. */
+  reset_stack();
+
   /* Traitement de la région. */
-  region_eval(n_region->tree);
+  result = region_eval(n_region->tree);
 
   /* Reset de la région. */
   DBG_PRINTF(("Depilement de la région %d.\nRégion courante = %d\n", current_region, old_region));
   current_region = old_region;
 
-  return;
+  return result;
 }
 
 static size_t get_variable_position(Syntax_tree *tree)
@@ -324,8 +384,18 @@ static size_t get_variable_position(Syntax_tree *tree)
       /* ------------------------------------------ */
       
       case SYMBOL_TYPE_BASE:
+      {
+        /* Définition du type de la valeur. */
+        for(i = 1; i <= SYMBOL_BASIC_MAX; i++)
+          if(symbol_table_get_basic(i) == sym)
+          {
+            data_stack[size].type = i;
+            break;
+          }
+
         return size;
-        
+      }
+ 
       /* ------------------------------------------ */
       /* TYPE STRUCTURE                             */
       /* ------------------------------------------ */
@@ -383,7 +453,7 @@ static size_t get_variable_position(Syntax_tree *tree)
           result.value.i -= array->dimension[i].bound_lower;
 
           /* Ajout du déplacement de l'indicage dans la taille courante. */
-          size += result.value.i * size_base;
+          size += result.value.i * size_base * ((Symbol *)array->type)->exec;
 
           if(tree_node_get_brother(current) == NULL)
             break;
@@ -415,15 +485,13 @@ static Data region_eval(Syntax_tree *tree)
   Syntax_node_content *content;
   Syntax_tree *son;
   Data res_a, res_b;
-  size_t size = 0;
+  size_t size;
 
-  result.value.i = 0;
+  memset(&result, 0, sizeof(Data));
+  result.type = SYMBOL_BASIC_CHAR;
 
   if(tree == NULL)
-  {
-    fprintf(stderr, "Attention : Empty node !\n");
     return result;
-  }
 
   content = syntax_tree_node_get_content(tree);
 
@@ -437,35 +505,35 @@ static Data region_eval(Syntax_tree *tree)
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
-      OP_ADD(result, res_a, res_b);
+      OP_ADD(result, res_a, res_b); /* result = res_a + res_b */
       break;
 
     case AT_OP_MINUS:
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
-      OP_SUB(result, res_a, res_b);
+      OP_SUB(result, res_a, res_b); /* result = res_a - res_b */
       break;
 
     case AT_OP_MULT:
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
-      OP_MUL(result, res_a, res_b);
+      OP_MUL(result, res_a, res_b); /* result = res_a * res_b */
       break;
 
     case AT_OP_DIV:
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
-      OP_DIV(result, res_a, res_b);
+      OP_DIV(result, res_a, res_b); /* result = res_a / res_b */
       break;
 
     case AT_OP_MOD:
       res_a = region_eval(tree_node_get_son(tree));
       res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
       OP_SET_TYPE(res_a, res_b);
-      OP_MOD(result, res_a, res_b);
+      OP_MOD(result, res_a, res_b); /* result = res_a % res_b */
       break;
       
     /* ------------------------------------------ */
@@ -473,44 +541,105 @@ static Data region_eval(Syntax_tree *tree)
     /* ------------------------------------------ */
 
     case AT_EQUAL:
-      son = tree_node_get_son(tree);
-      res_a = region_eval(tree_node_get_brother(son));
-      printf("LOCA %lu\n", get_variable_position(son));
-      DBG_PRINTF(("Affectation = %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
+      son = tree_node_get_son(tree);                    /* Variable.    */
+      size = get_variable_position(son);                /* Déplacement. */
+      result = region_eval(tree_node_get_brother(son)); /* Valeur d'affectation. */
+      CAST(result, data_stack[size].type);
+
+      /* Affectation. */
+      data_stack[size] = result;                        
+      DBG_SET(son);
       break;
 
     case AT_OPR_PLUSE:
-      son = tree_node_get_son(tree);
-      res_a = region_eval(tree_node_get_brother(son));
-      printf("LOCA %lu\n", get_variable_position(son));
-      DBG_PRINTF(("Affectation += %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
+      son = tree_node_get_son(tree);                   /* Variable.    */
+      size = get_variable_position(son);               /* Déplacement. */
+     
+      res_a = data_stack[size];                        /* Valeur de la variable. */
+      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
+
+      /* Opération += */
+      OP_SET_TYPE(res_a, res_b);
+      OP_ADD(result, res_a, res_b); /* += */
+      CAST(result, data_stack[size].type);
+
+       /* Affectation. */
+      data_stack[size] = result; 
+      DBG_SET(son);
       break;
 
     case AT_OPR_MINE:
-      son = tree_node_get_son(tree);
-      res_a = region_eval(tree_node_get_brother(son));
-      DBG_PRINTF(("Affectation -= %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
+      son = tree_node_get_son(tree);                   /* Variable.    */
+      size = get_variable_position(son);               /* Déplacement. */
+     
+      res_a = data_stack[size];                        /* Valeur de la variable. */
+      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
+
+      /* Opération -= */
+      OP_SET_TYPE(res_a, res_b);
+      OP_SUB(result, res_a, res_b); /* -= */
+      CAST(result, data_stack[size].type);
+
+       /* Affectation. */
+      data_stack[size] = result; 
+      DBG_SET(son);
       break;
 
     case AT_OPR_MULTE:
-      son = tree_node_get_son(tree);
-      res_a = region_eval(tree_node_get_brother(son));
-      DBG_PRINTF(("Affectation *= %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
-      break;
-    
-    case AT_OPR_DIVE:
-      son = tree_node_get_son(tree);
-      res_a = region_eval(tree_node_get_brother(son));
-      DBG_PRINTF(("Affectation /= %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
-      break;
-    
-    case AT_OPR_MODE:
-      son = tree_node_get_son(tree);
-      res_a = region_eval(tree_node_get_brother(son));
-      DBG_PRINTF(("Affectation %= %s(Region = %d)\n", VARIABLE_LEXEME(son), VARIABLE_REGION(son)));
+      son = tree_node_get_son(tree);                   /* Variable.    */
+      size = get_variable_position(son);               /* Déplacement. */
+     
+      res_a = data_stack[size];                        /* Valeur de la variable. */
+      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
+
+      /* Opération *= */
+      OP_SET_TYPE(res_a, res_b);
+      OP_MUL(result, res_a, res_b); /* *= */
+      CAST(result, data_stack[size].type);
+
+       /* Affectation. */
+      data_stack[size] = result; 
+      DBG_SET(son);
       break;
 
-    /* Incrémentations/Décrémentations. */
+    case AT_OPR_DIVE:
+      son = tree_node_get_son(tree);                   /* Variable.    */
+      size = get_variable_position(son);               /* Déplacement. */
+     
+      res_a = data_stack[size];                        /* Valeur de la variable. */
+      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
+
+      /* Opération /= */
+      OP_SET_TYPE(res_a, res_b);
+      OP_DIV(result, res_a, res_b); /* /= */
+      CAST(result, data_stack[size].type);
+
+       /* Affectation. */
+      data_stack[size] = result; 
+      DBG_SET(son);
+      break;
+
+    case AT_OPR_MODE:
+      son = tree_node_get_son(tree);                   /* Variable.    */
+      size = get_variable_position(son);               /* Déplacement. */
+     
+      res_a = data_stack[size];                        /* Valeur de la variable. */
+      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
+
+      /* Opération %= */
+      OP_SET_TYPE(res_a, res_b);
+      OP_MOD(result, res_a, res_b); /* %= */
+      CAST(result, data_stack[size].type);
+
+       /* Affectation. */
+      data_stack[size] = result; 
+      DBG_SET(son);
+      break;
+
+    /* ------------------------------------------ */
+    /* INCREMENTATIONS/DECREMENTATIONS            */
+    /* ------------------------------------------ */
+    
     case AT_OB_INC:
       break;
     case AT_OB_DEC:
@@ -520,7 +649,10 @@ static Data region_eval(Syntax_tree *tree)
     case AT_OB_PDEC:
       break;
 
-    /* Comparaisons. */
+    /* ------------------------------------------ */
+    /* COMPARAISONS                               */
+    /* ------------------------------------------ */
+
     case AT_CMP_E:
       break;
     case AT_CMP_G:
@@ -567,17 +699,13 @@ static Data region_eval(Syntax_tree *tree)
     case AT_CTL_TERNAIRE:
       break;
 
-
     case AT_VAR:
-      size = get_variable_position(tree);
-      printf("%lu\n", size);
-    case AT_ARRAY_INDEX:
-    case AT_HKEY_INDEX:
+      result = data_stack[get_variable_position(tree)];
       break;
 
     /* Appel de fonction/procédure. */
     case AT_CTL_CALL:
-      push_position(((Symbol *)content->value.var.type)->exec + 1);
+      result = push_position(((Symbol *)content->value.var.type)->exec + 1);
       break;
       
     /* Constantes. */
@@ -611,6 +739,8 @@ static Data region_eval(Syntax_tree *tree)
     case AT_CTL_STRUCT: 
     case AT_CTL_PROC:
     case AT_CTL_FUN:
+    case AT_ARRAY_INDEX:
+    case AT_HKEY_INDEX:
       break;
   }
 
@@ -643,6 +773,7 @@ void exec(Symbol_table *table)
   /* Execution. */
   current_region = -1;
   region = REGION_TABLE_GET(0);
+  reset_stack();
 
   if(!setjmp(jmp)) 
     region_eval(region->tree);
