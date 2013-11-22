@@ -26,27 +26,34 @@
 /** Retourne le lexeme d'un noeud de type variable. */
 #define VARIABLE_LEXEME(VAR) lexeme_table_get(hashtable, syntax_tree_node_get_content(VAR)->value.var.hkey)
 
+/** Met à 0 la valeur d'une variable. */
+#define VARIABLE_RESET(STACK_VAR)        \
+  do {                                   \
+    memset(&STACK_VAR, 0, sizeof(Data)); \
+    STACK_VAR.type = SYMBOL_BASIC_CHAR;  \
+} while(0)
+
 /** Affichage d'une valeur de la pile. */
-#define VARIABLE_PRINT(STREAM, STACK_VAR)       \
-  switch(STACK_VAR.type)                        \
-  {                                             \
-    case SYMBOL_BASIC_INT:                      \
-      fprintf(STREAM, "%d", STACK_VAR.value.i); \
-      break;                                    \
-    case SYMBOL_BASIC_FLOAT:                    \
-      fprintf(STREAM, "%f", STACK_VAR.value.f); \
-      break;                                    \
-    case SYMBOL_BASIC_BOOL:                     \
-      (STACK_VAR.value.c) ?                     \
-        fprintf(STREAM, "true") :               \
-        fprintf(STREAM, "false");               \
-        break;                                  \
-    case SYMBOL_BASIC_CHAR:                     \
-      fprintf(STREAM, "%c", STACK_VAR.value.c); \
-      break;                                    \
-    case SYMBOL_BASIC_STRING:                   \
-      fprintf(STREAM, "%s", STACK_VAR.value.s); \
-      break;                                    \
+#define VARIABLE_PRINT(STREAM, STACK_VAR)         \
+  switch(STACK_VAR.type)                          \
+  {                                               \
+    case SYMBOL_BASIC_INT:                        \
+      fprintf(STREAM, "%d", STACK_VAR.value.i);   \
+      break;                                      \
+    case SYMBOL_BASIC_FLOAT:                      \
+      fprintf(STREAM, "%f", STACK_VAR.value.f);   \
+      break;                                      \
+    case SYMBOL_BASIC_BOOL:                       \
+      (STACK_VAR.value.c) ?                       \
+        fprintf(STREAM, "true") :                 \
+        fprintf(STREAM, "false");                 \
+      break;                                      \
+    case SYMBOL_BASIC_CHAR:                       \
+      fprintf(STREAM, "'%c'", STACK_VAR.value.c); \
+      break;                                      \
+    case SYMBOL_BASIC_STRING:                     \
+      fprintf(STREAM, "%s", STACK_VAR.value.s);   \
+      break;                                      \
   }
 
 /** Debug d'une affectation. */
@@ -270,8 +277,7 @@ static void reset_stack(void)
   for(i += region->level; i < region->size; i++)
   {
     num = i + stack_position;
-    memset(&data_stack[num], 0, sizeof(Data));
-    data_stack[num].type = SYMBOL_BASIC_CHAR;    
+    VARIABLE_RESET(data_stack[num]);    
   }
    
   return;
@@ -487,8 +493,10 @@ static Data region_eval(Syntax_tree *tree)
   Data res_a, res_b;
   size_t size;
 
-  memset(&result, 0, sizeof(Data));
-  result.type = SYMBOL_BASIC_CHAR;
+  /* Mise à 0 des variables. */
+  VARIABLE_RESET(result);
+  VARIABLE_RESET(res_a);
+  VARIABLE_RESET(res_b);
 
   if(tree == NULL)
     return result;
@@ -640,13 +648,70 @@ static Data region_eval(Syntax_tree *tree)
     /* INCREMENTATIONS/DECREMENTATIONS            */
     /* ------------------------------------------ */
     
-    case AT_OB_INC:
-      break;
-    case AT_OB_DEC:
-      break;
     case AT_OB_PINC:
+      son = tree_node_get_son(tree);
+      size = get_variable_position(son);
+      
+      res_a.value.c = 1;
+      res_b = region_eval(tree_node_get_brother(son));
+      
+      /* Inc */
+      OP_SET_TYPE(res_a, res_b);
+      OP_ADD(result, res_a, res_b);
+      CAST(result, data_stack[size].type);
+
+      data_stack[size] = result;
+      DBG_SET(son);
       break;
+
     case AT_OB_PDEC:
+      son = tree_node_get_son(tree);
+      size = get_variable_position(son);
+      
+      res_a.value.c = -1;
+      res_b = region_eval(tree_node_get_brother(son));
+      
+      /* Dec */
+      OP_SET_TYPE(res_a, res_b);
+      OP_ADD(result, res_a, res_b);
+      CAST(result, data_stack[size].type);
+
+      data_stack[size] = result;
+      DBG_SET(son);
+      break;
+
+    case AT_OB_INC:
+      son = tree_node_get_son(tree);
+      size = get_variable_position(son);
+      
+      res_a.value.c = 1;
+      res_b = region_eval(tree_node_get_brother(son));
+      
+      /* Inc */
+      OP_SET_TYPE(res_a, res_b);
+      OP_ADD(result, res_a, res_b);
+      CAST(result, data_stack[size].type);
+
+      result = res_b;
+      DBG_SET(son);
+      data_stack[size] = result;
+      break;
+
+    case AT_OB_DEC:
+      son = tree_node_get_son(tree);
+      size = get_variable_position(son);
+      
+      res_a.value.c = -1;
+      res_b = region_eval(tree_node_get_brother(son));
+      
+      /* Dec */
+      OP_SET_TYPE(res_a, res_b);
+      OP_ADD(result, res_a, res_b);
+      CAST(result, data_stack[size].type);
+
+      result = res_b;
+      DBG_SET(son);
+      data_stack[size] = result;
       break;
 
     /* ------------------------------------------ */

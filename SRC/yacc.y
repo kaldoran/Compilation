@@ -10,10 +10,7 @@
 
   /** Teste si une variable est bien formée. */
   /* %param tree : Arbre contenant la variable. */
-  /* %return : 0 si c'est bien une variable,
-              -1 si ce n'est pas une variable,
-	       1 si c'est une variable mais où le dernier champ n'est pas un type de base. */ 
-  int test_variable(Syntax_tree *tree);
+  void test_variable(Syntax_tree *tree);
 
   /* Retourne un champ de déclaration d'une Hashkey */
   #define SYMBOL_OF(HKEY) symbol_table_get(hashtable, HKEY)
@@ -684,10 +681,10 @@ test_comp: INFERIEUR         {$$ = AT_CMP_L;}
   if(1) {                                                              \
     bad_compil = true;                                                 \
     fprintf(stderr, "Line %d - \"%s\" - %s\n", line_num, LEXEME, MSG); \
-    return -1;                                                         \
+    return;                                                            \
   }
 
-int test_variable(Syntax_tree *tree)
+void test_variable(Syntax_tree *tree)
 {
   Syntax_node_content *content;
   Syntax_tree *current, *temp;
@@ -702,7 +699,7 @@ int test_variable(Syntax_tree *tree)
   content = syntax_tree_node_get_content(tree);
                               
   /* Si association de noms échouée. */
-  if(content->value.var.type == NULL) return -1;
+  if(content->value.var.type == NULL) return;
 
   /* Ligne de déclaration du type de l'IDF. */
   sym = content->value.var.type;
@@ -739,7 +736,7 @@ int test_variable(Syntax_tree *tree)
           if(content->type == AT_ARRAY_INDEX && sym != SBASIC_STRING)
             BAD_COMPIL(lexeme, "It's not an array !");
         }
-        return 0; /* Type de base, plus rien à vérifier. */
+        return; /* Type de base, plus rien à vérifier. */
         
       /* ------------------------------------------ */
       /* TYPE STRUCTURE                             */
@@ -748,7 +745,7 @@ int test_variable(Syntax_tree *tree)
       case SYMBOL_TYPE_STRUCT:
         /* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base mais une structure. */
         if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-	  return 1;
+          BAD_COMPIL(lexeme, "You need to access a field !");
 
         /* Recherche dans le prochain champ de la structure. */
         content = syntax_tree_node_get_content(current);
@@ -780,7 +777,7 @@ int test_variable(Syntax_tree *tree)
       case SYMBOL_TYPE_ARRAY:
         /* Erreur : On tente d'obtenir la valeur d'un type qui n'est pas un type de base. */
         if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
-          return 1;
+          BAD_COMPIL(lexeme, "You need to access a data of the array !");
  
         /* Recherche dans le prochain champ du tableau. */
         content = syntax_tree_node_get_content(current);
@@ -823,6 +820,6 @@ int test_variable(Syntax_tree *tree)
     root = false;
   } 
   
-  return 0;
+  return;
 }
                          
