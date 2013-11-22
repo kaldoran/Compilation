@@ -56,6 +56,28 @@
       break;                                      \
   }
 
+/** Applique une opération. */
+/* Utilisée pour chaque case AT_OPR_... */
+#define SET_OPR(TYPE)                                \
+  do {                                               \
+    son = tree_node_get_son(tree);                   \
+    size = get_variable_position(son);               \
+                                                     \
+    /* res_a = Valeur de la variable actuelle. */    \
+    /* res_b = Valeur de la partie droite. */        \
+    res_a = data_stack[size];                        \
+    res_b = region_eval(tree_node_get_brother(son)); \
+                                                     \
+    /* Opération */                                  \
+    OP_SET_TYPE(res_a, res_b);                       \
+    TYPE;                                            \
+    CAST(result, data_stack[size].type);             \
+                                                     \
+    /* Affectation. */                               \
+    data_stack[size] = result;                       \
+    DBG_SET(son);                                    \
+  } while(0)
+    
 /** Debug d'une affectation. */
 #ifdef DEBUG
   #define DBG_SET(TREE)                                                                  \
@@ -560,88 +582,23 @@ static Data region_eval(Syntax_tree *tree)
       break;
 
     case AT_OPR_PLUSE:
-      son = tree_node_get_son(tree);                   /* Variable.    */
-      size = get_variable_position(son);               /* Déplacement. */
-     
-      res_a = data_stack[size];                        /* Valeur de la variable. */
-      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
-
-      /* Opération += */
-      OP_SET_TYPE(res_a, res_b);
-      OP_ADD(result, res_a, res_b); /* += */
-      CAST(result, data_stack[size].type);
-
-       /* Affectation. */
-      data_stack[size] = result; 
-      DBG_SET(son);
+      SET_OPR(OP_ADD(result, res_a, res_b));
       break;
 
     case AT_OPR_MINE:
-      son = tree_node_get_son(tree);                   /* Variable.    */
-      size = get_variable_position(son);               /* Déplacement. */
-     
-      res_a = data_stack[size];                        /* Valeur de la variable. */
-      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
-
-      /* Opération -= */
-      OP_SET_TYPE(res_a, res_b);
-      OP_SUB(result, res_a, res_b); /* -= */
-      CAST(result, data_stack[size].type);
-
-       /* Affectation. */
-      data_stack[size] = result; 
-      DBG_SET(son);
+      SET_OPR(OP_SUB(result, res_a, res_b));
       break;
 
     case AT_OPR_MULTE:
-      son = tree_node_get_son(tree);                   /* Variable.    */
-      size = get_variable_position(son);               /* Déplacement. */
-     
-      res_a = data_stack[size];                        /* Valeur de la variable. */
-      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
-
-      /* Opération *= */
-      OP_SET_TYPE(res_a, res_b);
-      OP_MUL(result, res_a, res_b); /* *= */
-      CAST(result, data_stack[size].type);
-
-       /* Affectation. */
-      data_stack[size] = result; 
-      DBG_SET(son);
+      SET_OPR(OP_MUL(result, res_a, res_b));
       break;
 
     case AT_OPR_DIVE:
-      son = tree_node_get_son(tree);                   /* Variable.    */
-      size = get_variable_position(son);               /* Déplacement. */
-     
-      res_a = data_stack[size];                        /* Valeur de la variable. */
-      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
-
-      /* Opération /= */
-      OP_SET_TYPE(res_a, res_b);
-      OP_DIV(result, res_a, res_b); /* /= */
-      CAST(result, data_stack[size].type);
-
-       /* Affectation. */
-      data_stack[size] = result; 
-      DBG_SET(son);
+      SET_OPR(OP_DIV(result, res_a, res_b));
       break;
 
     case AT_OPR_MODE:
-      son = tree_node_get_son(tree);                   /* Variable.    */
-      size = get_variable_position(son);               /* Déplacement. */
-     
-      res_a = data_stack[size];                        /* Valeur de la variable. */
-      res_b = region_eval(tree_node_get_brother(son)); /* Valeur à droite de la variable. */
-
-      /* Opération %= */
-      OP_SET_TYPE(res_a, res_b);
-      OP_MOD(result, res_a, res_b); /* %= */
-      CAST(result, data_stack[size].type);
-
-       /* Affectation. */
-      data_stack[size] = result; 
-      DBG_SET(son);
+      SET_OPR(OP_MOD(result, res_a, res_b));
       break;
 
     /* ------------------------------------------ */
