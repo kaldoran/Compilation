@@ -56,7 +56,7 @@
       break;                                      \
   }
 
-/** Applique une opération. */
+/** Applique une opération d'affectation (+=, -=, /=, *=, %=). */
 /* Utilisée pour chaque case AT_OPR_... */
 #define SET_OPR(TYPE)                                \
   do {                                               \
@@ -70,7 +70,7 @@
                                                      \
     /* Opération */                                  \
     OP_SET_TYPE(res_a, res_b);                       \
-    TYPE;                                            \
+    TYPE(result, res_a, res_b);                      \
     CAST(result, data_stack[size].type);             \
                                                      \
     /* Affectation. */                               \
@@ -78,6 +78,34 @@
     DBG_SET(son);                                    \
   } while(0)
     
+/** Applique une comparaison. */
+/* Utilisée pour chaque case AT_CMP_... */
+#define SET_CMP(CMP)                                        \
+    do {                                                    \
+      son = tree_node_get_son(tree);                        \
+      res_a = region_eval(son);                             \
+      res_b = region_eval(tree_node_get_brother(son));      \
+      OP_SET_TYPE(res_a, res_b);                            \
+                                                            \
+      switch(res_a.type)                                    \
+      {                                                     \
+        case SYMBOL_BASIC_INT:                              \
+          result.value.c = res_a.value.i CMP res_b.value.i; \
+          break;                                            \
+        case SYMBOL_BASIC_FLOAT:                            \
+          result.value.c = res_a.value.f CMP res_b.value.f; \
+          break;                                            \
+        case SYMBOL_BASIC_BOOL:                             \
+          result.value.c = res_a.value.c CMP res_b.value.c; \
+          break;                                            \
+        case SYMBOL_BASIC_CHAR:                             \
+          result.value.c = res_a.value.c CMP res_b.value.c; \
+          break;                                            \
+        case SYMBOL_BASIC_STRING:                           \
+          break;                                            \
+      }                                                     \
+    } while(0)
+
 /** Debug d'une affectation. */
 #ifdef DEBUG
   #define DBG_SET(TREE)                                                                  \
@@ -582,23 +610,23 @@ static Data region_eval(Syntax_tree *tree)
       break;
 
     case AT_OPR_PLUSE:
-      SET_OPR(OP_ADD(result, res_a, res_b));
+      SET_OPR(OP_ADD);
       break;
 
     case AT_OPR_MINE:
-      SET_OPR(OP_SUB(result, res_a, res_b));
+      SET_OPR(OP_SUB);
       break;
 
     case AT_OPR_MULTE:
-      SET_OPR(OP_MUL(result, res_a, res_b));
+      SET_OPR(OP_MUL);
       break;
 
     case AT_OPR_DIVE:
-      SET_OPR(OP_DIV(result, res_a, res_b));
+      SET_OPR(OP_DIV);
       break;
 
     case AT_OPR_MODE:
-      SET_OPR(OP_MOD(result, res_a, res_b));
+      SET_OPR(OP_MOD);
       break;
 
     /* ------------------------------------------ */
@@ -676,16 +704,22 @@ static Data region_eval(Syntax_tree *tree)
     /* ------------------------------------------ */
 
     case AT_CMP_E:
+      SET_CMP(==);
       break;
     case AT_CMP_G:
+      SET_CMP(>);
       break;
     case AT_CMP_GE:
+      SET_CMP(>=);
       break;
     case AT_CMP_L:
+      SET_CMP(<);
       break;
     case AT_CMP_LE:
+      SET_CMP(<=);
       break;
     case AT_CMP_NE:
+      SET_CMP(!=);
       break;
 
     /* Conditions. */
