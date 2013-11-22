@@ -115,7 +115,7 @@
 %type <hkey> nom_type type_simple declaration_suite_variable
 
 /* Expressions. */
-%type <node> test expression expression2 expression3
+%type <node> test expression expression0 expression1 expression2 expression3 expression4
 
 /* Boucles et conditions. */
 %type <node> tant_que pour pour_cont pour_a pour_e faire_tant_que
@@ -623,29 +623,38 @@ liste_variables: liste_variables VIRGULE variable {$$ = syntax_tree_add_brother(
 resultat_retourne: expression {$$ = $1;}
                  | {$$ = NULL;}
                  ;
-             
-expression: expression PLUS expression2  {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_PLUS), 
-                                                                   syntax_tree_add_brother($1, $3));}
-          | expression MOINS expression2 {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MINUS), 
-                                                                   syntax_tree_add_brother($1, $3));}
-          | expression OU expression2    {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_OR), 
-                                                                   syntax_tree_add_brother($1, $3));}
-          | expression2                  {$$ = $1;}
-          | test                         {$$ = $1;}
+           
+expression: expression OU expression0 {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_OR), 
+                                                                syntax_tree_add_brother($1, $3));}
+          | expression0 {$$ = $1;}
           ;
+
+expression0: expression0 ET expression1 {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_AND), 
+                                                                  syntax_tree_add_brother($1, $3));}
+           | expression1 {$$ = $1;}
+           ;
+
+expression1: test {$$ = $1;}
+           | expression2 {$$ = $1;}
+           ;
+expression2: expression2 PLUS expression3  {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_PLUS), 
+                                                                   syntax_tree_add_brother($1, $3));}
+           | expression2 MOINS expression3 {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MINUS), 
+                                                                   syntax_tree_add_brother($1, $3));}
+           | expression3                  {$$ = $1;}
+           ;
           
-expression2: expression2 MULTIPLICATION expression3 {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MULT), 
+expression3: expression3 MULTIPLICATION expression4 {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MULT), 
                                                                               syntax_tree_add_brother($1, $3));}
-           | expression2 DIVISION expression3       {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_DIV), 
+           | expression3 DIVISION expression4       {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_DIV), 
                                                                               syntax_tree_add_brother($1, $3));}
-           | expression2 MODULO expression3         {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MOD), 
+           | expression3 MODULO expression4         {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_OP_MOD), 
                                                                               syntax_tree_add_brother($1, $3));}
-           | expression2 ET expression3             {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_AND), 
-                                                                              syntax_tree_add_brother($1, $3));}
-           | expression3                            {$$ = $1;}
+         
+           | expression4                            {$$ = $1;}
            ; 
 
-expression3: PARENTHESE_OUVRANTE expression PARENTHESE_FERMANTE {$$ = $2;}
+expression4: PARENTHESE_OUVRANTE expression PARENTHESE_FERMANTE {$$ = $2;}
            | CSTE_ENTIERE        {$$ = syntax_tree_node_int_new($1);}
            | CSTE_REELLE         {$$ = syntax_tree_node_float_new($1);}
            | CSTE_CARACTERE      {$$ = syntax_tree_node_char_new($1);}
@@ -661,10 +670,10 @@ expression3: PARENTHESE_OUVRANTE expression PARENTHESE_FERMANTE {$$ = $2;}
                                                            syntax_tree_add_brother(syntax_tree_node_int_new(0), $2));}
            | PARENTHESE_OUVRANTE affectation_base PARENTHESE_FERMANTE {$$ = $2;}
            | PARENTHESE_OUVRANTE ternaire PARENTHESE_FERMANTE         {$$ = $2;}
-           | NEGATION expression3                                     {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_NOT), $2);}
+           | NEGATION expression4                                     {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_CND_NOT), $2);}
            ;   
 
-test: expression test_comp expression2 {$$ = syntax_tree_add_son(syntax_tree_node_new($2), syntax_tree_add_brother($1, $3));}
+test: expression1 test_comp expression2 {$$ = syntax_tree_add_son(syntax_tree_node_new($2), syntax_tree_add_brother($1, $3));}
     ;
 
 test_comp: INFERIEUR         {$$ = AT_CMP_L;}

@@ -722,7 +722,10 @@ static Data region_eval(Syntax_tree *tree)
       SET_CMP(!=);
       break;
 
-    /* Conditions. */
+    /* ------------------------------------------ */
+    /* CONDITIONS                                 */
+    /* ------------------------------------------ */
+
     case AT_CND_AND:
       break;
     case AT_CND_OR:
