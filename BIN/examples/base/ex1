@@ -25,16 +25,29 @@ function test(m_var : int, m_var_2 : float) return int
     return(m_var_2 + m_var * test_0()); /* 190 */
   };
 
-/* Notre langage gère les calculs entre tous les types possibles :
-   true est transformé en int (1) puis en float (1.0), 
-   96 en float (96.0)
-   30 en float (30.0)
-   variable_int en float (variable_int n'est pas initialisé, valeur = 0)
-
-   Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
- 
 start{
-      variable_int = 30 + 23.14 - 105.378 * 96 + true + test(30, 40); /* -9872 */
+      while(variable_int < 10) do {
+        variable_int++;
+      }
+
+      if(5 == 4  - 1) then {
+        variable_int = 41 + 36 - 45.0 / 3.0;
+      }
+      else if(5 + 8 > 13) then {                      
+        variable_int = 0;
+      }
+      else {
+
+      /* Notre langage gère les calculs entre tous les types possibles :
+         true est transformé en int (1) puis en float (1.0), 
+         96 en float (96.0)
+         30 en float (30.0)
+         variable_int en float (variable_int n'est pas initialisé, valeur = 0)
+
+         Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
+ 
+        variable_int = 30 + 23.14 - 105.378 * 96 + true + test(30, 40); /* -9872 */
+      }
 
       po.test_char += 10;
       machin[5] = 'p';

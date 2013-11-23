@@ -88,7 +88,7 @@
     data_stack[size] = result;                       \
     DBG_SET(son);                                    \
   } while(0)
-    
+
 /** Applique une incrémentation/décrémentation. */
 /* Utilisée par chaque case AT_OB_... */
 #define SET_OB(VALUE)                                  \
@@ -163,7 +163,7 @@ typedef union
   char c;  /* Un caractère. */
   char *s; /* Une chaine. */
 } Value;
-  
+
 /** Une donnée de la pile à l'execution. */
 typedef struct Data
 {
@@ -171,7 +171,7 @@ typedef struct Data
   Value value; /* Valeur de la donnée. */
 } Data;
 
-/** Structure servant à récupérer le nombre de déclarations 
+/** Structure servant à récupérer le nombre de déclarations
     de variables dans une région. */
 typedef struct N_symbols
 {
@@ -179,14 +179,14 @@ typedef struct N_symbols
   int region; /* Numéro de la région. */
 } N_symbols;
 
-/** Structure servant à récupérer les déclarations de variables 
+/** Structure servant à récupérer les déclarations de variables
     d'une région. */
 typedef struct A_symbols
 {
   Symbol **array; /* Tableaux de déclarations de variables. */
   int region;     /* Numéro de la région. */
 } A_symbols;
- 
+
 /* ---------------------------------------------------------------------- */
 /* Données internes (privées)                                             */
 /* ---------------------------------------------------------------------- */
@@ -196,7 +196,7 @@ extern Hashtable *hashtable;
 /** Nombre de régions. */
 static int n_regions;
 
-/* La variable sym est simple d'utilisation une fois initialisée : 
+/* La variable sym est simple d'utilisation une fois initialisée :
    sym[numero_region][num_declaration] => Pointeur sur la déclaration dans
    la table des déclarations. Cela permet à un appel de fonction/procedure
    de remplir facilement la pile à l'execution sans fouiller
@@ -219,7 +219,7 @@ static jmp_buf jmp;
 /* Fonctions internes (privées)                                           */
 /* ---------------------------------------------------------------------- */
 
-/* Important : Les déclaration évoquées dans les fonctions suivantes ne concernent 
+/* Important : Les déclaration évoquées dans les fonctions suivantes ne concernent
    que les déclarations de variables. */
 
 /** Compte le nombre de variables de même nom à partir d'une déclaration donnée. */
@@ -268,7 +268,7 @@ static void exec_count_variables_ap(void *value, void *cvalue)
   Symbol *s = value;
   N_symbols *n = cvalue;
 
-  for(; s != NULL; s = s->next) 
+  for(; s != NULL; s = s->next)
     if(s->type == SYMBOL_TYPE_VAR && s->region == n->region)
       n->n++;
 
@@ -278,11 +278,11 @@ static void exec_count_variables_ap(void *value, void *cvalue)
 static int exec_count_variables(Symbol_table *table, int region)
 {
   N_symbols n;
-  
+
   n.n = 0;
   n.region = region;
   hashtable_foreach_value(table, exec_count_variables_ap, &n);
-  
+
   return n.n;
 }
 
@@ -291,7 +291,7 @@ static void exec_get_variables_ap(void *value, void *cvalue)
   Symbol *s = value;
   A_symbols *a = cvalue;
 
-  for(; s != NULL; s = s->next) 
+  for(; s != NULL; s = s->next)
     if(s->type == SYMBOL_TYPE_VAR && s->region == a->region)
     {
       *(a->array) = s;
@@ -304,7 +304,7 @@ static void exec_get_variables_ap(void *value, void *cvalue)
 static Symbol **exec_get_variables(Symbol_table *table, int region)
 {
   int n = exec_count_variables(table, region);
-  Symbol **sym = malloc((n + 1) * sizeof *sym); 
+  Symbol **sym = malloc((n + 1) * sizeof *sym);
   A_symbols a;
 
   a.region = region;
@@ -325,21 +325,21 @@ static void exec_set_variables_move(void)
   Region *region;
 
   for(i = 0; i < n_regions; i++)
-  {      
+  {
     region = REGION_TABLE_GET(i);
 
     if(sym[i][0] != NULL)
-    { 
+    {
       /* Première déclaration liée au Niveau d'Imbrication Statique de la région. */
       sym[i][0]->exec = (region->level == 0) ? 0 : region->level + 1;
 
       /* Le déplacement à l'execution d'une variable est égale à :
-         La position de la variable précédente + la taille du type 
+         La position de la variable précédente + la taille du type
          de la variable précédente. */
       for(j = 1; sym[i][j] != NULL; j++)
         sym[i][j]->exec += sym[i][j - 1]->exec + ((Symbol *)sym[i][j - 1]->index)->exec;
 
-      /* Taille de la région courante : 
+      /* Taille de la région courante :
          Déplacement à l'exec de la dernière variable ajoutée + sa taille. */
       j--;
       region->size = sym[i][j]->exec + ((Symbol *)sym[i][j]->index)->exec;
@@ -355,15 +355,15 @@ static void reset_stack(void)
 {
   Region *region = REGION_TABLE_GET(current_region + 1);
   int i, num;
-    
-  i = !(region->level == 0); 
+
+  i = !(region->level == 0);
 
   for(i += region->level; i < region->size; i++)
   {
     num = i + stack_position;
-    VARIABLE_RESET(data_stack[num]);    
+    VARIABLE_RESET(data_stack[num]);
   }
-   
+
   return;
 }
 
@@ -377,7 +377,7 @@ static Data push_position(Syntax_tree *tree)
 
   Region *n_region = REGION_TABLE_GET(n);                  /* Nouvelle région. */
   Region *o_region = REGION_TABLE_GET(current_region + 1); /* Ancienne région. */
-  Data result;                                             /* Valeur de retour de la fonction/procédure. */  
+  Data result;                                             /* Valeur de retour de la fonction/procédure. */
   Parameter *params;                                       /* Paramètres de la fonction/procédure. */
 
   /* Autres données. */
@@ -392,46 +392,46 @@ static Data push_position(Syntax_tree *tree)
 
   /* En cas de dépassement de pile. */
   if(stack_position + o_region->size + 1 + n_region->level >= DATA_STACK_SIZE)
-  {    
+  {
     fprintf(stderr, "Error : Stack overflow !\n");
     longjmp(jmp, 1);
   }
 
   /* Mise à jour du chainage dynamique. */
-  data_stack[stack_position + o_region->size].value.i = stack_position; 
-  DBG_PRINTF(("Chainage dynamique: data_stack[%d] = %d\n", stack_position + o_region->size, 
+  data_stack[stack_position + o_region->size].value.i = stack_position;
+  DBG_PRINTF(("Chainage dynamique: data_stack[%d] = %d\n", stack_position + o_region->size,
               stack_position));
 
-  /* Déplacement dans la pile de la taille de l'ancienne région. */                   
-  stack_position += o_region->size;                 
+  /* Déplacement dans la pile de la taille de l'ancienne région. */
+  stack_position += o_region->size;
 
   /* Mise à jour du chainage statique. */
   if(n_region->level > o_region->level)
   {
-    data_stack[stack_position + 1].value.i = data_stack[stack_position].value.i; 
-    DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + 1, 
+    data_stack[stack_position + 1].value.i = data_stack[stack_position].value.i;
+    DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + 1,
                 data_stack[stack_position].value.i));
 
     for(i = 2; i <= n_region->level; i++)
     {
       data_stack[stack_position + i].value.i = data_stack[stack_position - o_region->size + i - 1].value.i;
-      DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + i, 
+      DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + i,
                   data_stack[stack_position + i].value.i));
     }
   }
   else
     for(i = 1; i <= n_region->level; i++)
     {
-      data_stack[stack_position + i].value.i = 
+      data_stack[stack_position + i].value.i =
         data_stack[stack_position - o_region->size + i + o_region->level - n_region->level].value.i;
- 
-      DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + i, 
+
+      DBG_PRINTF(("Chainage statique: data_stack[%d] = %d\n", stack_position + i,
                   data_stack[stack_position + i].value.i));
     }
 
   DBG_PRINTF(("%d case(s) de données\n\n", n_region->size - n_region->level * 2));
 
-  /* Nouvelle région. */                          
+  /* Nouvelle région. */
   current_region = n - 1;
 
   /* Mise à 0 des valeurs de la nouvelle région. */
@@ -448,7 +448,7 @@ static Data push_position(Syntax_tree *tree)
   for(i = 0; tree != NULL; i++)
   {
     result = region_eval(tree);
-    
+
     /* Type du paramètre. */
     for(n = 1; n <= SYMBOL_BASIC_MAX; n++)
       if(symbol_table_get_basic(n) == params[i].type)
@@ -456,7 +456,7 @@ static Data push_position(Syntax_tree *tree)
 
     /* Valeur du paramètre. */
     CAST(result, n);
-    
+
     /* Affectation. */
     sym_p = hashtable_get_value_by_key(hashtable, params[i].hkey);
 
@@ -497,7 +497,7 @@ static size_t get_variable_position(Syntax_tree *tree)
 
   /* Récupération du contenu de l'arbre. */
   content = syntax_tree_node_get_content(tree);
-                              
+
   /* Ligne de déclaration du type de l'IDF. */
   sym = content->value.var.type;
 
@@ -507,20 +507,20 @@ static size_t get_variable_position(Syntax_tree *tree)
   else
     i = stack_position;
 
-  size = i + sym->exec; 
+  size = i + sym->exec;
 
   /* Récupération du type de la variable. */
   sym = sym->index;
-  
+
   for(;;)
-  { 
+  {
     /* Parcours des champs. */
     switch(sym->type)
     {
       /* ------------------------------------------ */
       /* TYPE BASE                                  */
       /* ------------------------------------------ */
-      
+
       case SYMBOL_TYPE_BASE:
       {
         /* Définition du type de la valeur. */
@@ -533,11 +533,11 @@ static size_t get_variable_position(Syntax_tree *tree)
 
         return size;
       }
- 
+
       /* ------------------------------------------ */
       /* TYPE STRUCTURE                             */
       /* ------------------------------------------ */
-        
+
       case SYMBOL_TYPE_STRUCT:
         current = root ? tree_node_get_son(tree) : tree_node_get_brother(tree);
 
@@ -551,7 +551,7 @@ static size_t get_variable_position(Syntax_tree *tree)
         size += structure->exec[content->value.i];
 
         break;
- 
+
       /* ------------------------------------------ */
       /* TYPE TABLEAU                               */
       /* ------------------------------------------ */
@@ -581,8 +581,8 @@ static size_t get_variable_position(Syntax_tree *tree)
           {
             fprintf(stderr, "Exception : Index array is outside the limits!\n");
             longjmp(jmp, 1);
-          } 
-          
+          }
+
           /* Mise à 0 de l'indicage si besoin. */
           result.value.i -= array->dimension[i].bound_lower;
 
@@ -592,13 +592,13 @@ static size_t get_variable_position(Syntax_tree *tree)
           if(tree_node_get_brother(current) == NULL)
             break;
 
-          current = tree_node_get_brother(current);        
+          current = tree_node_get_brother(current);
         }
 
         sym = array->type;
         tree = current;
         break;
-               
+
       /* ------------------------------------------ */
       /* DEFAULT                                    */
       /* ------------------------------------------ */
@@ -608,11 +608,11 @@ static size_t get_variable_position(Syntax_tree *tree)
     }
 
     root = false;
-  } 
-  
+  }
+
   return 0;
 }
-             
+
 static Data region_eval(Syntax_tree *tree)
 {
   Data result;
@@ -652,7 +652,7 @@ static Data region_eval(Syntax_tree *tree)
     case AT_OP_MOD:
       SET_OP(OP_MOD);
       break;
-      
+
     /* ------------------------------------------ */
     /* AFFECTATIONS                               */
     /* ------------------------------------------ */
@@ -664,7 +664,7 @@ static Data region_eval(Syntax_tree *tree)
       CAST(result, data_stack[size].type);
 
       /* Affectation. */
-      data_stack[size] = result;                        
+      data_stack[size] = result;
       DBG_SET(son);
       break;
 
@@ -687,7 +687,7 @@ static Data region_eval(Syntax_tree *tree)
     /* ------------------------------------------ */
     /* INCREMENTATIONS/DECREMENTATIONS            */
     /* ------------------------------------------ */
-    
+
     case AT_OB_PINC:
       SET_OB(1);
       break;
@@ -763,8 +763,7 @@ static Data region_eval(Syntax_tree *tree)
       break;
 
     case AT_CND_NOT:
-      son = tree_node_get_son(tree);
-      result = region_eval(son);
+      result = region_eval(son = tree_node_get_son(tree));
       CAST(result, SYMBOL_BASIC_BOOL);
       result.value.c = !result.value.c;
       break;
@@ -790,14 +789,43 @@ static Data region_eval(Syntax_tree *tree)
       result = region_eval(tree_node_get_son(tree));
       break;
 
-    case AT_CTL_IF:   
+    case AT_CTL_IF:
+      res_a = region_eval(son = tree_node_get_son(tree));
+      CAST(res_a, SYMBOL_BASIC_BOOL);
+
+      /* Si condition vraie. */
+      if(res_a.value.c)
+        region_eval(tree_node_get_brother(son));
+      /* Si le noeud suivant dans l'arbre n'est pas vide. */
+      else if((tree = tree_node_get_brother(tree)) != NULL)
+      {
+        content = syntax_tree_node_get_content(tree);
+
+        /* Si c'est un noeud else. */
+        if(content->type == AT_CTL_ELSE)
+          region_eval(tree_node_get_son(tree));
+      }
+
       break;
-    case AT_CTL_ELSE:
-    case AT_CTL_WHILE:  
-    case AT_CTL_DO_WHILE: 
+
+    case AT_CTL_WHILE:
+      for(;;)
+      {
+        res_a = region_eval(son = tree_node_get_son(tree));
+        CAST(res_a, SYMBOL_BASIC_BOOL);
+
+        /* Si condition fausse, on quitte. */
+        if(!res_a.value.c)
+          break;
+
+        region_eval(tree_node_get_brother(son));
+      }
+      break;
+
+    case AT_CTL_DO_WHILE:
     case AT_CTL_FOR:
-  
-  
+
+
 
     case AT_CTL_SWITCH:
     case AT_CTL_CASE:
@@ -816,9 +844,9 @@ static Data region_eval(Syntax_tree *tree)
     case AT_CTL_CALL:
       result = push_position(tree);
       break;
-      
+
     /* Constantes. */
-    case AT_CST_STRING: 
+    case AT_CST_STRING:
       result.value.s = content->value.s;
       result.type = SYMBOL_BASIC_STRING;
       break;
@@ -830,7 +858,7 @@ static Data region_eval(Syntax_tree *tree)
       result.value.c = content->value.c;
       result.type = SYMBOL_BASIC_BOOL;
       break;
-    case AT_CST_CHAR: 
+    case AT_CST_CHAR:
       result.value.c = content->value.c;
       result.type = SYMBOL_BASIC_CHAR;
       break;
@@ -844,8 +872,9 @@ static Data region_eval(Syntax_tree *tree)
       break;
 
     /* Non-utilisés. */
-    case AT_CTL_ARRAY:    
-    case AT_CTL_STRUCT: 
+    case AT_CTL_ELSE:
+    case AT_CTL_ARRAY:
+    case AT_CTL_STRUCT:
     case AT_CTL_PROC:
     case AT_CTL_FUN:
     case AT_ARRAY_INDEX:
@@ -885,10 +914,10 @@ void exec(Symbol_table *table)
   region = REGION_TABLE_GET(0);
   reset_stack();
 
-  if(!setjmp(jmp)) 
+  if(!setjmp(jmp))
     region_eval(region->tree);
   /* Dépassement de pile. */
-  else 
+  else
   {
 
   }
@@ -896,10 +925,9 @@ void exec(Symbol_table *table)
   /* Libération. */
   for(i = 0; i < n_regions; i++)
     free(sym[i]);
-  
+
   free(sym);
   free(data_stack);
 
   return;
 }
-
