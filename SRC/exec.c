@@ -809,9 +809,9 @@ static Data region_eval(Syntax_tree *tree)
       break;
 
     case AT_CTL_WHILE:
-      for(;;)
+      for(son = tree_node_get_son(tree);;)
       {
-        res_a = region_eval(son = tree_node_get_son(tree));
+        res_a = region_eval(son);
         CAST(res_a, SYMBOL_BASIC_BOOL);
 
         /* Si condition fausse, on quitte. */
@@ -823,6 +823,16 @@ static Data region_eval(Syntax_tree *tree)
       break;
 
     case AT_CTL_DO_WHILE:
+      for(son = tree_node_get_son(tree);;)
+      {
+        res_a = region_eval(son);
+        CAST(res_a, SYMBOL_BASIC_BOOL);
+        region_eval(tree_node_get_brother(son));
+
+        /* Si condition fausse, on quitte. */
+        if(!res_a.value.c)
+          break;
+      }
     case AT_CTL_FOR:
 
 

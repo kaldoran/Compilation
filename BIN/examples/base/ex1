@@ -26,9 +26,9 @@ function test(m_var : int, m_var_2 : float) return int
   };
 
 start{
-      while(variable_int < 10) do {
+      do {
         variable_int++;
-      }
+      } while(variable_int < 10);
 
       if(5 == 4  - 1) then {
         variable_int = 41 + 36 - 45.0 / 3.0;
