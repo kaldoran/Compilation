@@ -13,83 +13,83 @@
 /* ---------------------------------------------------------------------- */
 
 /** Cast de int en un autre type. */
-#define CAST_INT(RES, TYPE)          \
-  switch(TYPE)                       \
-  {                                  \
-    case SYMBOL_BASIC_FLOAT:         \
-      RES.value.f = RES.value.i;     \
-      RES.type = SYMBOL_BASIC_FLOAT; \
-      break;                         \
-    case SYMBOL_BASIC_BOOL:          \
-      RES.value.c = !!RES.value.i;   \
-      RES.type = SYMBOL_BASIC_BOOL;  \
-      break;                         \
-    case SYMBOL_BASIC_CHAR:          \
-      RES.value.c = RES.value.i;     \
-      RES.type = SYMBOL_BASIC_CHAR;  \
-      break;                         \
-    case SYMBOL_BASIC_STRING:        \
-      break;                         \
+#define CAST_INT(RES, TYPE)           \
+  switch(TYPE)                        \
+  {                                   \
+    case SYMBOL_BASIC_FLOAT:          \
+      RES.value.f = RES.value.i;      \
+      RES.type = SYMBOL_BASIC_FLOAT;  \
+      break;                          \
+    case SYMBOL_BASIC_BOOL:           \
+      RES.value.c = RES.value.i != 0; \
+      RES.type = SYMBOL_BASIC_BOOL;   \
+      break;                          \
+    case SYMBOL_BASIC_CHAR:           \
+      RES.value.c = RES.value.i;      \
+      RES.type = SYMBOL_BASIC_CHAR;   \
+      break;                          \
+    case SYMBOL_BASIC_STRING:         \
+      break;                          \
   } 
 
 /** Cast de float en un autre type. */
-#define CAST_FLOAT(RES, TYPE)       \
-  switch(TYPE)                      \
-  {                                 \
-    case SYMBOL_BASIC_INT:          \
-      RES.value.i = RES.value.f;    \
-      RES.type = SYMBOL_BASIC_INT;  \
-      break;                        \
-    case SYMBOL_BASIC_BOOL:         \
-      RES.value.c = !!RES.value.f;  \
-      RES.type = SYMBOL_BASIC_BOOL; \
-      break;                        \
-    case SYMBOL_BASIC_CHAR:         \
-      RES.value.c = RES.value.f;    \
-      RES.type = SYMBOL_BASIC_CHAR; \
-      break;                        \
-    case SYMBOL_BASIC_STRING:       \
-      break;                        \
+#define CAST_FLOAT(RES, TYPE)                              \
+  switch(TYPE)                                             \
+  {                                                        \
+    case SYMBOL_BASIC_INT:                                 \
+      RES.value.i = RES.value.f;                           \
+      RES.type = SYMBOL_BASIC_INT;                         \
+      break;                                               \
+    case SYMBOL_BASIC_BOOL:                                \
+      RES.value.c = RES.value.f >= 1 || RES.value.f <= -1; \
+      RES.type = SYMBOL_BASIC_BOOL;                        \
+      break;                                               \
+    case SYMBOL_BASIC_CHAR:                                \
+      RES.value.c = RES.value.f;                           \
+      RES.type = SYMBOL_BASIC_CHAR;                        \
+      break;                                               \
+    case SYMBOL_BASIC_STRING:                              \
+      break;                                               \
   }
 
 /** Cast de char en un autre type. */
-#define CAST_CHAR(RES, TYPE)         \
-  switch(TYPE)                       \
-  {                                  \
-    case SYMBOL_BASIC_INT:           \
-      RES.value.i = RES.value.c;     \
-      RES.type = SYMBOL_BASIC_INT;   \
-      break;                         \
-    case SYMBOL_BASIC_FLOAT:         \
-      RES.value.f = RES.value.c;     \
-      RES.type = SYMBOL_BASIC_FLOAT; \
-      break;                         \
-    case SYMBOL_BASIC_BOOL:          \
-      RES.value.c = !!RES.value.c;   \
-      RES.type = SYMBOL_BASIC_BOOL;  \
-      break;                         \
-    case SYMBOL_BASIC_STRING:        \
-      break;                         \
+#define CAST_CHAR(RES, TYPE)          \
+  switch(TYPE)                        \
+  {                                   \
+    case SYMBOL_BASIC_INT:            \
+      RES.value.i = RES.value.c;      \
+      RES.type = SYMBOL_BASIC_INT;    \
+      break;                          \
+    case SYMBOL_BASIC_FLOAT:          \
+      RES.value.f = RES.value.c;      \
+      RES.type = SYMBOL_BASIC_FLOAT;  \
+      break;                          \
+    case SYMBOL_BASIC_BOOL:           \
+      RES.value.c = RES.value.c != 0; \
+      RES.type = SYMBOL_BASIC_BOOL;   \
+      break;                          \
+    case SYMBOL_BASIC_STRING:         \
+      break;                          \
   }
 
 /** Cast de bool en un autre type. */
-#define CAST_BOOL(RES, TYPE)         \
-  switch(TYPE)                       \
-  {                                  \
-    case SYMBOL_BASIC_INT:           \
-      RES.value.i = !!RES.value.c;   \
-      RES.type = SYMBOL_BASIC_INT;   \
-      break;                         \
-    case SYMBOL_BASIC_FLOAT:         \
-      RES.value.f = !!RES.value.c;   \
-      RES.type = SYMBOL_BASIC_FLOAT; \
-      break;                         \
-    case SYMBOL_BASIC_CHAR:          \
-      RES.value.c = !!RES.value.c;   \
-      RES.type = SYMBOL_BASIC_CHAR;  \
-      break;                         \
-    case SYMBOL_BASIC_STRING:        \
-      break;                         \
+#define CAST_BOOL(RES, TYPE)          \
+  switch(TYPE)                        \
+  {                                   \
+    case SYMBOL_BASIC_INT:            \
+      RES.value.i = RES.value.c != 0; \
+      RES.type = SYMBOL_BASIC_INT;    \
+      break;                          \
+    case SYMBOL_BASIC_FLOAT:          \
+      RES.value.f = RES.value.c != 0; \
+      RES.type = SYMBOL_BASIC_FLOAT;  \
+      break;                          \
+    case SYMBOL_BASIC_CHAR:           \
+      RES.value.c = RES.value.c != 0; \
+      RES.type = SYMBOL_BASIC_CHAR;   \
+      break;                          \
+    case SYMBOL_BASIC_STRING:         \
+      break;                          \
   }
 
 /** Cast de string en un autre type. */
@@ -109,7 +109,7 @@
       RES.type = SYMBOL_BASIC_BOOL;           \
       break;                                  \
     case SYMBOL_BASIC_CHAR:                   \
-      RES.value.c = !!RES.value.c;            \
+      RES.value.c = RES.value.s[0];           \
       RES.type = SYMBOL_BASIC_CHAR;           \
       break;                                  \
   }

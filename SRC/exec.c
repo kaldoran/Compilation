@@ -56,8 +56,18 @@
       break;                                      \
   }
 
+/** Applique un calcul (+, -, /, *, %). */
+/* Utilisée par chaque case AT_OP_... */
+#define SET_OP(TYPE)                                                     \
+  do {                                                                   \
+    res_a = region_eval(tree_node_get_son(tree));                        \
+    res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree))); \
+    OP_SET_TYPE(res_a, res_b);                                           \
+    TYPE(result, res_a, res_b); /* result = res_a OP res_b */            \
+  } while(0)
+
 /** Applique une opération d'affectation (+=, -=, /=, *=, %=). */
-/* Utilisée pour chaque case AT_OPR_... */
+/* Utilisée par chaque case AT_OPR_... */
 #define SET_OPR(TYPE)                                \
   do {                                               \
     son = tree_node_get_son(tree);                   \
@@ -78,8 +88,27 @@
     DBG_SET(son);                                    \
   } while(0)
     
+/** Applique une incrémentation/décrémentation. */
+/* Utilisée par chaque case AT_OB_... */
+#define SET_OB(VALUE)                                  \
+    do {                                               \
+      son = tree_node_get_son(tree);                   \
+      size = get_variable_position(son);               \
+                                                       \
+      res_a.value.c = VALUE;                           \
+      res_b = region_eval(son);                        \
+                                                       \
+      /* Inc/Dec */                                    \
+      OP_SET_TYPE(res_a, res_b);                       \
+      OP_ADD(result, res_a, res_b);                    \
+      CAST(result, data_stack[size].type);             \
+                                                       \
+      data_stack[size] = result;                       \
+      DBG_SET(son);                                    \
+} while(0)
+
 /** Applique une comparaison. */
-/* Utilisée pour chaque case AT_CMP_... */
+/* Utilisée par chaque case AT_CMP_... */
 #define SET_CMP(CMP)                                        \
     do {                                                    \
       son = tree_node_get_son(tree);                        \
@@ -560,38 +589,19 @@ static Data region_eval(Syntax_tree *tree)
     /* ------------------------------------------ */
 
     case AT_OP_PLUS:
-      res_a = region_eval(tree_node_get_son(tree));
-      res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-      OP_SET_TYPE(res_a, res_b);
-      OP_ADD(result, res_a, res_b); /* result = res_a + res_b */
+      SET_OP(OP_ADD);
       break;
-
     case AT_OP_MINUS:
-      res_a = region_eval(tree_node_get_son(tree));
-      res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-      OP_SET_TYPE(res_a, res_b);
-      OP_SUB(result, res_a, res_b); /* result = res_a - res_b */
+      SET_OP(OP_SUB);
       break;
-
     case AT_OP_MULT:
-      res_a = region_eval(tree_node_get_son(tree));
-      res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-      OP_SET_TYPE(res_a, res_b);
-      OP_MUL(result, res_a, res_b); /* result = res_a * res_b */
+      SET_OP(OP_MUL);
       break;
-
     case AT_OP_DIV:
-      res_a = region_eval(tree_node_get_son(tree));
-      res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-      OP_SET_TYPE(res_a, res_b);
-      OP_DIV(result, res_a, res_b); /* result = res_a / res_b */
+      SET_OP(OP_DIV);
       break;
-
     case AT_OP_MOD:
-      res_a = region_eval(tree_node_get_son(tree));
-      res_b = region_eval(tree_node_get_brother(tree_node_get_son(tree)));
-      OP_SET_TYPE(res_a, res_b);
-      OP_MOD(result, res_a, res_b); /* result = res_a % res_b */
+      SET_OP(OP_MOD);
       break;
       
     /* ------------------------------------------ */
@@ -612,19 +622,15 @@ static Data region_eval(Syntax_tree *tree)
     case AT_OPR_PLUSE:
       SET_OPR(OP_ADD);
       break;
-
     case AT_OPR_MINE:
       SET_OPR(OP_SUB);
       break;
-
     case AT_OPR_MULTE:
       SET_OPR(OP_MUL);
       break;
-
     case AT_OPR_DIVE:
       SET_OPR(OP_DIV);
       break;
-
     case AT_OPR_MODE:
       SET_OPR(OP_MOD);
       break;
@@ -634,69 +640,18 @@ static Data region_eval(Syntax_tree *tree)
     /* ------------------------------------------ */
     
     case AT_OB_PINC:
-      son = tree_node_get_son(tree);
-      size = get_variable_position(son);
-      
-      res_a.value.c = 1;
-      res_b = region_eval(tree_node_get_brother(son));
-      
-      /* Inc */
-      OP_SET_TYPE(res_a, res_b);
-      OP_ADD(result, res_a, res_b);
-      CAST(result, data_stack[size].type);
-
-      data_stack[size] = result;
-      DBG_SET(son);
+      SET_OB(1);
       break;
-
     case AT_OB_PDEC:
-      son = tree_node_get_son(tree);
-      size = get_variable_position(son);
-      
-      res_a.value.c = -1;
-      res_b = region_eval(tree_node_get_brother(son));
-      
-      /* Dec */
-      OP_SET_TYPE(res_a, res_b);
-      OP_ADD(result, res_a, res_b);
-      CAST(result, data_stack[size].type);
-
-      data_stack[size] = result;
-      DBG_SET(son);
+      SET_OB(-1);
       break;
-
     case AT_OB_INC:
-      son = tree_node_get_son(tree);
-      size = get_variable_position(son);
-      
-      res_a.value.c = 1;
-      res_b = region_eval(tree_node_get_brother(son));
-      
-      /* Inc */
-      OP_SET_TYPE(res_a, res_b);
-      OP_ADD(result, res_a, res_b);
-      CAST(result, data_stack[size].type);
-
-      result = res_b;
-      DBG_SET(son);
-      data_stack[size] = result;
+      SET_OB(1);
+      result = res_b; /* Valeur de la variable avant son incrémentation. */
       break;
-
     case AT_OB_DEC:
-      son = tree_node_get_son(tree);
-      size = get_variable_position(son);
-      
-      res_a.value.c = -1;
-      res_b = region_eval(tree_node_get_brother(son));
-      
-      /* Dec */
-      OP_SET_TYPE(res_a, res_b);
-      OP_ADD(result, res_a, res_b);
-      CAST(result, data_stack[size].type);
-
-      result = res_b;
-      DBG_SET(son);
-      data_stack[size] = result;
+      SET_OB(-1);
+      result = res_b; /* Valeur de la variable avant sa décrémentation. */
       break;
 
     /* ------------------------------------------ */
@@ -727,13 +682,48 @@ static Data region_eval(Syntax_tree *tree)
     /* ------------------------------------------ */
 
     case AT_CND_AND:
-      break;
-    case AT_CND_OR:
-      break;
-    case AT_CND_NOT:
+      son = tree_node_get_son(tree);
+      result.type = SYMBOL_BASIC_BOOL;
+
+      result = region_eval(son);
+      CAST(result, SYMBOL_BASIC_BOOL);
+
+      /* Inutile d'évaluer si le premier cas du AND est faux. */
+      if(result.value.c)
+      {
+        result = region_eval(tree_node_get_brother(son));
+        CAST(result, SYMBOL_BASIC_BOOL);
+      }
       break;
 
-    /* Fonctions prédéfinies. */
+    case AT_CND_OR:
+      son = tree_node_get_son(tree);
+      result.type = SYMBOL_BASIC_BOOL;
+
+      result = region_eval(son);
+      CAST(result, SYMBOL_BASIC_BOOL);
+
+      /* Inutile d'évaluer si le premier cas du OR est vrai. */
+      if(!result.value.c)
+      {
+        result = region_eval(tree_node_get_brother(son));
+        CAST(result, SYMBOL_BASIC_BOOL);
+      }
+      else
+        result.value.c = 1;
+      break;
+
+    case AT_CND_NOT:
+      son = tree_node_get_son(tree);
+      result = region_eval(son);
+      CAST(result, SYMBOL_BASIC_BOOL);
+      result.value.c = !result.value.c;
+      break;
+
+    /* ------------------------------------------ */
+    /* FONCTIONS PREDEFINES                       */
+    /* ------------------------------------------ */
+
     case AT_FUN_READ:
       break;
     case AT_FUN_WRITE:
