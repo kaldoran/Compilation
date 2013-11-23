@@ -324,10 +324,11 @@ static void exec_set_variables_move(void)
   Region *region;
 
   for(i = 0; i < n_regions; i++)
+  {      
+    region = REGION_TABLE_GET(i);
+
     if(sym[i][0] != NULL)
     { 
-      region = REGION_TABLE_GET(i);
-
       /* Première déclaration liée au Niveau d'Imbrication Statique de la région. */
       sym[i][0]->exec = (region->level == 0) ? 0 : region->level + 1;
 
@@ -343,7 +344,8 @@ static void exec_set_variables_move(void)
       region->size = sym[i][j]->exec + ((Symbol *)sym[i][j]->index)->exec;
     }
     else
-      region->size = region->level;
+      region->size = (region->level == 0) ? 0 : region->level + 1;
+  }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -775,9 +777,18 @@ static Data region_eval(Syntax_tree *tree)
     case AT_FUN_WRITE:
       break;
     case AT_FUN_RAND:
+      result.type = SYMBOL_BASIC_FLOAT;
+      result.value.f = rand();
       break;
 
-    /* Contrôles. */
+    /* ------------------------------------------ */
+    /* CONTROLES                                  */
+    /* ------------------------------------------ */
+
+    case AT_CTL_RETURN:
+      result = region_eval(tree_node_get_son(tree));
+      break;
+
     case AT_CTL_IF:   
       break;
     case AT_CTL_ELSE:
@@ -785,10 +796,12 @@ static Data region_eval(Syntax_tree *tree)
     case AT_CTL_DO_WHILE: 
     case AT_CTL_FOR:
   
-    case AT_CTL_RETURN:
+  
+
     case AT_CTL_SWITCH:
     case AT_CTL_CASE:
     case AT_CTL_DEFAULT:
+
     case AT_CTL_BREAK:
     case AT_CTL_CONTINUE:
     case AT_CTL_TERNAIRE:
