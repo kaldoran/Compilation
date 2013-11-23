@@ -136,6 +136,14 @@
       }                                                     \
     } while(0)
 
+/** Evalue à la suite les instructions d'un arbre. */
+#define EVAL_BROTHERS(TREE)             \
+  while(TREE != NULL)                   \
+  {                                     \
+    region_eval(TREE);                  \
+    TREE = tree_node_get_brother(TREE); \
+  }
+
 /** Debug d'une affectation. */
 #ifdef DEBUG
   #define DBG_SET(TREE)                                                                  \
@@ -795,7 +803,10 @@ static Data region_eval(Syntax_tree *tree)
 
       /* Si condition vraie. */
       if(res_a.value.c)
-        region_eval(tree_node_get_brother(son));
+      {
+        son = tree_node_get_brother(son);
+        EVAL_BROTHERS(son);
+      }
       /* Si le noeud suivant dans l'arbre n'est pas vide. */
       else if((tree = tree_node_get_brother(tree)) != NULL)
       {
@@ -803,14 +814,18 @@ static Data region_eval(Syntax_tree *tree)
 
         /* Si c'est un noeud else. */
         if(content->type == AT_CTL_ELSE)
-          region_eval(tree_node_get_son(tree));
+        {
+           son = tree_node_get_brother(son);
+           EVAL_BROTHERS(son);
+        }
       }
 
       break;
 
     case AT_CTL_WHILE:
-      for(son = tree_node_get_son(tree);;)
+      for(;;)
       {
+        son = tree_node_get_son(tree);
         res_a = region_eval(son);
         CAST(res_a, SYMBOL_BASIC_BOOL);
 
@@ -818,29 +833,34 @@ static Data region_eval(Syntax_tree *tree)
         if(!res_a.value.c)
           break;
 
-        region_eval(tree_node_get_brother(son));
+        son = tree_node_get_brother(son);
+        EVAL_BROTHERS(son);
       }
       break;
 
     case AT_CTL_DO_WHILE:
-      for(son = tree_node_get_son(tree);;)
+      for(;;)
       {
-        res_a = region_eval(son);
+        son = tree_node_get_brother(tree_node_get_son(tree));
+        EVAL_BROTHERS(son);
+
+        res_a = region_eval(tree_node_get_son(tree));
         CAST(res_a, SYMBOL_BASIC_BOOL);
-        region_eval(tree_node_get_brother(son));
 
         /* Si condition fausse, on quitte. */
         if(!res_a.value.c)
           break;
       }
+      break;
 
     case AT_CTL_FOR:
       /* Affectation. */
       son = tree_node_get_son(tree);
       region_eval(son);
 
-      for(son = tree_node_get_brother(son);;)
+      for(;;)
       {
+        son = tree_node_get_brother(tree_node_get_son(tree));
         res_a = region_eval(son);
         CAST(res_a, SYMBOL_BASIC_BOOL);
 
@@ -849,10 +869,12 @@ static Data region_eval(Syntax_tree *tree)
           break;
 
         /* Instructions. */
-        region_eval(tree_node_get_brother(tree_node_get_brother(son)));
+        son = tree_node_get_brother(tree_node_get_brother(son));
+        EVAL_BROTHERS(son);
 
         /* Incrémentation. */
-        region_eval(tree_node_get_brother(son));
+        son = tree_node_get_brother(tree_node_get_brother(tree_node_get_son(tree)));
+        region_eval(son);
       }
       break;
 
@@ -922,6 +944,7 @@ void exec(Symbol_table *table)
 
   int i;
   Region *region;
+  Syntax_tree *tree;
 
   if((n_regions = regions_table_get_size()) == 0)
     return;
@@ -944,7 +967,10 @@ void exec(Symbol_table *table)
   reset_stack();
 
   if(!setjmp(jmp))
-    region_eval(region->tree);
+  {
+    tree = region->tree;
+    EVAL_BROTHERS(tree);
+  }
   /* Dépassement de pile. */
   else
   {

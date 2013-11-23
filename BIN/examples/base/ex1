@@ -26,6 +26,17 @@ function test(m_var : int, m_var_2 : float) return int
   };
 
 start{
+        for(variable_int = 0; variable_int < 10; variable_int++) do {
+          variable_int = variable_int + 2;
+          variable_int = variable_int - 2;
+        }
+
+      do {
+        variable_int = 41 + 36 - 45.0 / 3.0;
+        variable_int = 0;
+        variable_int = 1;
+      } while(variable_int < 1);
+
       for(variable_int = 0; variable_int < 10; variable_int++) do {
         x = -variable_int;
       }
@@ -34,7 +45,7 @@ start{
         variable_int++;
       } while(variable_int < 10);
 
-      if(5 == 4  - 1) then {
+      if((variable_int = 5)) then {
         variable_int = 41 + 36 - 45.0 / 3.0;
       }
       else if(5 + 8 > 13) then {                      
