@@ -833,9 +833,28 @@ static Data region_eval(Syntax_tree *tree)
         if(!res_a.value.c)
           break;
       }
+
     case AT_CTL_FOR:
+      /* Affectation. */
+      son = tree_node_get_son(tree);
+      region_eval(son);
 
+      for(son = tree_node_get_brother(son);;)
+      {
+        res_a = region_eval(son);
+        CAST(res_a, SYMBOL_BASIC_BOOL);
 
+        /* Si condition fausse, on quitte. */
+        if(!res_a.value.c)
+          break;
+
+        /* Instructions. */
+        region_eval(tree_node_get_brother(tree_node_get_brother(son)));
+
+        /* Incrémentation. */
+        region_eval(tree_node_get_brother(son));
+      }
+      break;
 
     case AT_CTL_SWITCH:
     case AT_CTL_CASE:

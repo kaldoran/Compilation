@@ -26,6 +26,10 @@ function test(m_var : int, m_var_2 : float) return int
   };
 
 start{
+      for(variable_int = 0; variable_int < 10; variable_int++) do {
+        x = -variable_int;
+      }
+
       do {
         variable_int++;
       } while(variable_int < 10);
