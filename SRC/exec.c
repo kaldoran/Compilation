@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <setjmp.h>
 #include "list.h"
 #include "regions_table.h"
@@ -879,6 +880,7 @@ void exec(Symbol_table *table)
     fatal_error("exec");
 
   /* Execution. */
+  srand(time(NULL));
   current_region = -1;
   region = REGION_TABLE_GET(0);
   reset_stack();
