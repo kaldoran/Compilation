@@ -779,7 +779,7 @@ static Data region_eval(Syntax_tree *tree)
       break;
     case AT_FUN_RAND:
       result.type = SYMBOL_BASIC_FLOAT;
-      result.value.f = rand();
+      result.value.f = (float)rand() / (float)RAND_MAX;
       break;
 
     /* ------------------------------------------ */
