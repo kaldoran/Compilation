@@ -5,10 +5,18 @@ type type_normal : struct
   test_char : char;
 end struct;
 
+/* 3 variables (dont une de taille 2) : Prochaine region en data_stack[4] */
 var po : type_normal;
 var variable_int : int;
-
 var machin : string[20];
+
+proc test(m_var : int, m_var_2 : float) 
+  start 
+  {
+    m_var_2 += 0;
+
+    m_var += 0;
+  };
 
 /* Notre langage gère les calculs entre tous les types possibles :
    true est transformé en int (1) puis en float (1.0), 
@@ -19,6 +27,7 @@ var machin : string[20];
    Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
  
 start{
+      test(30, 40);
       variable_int = 30 + 23.14 - 105.378 * 96 + true; 
       po.test_char += 10;
       machin[5] = 'p';

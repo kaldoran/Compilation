@@ -251,9 +251,9 @@ static void reset_stack(void);
 
 /** Déplace la position dans la pile.
     Met à jour le chainage dynamique et statique. */
-/* %param n : Numéro de région à ajouter sur la pile. */
+/* %param tree : Noeud contenant la procédure/Fonction à appeler. */
 /* %return : Le résultat de l'appel de fonction/procédure. */
-static Data push_position(int n);
+static Data push_position(Syntax_tree *tree);
 
 /** Evalue un arbre. */
 /* %param tree : Arbre à évaluer. */
@@ -346,6 +346,8 @@ static void exec_set_variables_move(void)
       region->size = region->level;
 }
 
+/* ---------------------------------------------------------------------- */
+
 static void reset_stack(void)
 {
   Region *region = REGION_TABLE_GET(current_region + 1);
@@ -362,13 +364,25 @@ static void reset_stack(void)
   return;
 }
 
-static Data push_position(int n)
+static Data push_position(Syntax_tree *tree)
 {
+  Syntax_node_content *content = syntax_tree_node_get_content(tree); /* Contenu du noeud. */
+
+  Symbol *sym = content->value.var.type; /* Champ de déclaration de la procédure/Fonction. */
+  Symbol *sym_p;                         /* Champ de déclaration d'un paramètre. */
+  int n = sym->exec + 1;                 /* Numéro de la région à ajouter sur la pile. */
+
   Region *n_region = REGION_TABLE_GET(n);                  /* Nouvelle région. */
   Region *o_region = REGION_TABLE_GET(current_region + 1); /* Ancienne région. */
-  Data result;
+  Data result;                                             /* Valeur de retour de la fonction/procédure. */  
+  Parameter *params;                                       /* Paramètres de la fonction/procédure. */
+
+  /* Autres données. */
   int old_region = current_region;
-  int i;
+  unsigned int i;
+
+  /* Mise à 0 de la valeur de retour. */
+  VARIABLE_RESET(result);
 
   DBG_PRINTF(("Ajout de la région: %d\n", n - 1));
   DBG_PRINTF(("Déplacement de la base courante de %lu\n", (unsigned long int)o_region->size));
@@ -377,7 +391,7 @@ static Data push_position(int n)
   if(stack_position + o_region->size + 1 + n_region->level >= DATA_STACK_SIZE)
   {    
     fprintf(stderr, "Error : Stack overflow !\n");
-    longjmp(jmp, 1); /* Retour au début du programme. */
+    longjmp(jmp, 1);
   }
 
   /* Mise à jour du chainage dynamique. */
@@ -420,8 +434,44 @@ static Data push_position(int n)
   /* Mise à 0 des valeurs de la nouvelle région. */
   reset_stack();
 
+  /* Ajout des paramètres de la procédure/fonction sur la pile. */
+  if(sym->type == SYMBOL_TYPE_PROCEDURE)
+    params = ((Procedure *)sym->index)->params;
+  else
+    params = ((Function *)sym->index)->params;
+
+  tree = tree_node_get_son(tree);
+
+  for(i = 0; tree != NULL; i++)
+  {
+    result = region_eval(tree);
+    
+    /* Type du paramètre. */
+    for(n = 1; n <= SYMBOL_BASIC_MAX; n++)
+      if(symbol_table_get_basic(n) == params[i].type)
+        break;
+
+    /* Valeur du paramètre. */
+    CAST(result, n);
+    
+    /* Affectation. */
+    sym_p = hashtable_get_value_by_key(hashtable, params[i].hkey);
+
+    for(; sym_p->region != current_region; sym_p = sym_p->next);
+    data_stack[stack_position + sym_p->exec] = result;
+
+    /* Paramètre suivant. */
+    tree = tree_node_get_brother(tree);
+  }
+
   /* Traitement de la région. */
   result = region_eval(n_region->tree);
+
+  /* Valeur de retour de la procédure/fonction. */
+  if(sym->type == SYMBOL_TYPE_PROCEDURE)
+    VARIABLE_RESET(result);
+  else
+    CAST(result, ((Symbol *)((Function *)sym->index)->return_type)->type);
 
   /* Reset de la région. */
   DBG_PRINTF(("Depilement de la région %d.\nRégion courante = %d\n", current_region, old_region));
@@ -486,10 +536,8 @@ static size_t get_variable_position(Syntax_tree *tree)
       /* ------------------------------------------ */
         
       case SYMBOL_TYPE_STRUCT:
-        if((root && (current = tree_node_get_son(tree)) == NULL) || 
-           (!root && (current = tree_node_get_brother(tree)) == NULL))
-          return size;
-        
+        current = root ? tree_node_get_son(tree) : tree_node_get_brother(tree);
+
         /* Champ à utiliser. */
         content = syntax_tree_node_get_content(current);
         structure = sym->index;
@@ -506,9 +554,7 @@ static size_t get_variable_position(Syntax_tree *tree)
       /* ------------------------------------------ */
 
       case SYMBOL_TYPE_ARRAY:
-        if((root && (current = tree_node_get_son(tree)) == NULL) || 
-           (!root && (current = tree_node_get_brother(tree)) == NULL))
-          return size;
+        current = root ? tree_node_get_son(tree) : tree_node_get_brother(tree);
 
         /* Recherche dans le prochain champ du tableau. */
         content = syntax_tree_node_get_content(current);
@@ -754,7 +800,7 @@ static Data region_eval(Syntax_tree *tree)
 
     /* Appel de fonction/procédure. */
     case AT_CTL_CALL:
-      result = push_position(((Symbol *)content->value.var.type)->exec + 1);
+      result = push_position(tree);
       break;
       
     /* Constantes. */
