@@ -81,5 +81,6 @@ start{
         variable_int = 14;
       }
 
+      x = (0 == 1 - 1 ? true : false);
 }
 

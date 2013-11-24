@@ -884,7 +884,17 @@ static Data region_eval(Syntax_tree *tree)
 
     case AT_CTL_BREAK:
     case AT_CTL_CONTINUE:
+      break;
+
     case AT_CTL_TERNAIRE:
+      res_a = region_eval(son = tree_node_get_son(tree));
+      CAST(res_a, SYMBOL_BASIC_BOOL);
+
+      /* Si condition vraie. */
+      if(res_a.value.c)
+        result = region_eval(tree_node_get_brother(son));
+      else
+        result = region_eval(tree_node_get_brother(tree_node_get_brother(son)));
       break;
 
     case AT_VAR:
