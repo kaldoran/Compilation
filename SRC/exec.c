@@ -475,14 +475,21 @@ static Data push_position(Syntax_tree *tree)
 
   for(i = 0; tree != NULL; i++)
   {
-    /* Déplacement necessaire en arrière pour évaluer les paramètres. */
-    stack_position -= o_region->size;
-    current_region = old_region;
+    /* Déplacement necessaire en arrière pour évaluer les paramètres
+       de régions avec un NIS plus bas. */
+    if(o_region->level > n_region->level)
+    {
+      stack_position -= o_region->size;
+      current_region = old_region;
+    }
 
     result = region_eval(tree);
 
-    stack_position += o_region->size;
-    current_region = n - 1;
+    if(o_region->level > n_region->level)
+    {
+      stack_position += o_region->size;
+      current_region = n - 1;
+    }
 
     /* Type du paramètre. */
     for(n = 1; n <= SYMBOL_BASIC_MAX; n++)
