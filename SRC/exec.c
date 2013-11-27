@@ -86,7 +86,7 @@
                                                      \
     /* Affectation. */                               \
     data_stack[size] = result;                       \
-    DBG_SET(son);                                    \
+    DBG_SET(son, size);                              \
   } while(0)
 
 /** Applique une incrémentation/décrémentation. */
@@ -105,7 +105,7 @@
       CAST(result, data_stack[size].type);             \
                                                        \
       data_stack[size] = result;                       \
-      DBG_SET(son);                                    \
+      DBG_SET(son, size);                              \
 } while(0)
 
 /** Applique une comparaison. */
@@ -116,6 +116,7 @@
       res_a = region_eval(son);                             \
       res_b = region_eval(tree_node_get_brother(son));      \
       OP_SET_TYPE(res_a, res_b);                            \
+      result.type = SYMBOL_BASIC_BOOL;                      \
                                                             \
       switch(res_a.type)                                    \
       {                                                     \
@@ -137,23 +138,31 @@
     } while(0)
 
 /** Evalue à la suite les instructions d'un arbre. */
-#define EVAL_BROTHERS(TREE)             \
-  while(TREE != NULL)                   \
-  {                                     \
-    result = region_eval(TREE);         \
-    TREE = tree_node_get_brother(TREE); \
+#define EVAL_BROTHERS(TREE)                   \
+  while(TREE != NULL && !return_state)        \
+  {                                           \
+    result = region_eval(TREE);               \
+    TREE = tree_node_get_brother(TREE);       \
+                                              \
+    /* Si l'instruction retour enclenchée. */ \
+    if(return_state)                          \
+    {                                         \
+      TREE = NULL;                            \
+      break;                                  \
+    }                                         \
   }
 
 /** Debug d'une affectation. */
 #ifdef DEBUG
-  #define DBG_SET(TREE)                                                                  \
-    do {                                                                                 \
-      DBG_PRINTF(("Region %d : %s=", VARIABLE_REGION((TREE)), VARIABLE_LEXEME((TREE)))); \
-      VARIABLE_PRINT(stderr, result);                                                    \
-      fprintf(stderr, "\n");                                                             \
+  #define DBG_SET(TREE, SIZE)                                 \
+    do {                                                      \
+      DBG_PRINTF(("Region %d : %s=", VARIABLE_REGION((TREE)), \
+                VARIABLE_LEXEME((TREE))));                    \
+      VARIABLE_PRINT(stderr, result);                         \
+      fprintf(stderr, " (stack[%lu])\n", SIZE);               \
     } while(0)
 #else
-  #define DBG_SET(TREE)
+  #define DBG_SET(TREE, SIZE)
 #endif
 
 #include "exec_cast.h"
@@ -223,6 +232,9 @@ static unsigned int stack_position = 0;
 /** Saut. Utilisé en cas de dépassement de pile. */
 static jmp_buf jmp;
 
+/** Return activé ? */
+static bool return_state = false;
+
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
 /* ---------------------------------------------------------------------- */
@@ -268,6 +280,10 @@ static Data push_position(Syntax_tree *tree);
 /* %param tree : Arbre à évaluer. */
 /* %return : Le résultat de l'évaluation. */
 static Data region_eval(Syntax_tree *tree);
+
+/** Fonction écrire. */
+/* %param tree : Noeud de type AT_FUN_WRITE. */
+void fun_write(Syntax_tree *tree);
 
 /* ---------------------------------------------------------------------- */
 
@@ -488,6 +504,8 @@ static Data push_position(Syntax_tree *tree)
   /* Reset de la région. */
   DBG_PRINTF(("Depilement de la région %d.\nRégion courante = %d\n", current_region, old_region));
   current_region = old_region;
+  return_state = false;
+  stack_position -= o_region->size;
 
   return result;
 }
@@ -503,6 +521,7 @@ static size_t get_variable_position(Syntax_tree *tree)
   bool root = true;
   size_t size, size_base;
   Data result;
+  bool prev = false;
 
   /* Récupération du contenu de l'arbre. */
   content = syntax_tree_node_get_content(tree);
@@ -548,7 +567,15 @@ static size_t get_variable_position(Syntax_tree *tree)
       /* ------------------------------------------ */
 
       case SYMBOL_TYPE_STRUCT:
-        current = root ? tree_node_get_son(tree) : tree_node_get_brother(tree);
+        if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL) || prev)
+        {
+          structure = sym->index;
+          content = syntax_tree_node_get_content(tree);
+          size += structure->exec[content->value.i];
+          sym = structure->field[content->value.i].type;
+          prev = false;
+          break;
+        }
 
         /* Champ à utiliser. */
         content = syntax_tree_node_get_content(current);
@@ -558,7 +585,6 @@ static size_t get_variable_position(Syntax_tree *tree)
         sym = structure->field[content->value.i].type;
         tree = current;
         size += structure->exec[content->value.i];
-
         break;
 
       /* ------------------------------------------ */
@@ -566,7 +592,11 @@ static size_t get_variable_position(Syntax_tree *tree)
       /* ------------------------------------------ */
 
       case SYMBOL_TYPE_ARRAY:
-        current = root ? tree_node_get_son(tree) : tree_node_get_brother(tree);
+        if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
+        {
+          fprintf(stderr, "Des filles bifurquaient en salle informatique.\n");
+          exit(-1);
+        }
 
         /* Recherche dans le prochain champ du tableau. */
         content = syntax_tree_node_get_content(current);
@@ -596,7 +626,7 @@ static size_t get_variable_position(Syntax_tree *tree)
           result.value.i -= array->dimension[i].bound_lower;
 
           /* Ajout du déplacement de l'indicage dans la taille courante. */
-          size += result.value.i * size_base * ((Symbol *)array->type)->exec;
+          size += result.value.i * size_base;
 
           if(tree_node_get_brother(current) == NULL)
             break;
@@ -606,6 +636,8 @@ static size_t get_variable_position(Syntax_tree *tree)
 
         sym = array->type;
         tree = current;
+        prev = true;
+
         break;
 
       /* ------------------------------------------ */
@@ -630,9 +662,6 @@ static Data region_eval(Syntax_tree *tree)
   Data res_a, res_b;
   size_t size;
 
-  char *c;
-  bool pourcent, backslash;
-  
   /* Mise à 0 des variables. */
   VARIABLE_RESET(result);
   VARIABLE_RESET(res_a);
@@ -677,7 +706,7 @@ static Data region_eval(Syntax_tree *tree)
 
       /* Affectation. */
       data_stack[size] = result;
-      DBG_SET(son);
+      DBG_SET(son, size);
       break;
 
     case AT_OPR_PLUSE:
@@ -787,45 +816,7 @@ static Data region_eval(Syntax_tree *tree)
     case AT_FUN_READ:
       break;
     case AT_FUN_WRITE:
-      son = tree_node_get_son(tree);
-      res_a = region_eval(son);
-      c = res_a.value.s;
-
-      backslash = pourcent = false;
-
-      while(*c != '\0'){
-          if(*c == '%'){
-              if(pourcent){
-                  if(son == NULL) 
-                  {
-                      fprintf(stderr, "Error : write : there is not enought variables !\n");
-                      longjmp(jmp, 1);
-                  }
-
-                  son = tree_node_get_brother(son);
-
-                  res_b = region_eval(son);
-                  VARIABLE_PRINT(stdout, res_b)
-
-                  pourcent = false;
-              }
-              else{
-                  pourcent = true;
-              }
-          }
-          else if(*c == '\\'){
-              backslash = true;
-          } 
-          else if(backslash && *c == 'n'){
-              printf("\n");
-              backslash = false;
-          }
-          else{
-              printf("%c", *c);
-          }
-
-          c++;
-      }
+      fun_write(tree);
       break;
     case AT_FUN_RAND:
       result.type = SYMBOL_BASIC_FLOAT;
@@ -837,20 +828,22 @@ static Data region_eval(Syntax_tree *tree)
       /* ------------------------------------------ */
 
     case AT_CTL_RETURN:
-      result = region_eval(tree_node_get_son(tree));
+      result = region_eval(tree_node_get_son(tree)); /* Si pas de valeur à return, alors 0. */
+      return_state = true;
       DBG_PRINTF(("Return !\n"));
       break;
 
     case AT_CTL_IF:
-      res_a = region_eval(son = tree_node_get_son(tree));
+      son = tree_node_get_son(tree);
+      res_a = region_eval(son);
       CAST(res_a, SYMBOL_BASIC_BOOL);
 
-      /* Si condition vraie. */
       if(res_a.value.c)
       {
         son = tree_node_get_brother(son);
         EVAL_BROTHERS(son);
       }
+
       /* Si le noeud suivant dans l'arbre n'est pas vide. */
       else if((tree = tree_node_get_brother(tree)) != NULL)
       {
@@ -859,7 +852,7 @@ static Data region_eval(Syntax_tree *tree)
         /* Si c'est un noeud else. */
         if(content->type == AT_CTL_ELSE)
         {
-          son = tree_node_get_brother(son);
+          son = tree_node_get_son(tree);
           EVAL_BROTHERS(son);
         }
       }
@@ -1020,6 +1013,52 @@ static Data region_eval(Syntax_tree *tree)
   return result;
 }
 
+void fun_write(Syntax_tree *tree)
+{
+  Data res_a;
+  Data res_b;
+  char *c;
+  bool backslash = false, pourcent = false;
+
+  VARIABLE_RESET(res_a);
+  VARIABLE_RESET(res_b);
+
+  tree = tree_node_get_son(tree);
+  res_a = region_eval(tree);
+
+  for(c= res_a.value.s; *c != '\0'; c++)
+    if(*c == '%')
+    {
+      if(pourcent)
+      {
+        /* Pas assez de variables. */
+        if(tree == NULL)
+        {
+          fprintf(stderr, "Error : write : there is not enought variables !\n");
+          longjmp(jmp, 1);
+        }
+
+        tree = tree_node_get_brother(tree);
+        res_b = region_eval(tree);
+        VARIABLE_PRINT(stdout, res_b);
+        pourcent = false;
+      }
+      else
+        pourcent = true;
+    }
+    else if(*c == '\\')
+      backslash = true;
+    else if(backslash && *c == 'n')
+    {
+      printf("\n");
+      backslash = false;
+    }
+    else
+      printf("%c", *c);
+
+  return;
+}
+
 /* ---------------------------------------------------------------------- */
 
 void exec(Symbol_table *table)
@@ -1068,6 +1107,7 @@ void exec(Symbol_table *table)
 
   free(sym);
   free(data_stack);
+  (void)result;
 
   return;
 }

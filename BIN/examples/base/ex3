@@ -36,7 +36,7 @@ var k : aaaa;
 
 start{
  x += 3 + joujou(30, "ooooo");
- k = 223;
+ k.b = 223;
  joujou(x, chaine);
 }
 

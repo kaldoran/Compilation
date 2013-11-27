@@ -1,7 +1,8 @@
 %PROGRAM%
-
-var x,y,i,coucoucoucou:int;
 var continuer:bool;
+
+var x,y,i:int;
+var coucoucoucou: int;
 
 type personne : struct
   test_int : int;

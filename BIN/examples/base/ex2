@@ -23,16 +23,18 @@ proc proc_1 ()
   var y : int;
 
   start
-  {
-    func_1();
-    if ( x == 6) then {
+  {    
+    write("EVALUATION :\n");
+
+    if(x == 6) then {
       x = 5;
+      write("x = 5\n");
     }
-    else if (y == 4) then {
-      write("Héhé ! HAHA!");
+    else if (x == 0) then {
+      write("Héhé ! HAHA!\n");
     }
     else{
-      write("Pas de bol");
+      write("Pas de bol\n");
     }
   };
 
