@@ -13,7 +13,7 @@ var variable_carac: char;
 var variable_chaine: chaine; 
 var variable_int: int;
 
-proc prem_proc(arg : type_tableau, arg_2 : type_normal)
+proc prem_proc(arg : int, arg_2 : char)
   var i: int;
   start 
   { 

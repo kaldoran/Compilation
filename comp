@@ -1,4 +1,5 @@
-EYNAUD NICOLAS
+#!/bin/bash
+# REYNAUD NICOLAS
 # jeudi 31 octobre 2013, 01:06:03 (UTC+0100)
 
 # Compile chaque programme du dossier BIN/examples puis sauvegarde le log de la compilation.
