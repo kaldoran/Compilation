@@ -17,6 +17,7 @@ function factorielle(n : int) return int
 var i : int;
 start{
     read(i);
+    factorielle(5);	
     write("Résultat de la factorielle de %d : %d\n", i, factorielle(i));
 }
 
