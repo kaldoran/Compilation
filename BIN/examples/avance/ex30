@@ -12,18 +12,19 @@ type smoothie : struct
 	nb_banane : int;
 end struct;
 
-function mix(ensembleFruit:ensembleFruit) return char 
+function mix(quantite : float) return char 
     start {
+        write("Vous avez demandé %%cl de jus de fruits\n", quantite);
     	return "jus de fruit";
     };
-
 
 function rand10(min : int, max : int) return int 
     start {
          return (min * (rand() / 20) - max);
     };
 
-proc randommix(smoothie : smoothie) 
+proc randommix(smoothie : int) 
+
     var rand1 : int;
     var rand2 : int;
     var continu : bool;
@@ -32,10 +33,10 @@ proc randommix(smoothie : smoothie)
     start {
 
         do {
-            ensemblef = 1;
-            ensemblef[1].banana = (rand1 = rand()  + smoothie.nb_fraise);
-            ensemblef = (rand2 = rand() + smoothie.nb_banane);
-            mix(ensemblef);
+            ensemblef[25] = 1;
+            ensemblef[12] = (rand1 = rand() + smoothie);
+            ensemblef[36] += (rand2 = rand() + smoothie);
+            mix(ensemblef[3]);
 
             write("%d fraises mixée , %d banane mixée",rand1,rand2);
             write("Pour quitter trouver le bon nombre");
@@ -51,6 +52,7 @@ var mangue : string[60];
 
 start {
 	banane = "banane" + "orange" > "noix de coco";
+        randommix(banane);
 	return "salade de fruit";
 	write("on peut ajouter une %s ",mangue);
 }

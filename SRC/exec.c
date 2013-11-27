@@ -430,6 +430,8 @@ static Data push_position(Syntax_tree *tree)
   stack_position += o_region->size;
 
   /* Mise à jour du chainage statique. */
+
+  /* Si la nouvelle région est plus imbriquée. */
   if(n_region->level > o_region->level)
   {
     data_stack[stack_position + 1].value.i = data_stack[stack_position].value.i;
@@ -443,6 +445,8 @@ static Data push_position(Syntax_tree *tree)
                   data_stack[stack_position + i].value.i));
     }
   }
+
+  /* Région moins imbriquée. */
   else
     for(i = 1; i <= n_region->level; i++)
     {
@@ -471,7 +475,14 @@ static Data push_position(Syntax_tree *tree)
 
   for(i = 0; tree != NULL; i++)
   {
+    /* Déplacement necessaire en arrière pour évaluer les paramètres. */
+    stack_position -= o_region->size;
+    current_region = old_region;
+
     result = region_eval(tree);
+
+    stack_position += o_region->size;
+    current_region = n - 1;
 
     /* Type du paramètre. */
     for(n = 1; n <= SYMBOL_BASIC_MAX; n++)
