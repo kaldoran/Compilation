@@ -13,7 +13,7 @@ type coordonnee :
 type map : array [0..100] of coordonnee;
 
 						--     MUNITION      --
-type munition :
+type mun :
 	struct 
 		balle : int;
 		grenade : int;
@@ -24,44 +24,46 @@ type Player :
 		nom : string[200];
 		score : int;
 		position : coordonnee;
-		munition : munition;
+		munition : mun;
 	end struct;
 
-function positionPlayerX (P : Player) return float 
-    var posX : float;
+function positionPlayerX(x : int, y : int) return float 
+var posX : float;
     start { 
-	    if ((posX = P.position.x) > 0) then {
+            posX = x * y - 56;
+	    if(x + y > 0) then {
 	    	return posX;
 	    }
 	    return -1;		
     };
 
-
-
-function positionPlayerY (p : Player) return float
+function positionPlayerY(x : int, y : int) return float
 var posY : float;
-start {
-	if ((posY = p.position.y) > 0) then {
-		return posY;
-	}
-	return -1;	
-	
+start 
+{
+  if(x > 0) then {
+    while(x > 0) do {
+      write("Decompte : %%\n", x--);
+    }
+  }
+
+  return -1;		
 };
 
-function nbMunition(p : Player) return int 
+function nbMunition(n : float) return int 
     start { 
-        return p.munition.balle; 
+        return n + 38 * MAX_Y; 
     };
 
 var map : map;
 
-proc item (coord : coordonnee)
+proc item(coord_x : int, coord_y : int)
     var i : int;
 
     start {
         for i=0; ( i < MAX_X and i < MAX_Y); i++ do {
-            if (coord.x.map[i] != 7.8 and coord.y.map[i] < "chaine magique") then {
-                write("Vous regardez la chaine magique !", coord.x.map[(10 % 5)]);
+            if (coord_x != 7.8 and coord_y < "chaine magique") then { /* Chaine transformée en int : 0 */
+                write("Vous regardez la chaine magique %% !", coord_x - 785);
             }
             else if( (i = (i * 5 % 3)) != 87548 ) then { 
                 write("Un diamant ! Il se mange ?");
@@ -72,21 +74,22 @@ proc item (coord : coordonnee)
         }
     };
 
-proc affiche(P : Player ) 
+proc affiche(pplayer : int) 
     start {
-        write("Nb munition", nbMunition(P));
+        write("Nb munition %%\n", nbMunition(pplayer));
         return;
     };
 
-proc affichePos(P : Player) 
+proc affichePos(pplayer :int) 
     start {
-        write("Position actuelle : %d %d", positionPlayerX(P), positionPlayerY(P));
+        write("Appel de positionPlayerX et positionPlayerY\n");
+        write("Position actuelle : %% %%\n", positionPlayerX(pplayer, pplayer * 24), positionPlayerY(pplayer, pplayer + 24));
         return;
     };
 
-function move(P : Player,  x : float , y : float ) return int 
-	proc Love(P : Player ) 
-		proc ProcCeption(P : Player ) 
+function move(pplayer : int,  x : float , y : float) return int 
+	proc Love(pplayer : int) 
+		proc ProcCeption(pplayer : int) 
 			function lol() return int
 			start {
 				return;
@@ -100,9 +103,10 @@ function move(P : Player,  x : float , y : float ) return int
 		return;
 	};
 start {
-	P.position.x = x;
-	P.position.y = y;
-	affichePos(P);
+	pplayer = x;
+	pplayer = y + 122;
+        write("Appel de affichePos\n");
+	affichePos(pplayer);
 	return 1;
 };
 
@@ -110,28 +114,39 @@ var newplayer : Player;
 var jump : int;
 var was_it_true : bool;
 var var_map : map;
+var i : int;
 
 start { 
-	map[10].x = 10; 
-    newplayer.nom = "Kaldoran";
-	if ( (jump = (newplayer.position.z)) > 0) then {
-		write("jump height : %d",jump);
-		;
-	}
-	else if(map[newplayer.position.x + newplayer.munition + jump % MAX_Y]) then {
-		jump = 0;
-		newplayer.position.x = 0;
-		newplayer.position.y = 0;
-		newplayer.position.z = 0;
-		newplayer.score = -1;
-		newplayer.nom = "Cheateur";
-		write("Cheat detected !");
-		read(was_it_true);
-		was_it_true = (was_it_true == false) ? "Menteur" : "Meuteur quand même";
-		write("%s",was_it_true);
-	}
+  /* Définition des constantes. */
+  MAX_X = 123;
+  MAX_Y = 72;
 
-	; // ca sert a rien mais c'est cool
+  newplayer.munition.grenade = 10;
+  map[10].x = 10; 
+  newplayer.nom = "Kaldoran aux haricots";
+  i = newplayer.position.x + newplayer.munition.grenade + jump % MAX_Y;
+  map[i].z = 4;
+
+  if((jump = (newplayer.position.z)) > 0) then {
+    write("jump height : %%\n",jump);
+  }
+  else if(map[i].z) then {
+    jump = 12;
+    
+    newplayer.position.x = 6;
+    newplayer.position.y = 34;
+    newplayer.position.z = 5;
+    newplayer.score = -1;
+    newplayer.nom = "Cheateur\n";
+    
+    write("Cheat detected !\n");
+    read(was_it_true);
+    was_it_true = (was_it_true == false) ? "Menteur" : "Menteur quand même";
+    write("%s\n",was_it_true);
+
+    move(newplayer.score, newplayer.position.x, newplayer.position.y);
+  }
+  ; // ca sert a rien mais c'est cool
 } 
 -- FIN PROGRAMME --
 

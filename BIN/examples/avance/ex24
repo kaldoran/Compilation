@@ -63,7 +63,7 @@ type SaladeDeFruits :
 var ma_salade : SaladeDeFruits;
 
 # Traiter une salade de fruits
-proc traiter(salade : SaladeDeFruits)
+proc traiter(salade : int)
   var i : int;
   var salade : SaladeDeFruits;
   var on_en_fait_du_coco_chanel, on_en_fait_du_lait_de_coco, on_en_fait_une_pina_colada, ca_se_mange_en_compote, cm3_de_puree_de_banane : bool;
@@ -73,11 +73,16 @@ proc traiter(salade : SaladeDeFruits)
     # Oranges
     write("Oranges:\n");
 
-    for(i = 0; i <= 5; ++i) do {
-      write("  Litres: %d\n", salade.oranges[i].nb_litres_de_jus); 
+    for(i = 0; i < 5; ++i) do {
+      salade.oranges[i].nb_litres_de_jus = rand() * 100;
+      write("  Litres: %%\n", salade.oranges[i].nb_litres_de_jus); 
       
       if salade.oranges[i].bresilienne then {
         write("  L'orange est brésilienne.\n");
+      }
+
+      if i == 3 and !salade.oranges[3].bresilienne then {
+        write(  "L'orange 3 n'est pas brésilienne, quel dommage !\n");
       }
 
       if salade.oranges[i].un_peu_de_vodka_avec then {
@@ -86,9 +91,12 @@ proc traiter(salade : SaladeDeFruits)
     }
 
     write("\nAnanas:\n");
+    salade.ananas[4].on_en_fait_une_pina_colada = true;
+    salade.ananas[1].on_en_fait_une_pina_colada = true;
+    salade.ananas[1].est_il_jaune = true;
 
     # Ananas
-    for(i = 0; i <= 6; i++) do {
+    for(i = 0; i < 6; i++) do {
       if salade.ananas[i].on_en_fait_une_pina_colada then {
         write("  Houla ! Pas trop fort !\n");
       }
@@ -101,7 +109,7 @@ proc traiter(salade : SaladeDeFruits)
     write("\nCocas:\n");
 
     # Cocas
-    for(i = 0; i <= 2; i++) do {
+    for(i = 0; i < 2; i++) do {
       if salade.cocas[i].ca_se_fume and salade.cocas[i].ca_se_boit then {
         write("  Pas bon tout ça !\n");
       }
@@ -110,7 +118,7 @@ proc traiter(salade : SaladeDeFruits)
     write("\nCocos:\n");
 
     # Cocos
-    for(i = 0; i <= 3; i++) do {
+    for(i = 0; i < 3; i++) do {
       if salade.cocos[i].si_tu_me_donnes_tes_noix_de_coco_je_te_donnerai_mes_ananas > 20 then {
         if salade.ananas[i].on_en_fait_une_pina_colada then {
           write("  On fait déjà une pina colada, on va pas non plus te donner des noix de coco.\n");
@@ -130,26 +138,32 @@ proc traiter(salade : SaladeDeFruits)
     # Bananes
     i = 0;
     write("\nBananes:\n");
-    
+    ca_se_mange_en_compote = (5 + 5 + 5 == 30 / 2);
+    cm3_de_puree_de_banane = 1;
+
+    /* Tire une purée aléatoire, ça marche vraiment ! Relancez le programme plusieurs fois ! :3 */
+
     while (i++) != 3 do {
-       if ca_se_mange_en_compote and rand() > 3 + salade.oranges[rand() % 6].nb_litres_de_jus and 10 > cm3_de_puree_de_banane then {
+       if ca_se_mange_en_compote and rand() * 100 > 3 + 
+          salade.oranges[rand() % 6].nb_litres_de_jus and 10 > cm3_de_puree_de_banane then {
          write("  Une superbe purée aléatoire !\n");
        }
     }
 
     return;
+
+    write("Phrase ignorée ! Le return est avant !\n");
   };
 
 # Programme
 start
 {
-  traiter(ma_salade);
-
+  traiter(ma_salade.oranges[2].nb_litres_de_jus);
   if !ma_salade.est_comestible then {
     ma_salade.oranges[0].nb_litres_de_jus = ma_salade.bananes[1].cm3_de_puree_de_banane;
   }
 
-  traiter(ma_salade);
+  traiter(ma_salade.bananes[1].ca_se_mange_en_compote);
 
   return 0;
 }
