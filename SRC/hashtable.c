@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: hashtable.c                                                  */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-09 - 19:09:04                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -12,7 +12,7 @@
 #include "list.h"
 #include "private_hashtable.h"
 #include "error.h"
-#include "hashtable.h"  
+#include "hashtable.h"
 
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
@@ -26,7 +26,7 @@ static Hashvalue *hashvalue_new(const char *id, void *value);
 
 /** Libère complètement une structure Hashvalue. */
 /* %param hvalue : La Hashvalue à libérer. */
-/* %param fun : Agit sur la valeur contenue dans la Hashvalue. 
+/* %param fun : Agit sur la valeur contenue dans la Hashvalue.
    Pour un usage classique, utiliser "free" en paramètre.
    Note : Le paramètre peut être NULL. */
 static void hashvalue_free(Hashvalue *hvalue, void (*fun)(void *value));
@@ -45,7 +45,7 @@ static Hashvalue *hashvalue_new(const char *id, void *value)
     free(id_new);
     return NULL; /* Bad alloc */
   }
-  
+
   strcpy(id_new, id);
   hvalue->id = id_new;
   hvalue->len = len;
@@ -74,7 +74,7 @@ static void hashvalue_free(Hashvalue *hvalue, void (*fun)(void *value))
 Hashtable *hashtable_new_with_size(size_t size)
 {
   Hashtable *h;
- 
+
   if((h = calloc(1, sizeof *h)) == NULL ||
      (h->array = calloc(size, sizeof *h->array)) == NULL ||
      (h->hvalues = list_new()) == NULL)
@@ -109,10 +109,10 @@ void hashtable_free(Hashtable *h, void (*fun)(void *value))
         hashvalue_free(cur->value, fun);
         free(cur);
       }
-  
+
       free(h->array[i]);
     }
-  
+
   list_free(h->hvalues, NULL);
   free(h->array);
   free(h);
@@ -175,7 +175,7 @@ Hashkey hashtable_get_key(Hashtable *h, const char *id)
   List *l;
   List_node *ln;
   unsigned int index = HCODE(h, id);
- 
+
   if((l = h->array[index]) != NULL)
     for(ln = l->start; ln != NULL; ln = ln->next)
       if(strcmp(HNVALUE(ln)->id, id) == 0)
@@ -199,7 +199,7 @@ void *hashtable_get_value_by_id(Hashtable *h, const char *id)
 }
 
 void *hashtable_get_value_by_key(Hashtable *h, Hashkey hkey)
-{  
+{
   (void)h;
   return ((Hashvalue *)hkey)->value;
 }
@@ -235,12 +235,12 @@ Hashkey hashtable_exists_id(Hashtable *h, const char *id)
   List *l;
   unsigned int index = HCODE(h, id);
   unsigned char i = 0;
-  
-  if((l = h->array[index]) != NULL) 
+
+  if((l = h->array[index]) != NULL)
     for(ln = l->start; ln != NULL; ln = ln->next, i++)
       if(strcmp(HNVALUE(ln)->id, id) == 0)
         return ln->value;
-  
+
   return NULL;
 }
 
@@ -260,7 +260,7 @@ Hashkey hashtable_add_value(Hashtable *h, const char *id, void *value)
 
     h->array[index] = l;
   }
-  
+
   /* Vérification de l'inexistence de la chaine */
   if((hvalue = hashtable_exists_id(h, id)) != NULL)
     return hvalue;
@@ -272,14 +272,14 @@ Hashkey hashtable_add_value(Hashtable *h, const char *id, void *value)
     fatal_error("hashtable_add_value");
 
   /* Mise à jour de la liste des valeurs */
-  if(list_push_node(h->hvalues, hvalue) == NULL)  
+  if(list_push_node(h->hvalues, hvalue) == NULL)
     fatal_error("hashtable_add_value");
 
   h->size++;
 
   return hvalue;
 }
- 
+
 void hashtable_foreach_key(Hashtable *h, void (*fun)(const char *key, void *value), void *cvalue)
 {
   List_node *ln;
@@ -315,7 +315,7 @@ void hashtable_print(Hashtable *h, void (*fun)(void *value))
 }
 
 Hashcode hashcode(const char *str)
-{ 
+{
   char *ptr = (char *)str;
   Hashcode res = 0;
 

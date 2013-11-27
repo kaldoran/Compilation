@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: save.c                                                       */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-30 - 10:52:35                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -52,8 +52,8 @@ void fill_index_array(void *value, void *cvalue);
 void count_symbol(void *value, void *cvalue)
 {
   Symbol *s = value;
-  
-  for(; s != NULL; s = s->next)   
+
+  for(; s != NULL; s = s->next)
     (*(unsigned int *)cvalue)++;
 
   return;
@@ -62,8 +62,8 @@ void count_symbol(void *value, void *cvalue)
 void fill_index_array(void *value, void *cvalue)
 {
   Symbol *s = value;
-  
-  for(; s != NULL; s = s->next)   
+
+  for(; s != NULL; s = s->next)
     index_array[(*(int *)cvalue)++] = s;
 
   return;
@@ -106,38 +106,38 @@ void save(const char *filename, Hashtable *h)
     {
       /* Print : Déclaration de variable (TYPE, REGION, ID, EXEC). */
       if(s->type == SYMBOL_TYPE_VAR)
-        fprintf(file, "S %d %d %d %lu\n", s->type, s->region, index_array_get_id(s->index), 
+        fprintf(file, "S %d %d %d %lu\n", s->type, s->region, index_array_get_id(s->index),
                 (unsigned long int)s->exec);
       else
       {
         fprintf(file, "S %d %d -1 %lu\n", s->type, s->region, (unsigned long int)s->exec);
-        
+
         switch(s->type)
         {
           case SYMBOL_TYPE_STRUCT:
             structure = s->index;
             fprintf(file, "%u\n", structure->field_number);
-            
+
             for(j = 0; j < structure->field_number; j++)
               fprintf(file, "%d %lu %s\n", index_array_get_id(structure->field[j].type),
-		      (unsigned long int)structure->exec[j], 
+		      (unsigned long int)structure->exec[j],
 		      lexeme_table_get(h, structure->field[j].hkey));
             break;
-            
+
           case SYMBOL_TYPE_ARRAY:
             array = s->index;
             fprintf(file, "%u %d\n", array->dimension_number, index_array_get_id(array->type));
-            
+
             for(j = 0; j < array->dimension_number; j++)
               fprintf(file, "%u %u\n", array->dimension[j].bound_lower, array->dimension[j].bound_upper);
             break;
-          
+
           case SYMBOL_TYPE_FUNCTION:
             function = s->index;
             fprintf(file, "%u %d\n", function->param_number, index_array_get_id(function->return_type));
 
             for(j = 0; j < function->param_number; j++)
-              fprintf(file, "%d %s\n", index_array_get_id(function->params[j].type), 
+              fprintf(file, "%d %s\n", index_array_get_id(function->params[j].type),
                       lexeme_table_get(h, function->params[j].hkey));
             break;
 
@@ -146,16 +146,16 @@ void save(const char *filename, Hashtable *h)
             fprintf(file, "%u\n", procedure->param_number);
 
             for(j = 0; j < procedure->param_number; j++)
-              fprintf(file, "%d %s\n", index_array_get_id(procedure->params[j].type), 
+              fprintf(file, "%d %s\n", index_array_get_id(procedure->params[j].type),
                       lexeme_table_get(h, procedure->params[j].hkey));
             break;
         }
       }
     }
   }
-  
+
   fclose(file);
- 
+
   return;
 }
 
@@ -202,7 +202,7 @@ Hashtable *load(const char *filename)
 
   /* Création de l'index_array. */
   hashtable_foreach_value(h, count_symbol, &n_symbols);
-  
+
   if(n_symbols > 0 && (index_array = malloc(n_symbols * sizeof *index_array)) == NULL)
     fatal_error("load");
 
@@ -215,7 +215,7 @@ Hashtable *load(const char *filename)
     if(*buffer == 'L')
     {
       sscanf(buffer, "L %s %d", lexeme, (int *)&i);
-      
+
       if((hkey = lexeme_table_add(h, lexeme)) == NULL)
         fatal_error("load");
     }
@@ -225,10 +225,10 @@ Hashtable *load(const char *filename)
     {
       if((s = calloc(1, sizeof *s)) == NULL)
         fatal_error("load");
-      
+
       sscanf(buffer, "S %d %d %*d %lu\n", (int *)&s->type, &s->region, (unsigned long int *)&s->exec);
       index_array[i++] = s;
-      
+
       /* Si aucune déclaration. */
       if(((Hashvalue *)hkey)->value == NULL)
       {
@@ -245,7 +245,7 @@ Hashtable *load(const char *filename)
   }
   /* ---------------- PARCOURS 2 ---------------- */
 
-  fseek(file, 0, SEEK_SET); 
+  fseek(file, 0, SEEK_SET);
 
   for(ln = h->hvalues->start; ln != NULL; ln = ln->next)
     /* Parcours des déclarations. */
@@ -253,7 +253,7 @@ Hashtable *load(const char *filename)
       for(;;)
       {
         fgets(buffer, BUFFER_SIZE, file);
-        
+
         /* Symbole trouvé. */
         if(*buffer == 'S')
         {
@@ -272,7 +272,7 @@ Hashtable *load(const char *filename)
 
               for(k = 0; k < i; k++)
               {
-                fscanf(file, "%u %lu %s", &j, &structure->exec[k], lexeme); 
+                fscanf(file, "%u %lu %s", &j, &structure->exec[k], lexeme);
                 structure->field[k].type = index_array[j];
                 structure->field[k].hkey = hashtable_get_key(h, lexeme);
               }
@@ -280,7 +280,7 @@ Hashtable *load(const char *filename)
 
             case SYMBOL_TYPE_ARRAY:
               fscanf(file, "%u %u", &i, &j);
-              
+
               if((s->index = array = array_new(i, index_array[j])) == NULL)
                 fatal_error("load");
 
@@ -290,13 +290,13 @@ Hashtable *load(const char *filename)
 
             case SYMBOL_TYPE_FUNCTION:
               fscanf(file, "%u %u", &i, &j);
-              
+
               if((s->index = function = function_new(index_array[j], i)) == NULL)
                 fatal_error("load");
 
               for(k = 0; k < i; k++)
               {
-                fscanf(file, "%u %s", &j, lexeme); 
+                fscanf(file, "%u %s", &j, lexeme);
                 function->params[k].type = index_array[j];
                 function->params[k].hkey = hashtable_get_key(h, lexeme);
               }
@@ -305,13 +305,13 @@ Hashtable *load(const char *filename)
 
             case SYMBOL_TYPE_PROCEDURE:
               fscanf(file, "%u", &i);
-              
+
               if((s->index = procedure = procedure_new(i)) == NULL)
                 fatal_error("load");
 
               for(k = 0; k < i; k++)
               {
-                fscanf(file, "%u %s", &j, lexeme); 
+                fscanf(file, "%u %s", &j, lexeme);
                 procedure->params[k].type = index_array[j];
                 procedure->params[k].hkey = hashtable_get_key(h, lexeme);
               }
@@ -322,7 +322,7 @@ Hashtable *load(const char *filename)
           break;
         }
       }
- 
+
   fclose(file);
 
   return h;
@@ -334,7 +334,7 @@ void index_array_new(Hashtable *h)
 
   /* Création de l'index_array. */
   hashtable_foreach_value(h, count_symbol, &n_symbols);
-  
+
   if(n_symbols > 0 && (index_array = malloc(n_symbols * sizeof *index_array)) == NULL)
     fatal_error("index_array_new");
 

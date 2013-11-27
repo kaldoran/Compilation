@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: description_table.h                                          */
-/* Author: BIGARD Florian                                                 */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-23 - 13:25:09                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -35,7 +35,7 @@ typedef struct Structure
 {
   unsigned int field_number; /* Nombre de champs de la structure. */
   Field *field;              /* Tableau des champs de la structure. */
-  size_t *exec;              /* Déplacements à l'execution à l'intérieur d'une structure. */ 
+  size_t *exec;              /* Déplacements à l'execution à l'intérieur d'une structure. */
 } Structure;
 
 /** Structure d'un tableau. */

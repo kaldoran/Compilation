@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: exec.c                                                       */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-11-18 - 20:11:04                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -140,7 +140,7 @@
 #define EVAL_BROTHERS(TREE)             \
   while(TREE != NULL)                   \
   {                                     \
-    region_eval(TREE);                  \
+    result = region_eval(TREE);         \
     TREE = tree_node_get_brother(TREE); \
   }
 
@@ -476,7 +476,8 @@ static Data push_position(Syntax_tree *tree)
   }
 
   /* Traitement de la région. */
-  result = region_eval(n_region->tree);
+  tree = n_region->tree;
+  EVAL_BROTHERS(tree);
 
   /* Valeur de retour de la procédure/fonction. */
   if(sym->type == SYMBOL_TYPE_PROCEDURE)
@@ -613,7 +614,7 @@ static size_t get_variable_position(Syntax_tree *tree)
 
       default:
         break;
-    }
+    } /* Fin switch. */
 
     root = false;
   }
@@ -661,9 +662,9 @@ static Data region_eval(Syntax_tree *tree)
       SET_OP(OP_MOD);
       break;
 
-    /* ------------------------------------------ */
-    /* AFFECTATIONS                               */
-    /* ------------------------------------------ */
+      /* ------------------------------------------ */
+      /* AFFECTATIONS                               */
+      /* ------------------------------------------ */
 
     case AT_EQUAL:
       son = tree_node_get_son(tree);                    /* Variable.    */
@@ -692,9 +693,9 @@ static Data region_eval(Syntax_tree *tree)
       SET_OPR(OP_MOD);
       break;
 
-    /* ------------------------------------------ */
-    /* INCREMENTATIONS/DECREMENTATIONS            */
-    /* ------------------------------------------ */
+      /* ------------------------------------------ */
+      /* INCREMENTATIONS/DECREMENTATIONS            */
+      /* ------------------------------------------ */
 
     case AT_OB_PINC:
       SET_OB(1);
@@ -711,9 +712,9 @@ static Data region_eval(Syntax_tree *tree)
       result = res_b; /* Valeur de la variable avant sa décrémentation. */
       break;
 
-    /* ------------------------------------------ */
-    /* COMPARAISONS                               */
-    /* ------------------------------------------ */
+      /* ------------------------------------------ */
+      /* COMPARAISONS                               */
+      /* ------------------------------------------ */
 
     case AT_CMP_E:
       SET_CMP(==);
@@ -734,9 +735,9 @@ static Data region_eval(Syntax_tree *tree)
       SET_CMP(!=);
       break;
 
-    /* ------------------------------------------ */
-    /* CONDITIONS                                 */
-    /* ------------------------------------------ */
+      /* ------------------------------------------ */
+      /* CONDITIONS                                 */
+      /* ------------------------------------------ */
 
     case AT_CND_AND:
       son = tree_node_get_son(tree);
@@ -776,9 +777,9 @@ static Data region_eval(Syntax_tree *tree)
       result.value.c = !result.value.c;
       break;
 
-    /* ------------------------------------------ */
-    /* FONCTIONS PREDEFINES                       */
-    /* ------------------------------------------ */
+      /* ------------------------------------------ */
+      /* FONCTIONS PREDEFINES                       */
+      /* ------------------------------------------ */
 
     case AT_FUN_READ:
       break;
@@ -789,12 +790,13 @@ static Data region_eval(Syntax_tree *tree)
       result.value.f = (float)rand() / (float)RAND_MAX;
       break;
 
-    /* ------------------------------------------ */
-    /* CONTROLES                                  */
-    /* ------------------------------------------ */
+      /* ------------------------------------------ */
+      /* CONTROLES                                  */
+      /* ------------------------------------------ */
 
     case AT_CTL_RETURN:
       result = region_eval(tree_node_get_son(tree));
+      DBG_PRINTF(("Return !\n"));
       break;
 
     case AT_CTL_IF:
@@ -815,8 +817,8 @@ static Data region_eval(Syntax_tree *tree)
         /* Si c'est un noeud else. */
         if(content->type == AT_CTL_ELSE)
         {
-           son = tree_node_get_brother(son);
-           EVAL_BROTHERS(son);
+          son = tree_node_get_brother(son);
+          EVAL_BROTHERS(son);
         }
       }
 
@@ -879,11 +881,34 @@ static Data region_eval(Syntax_tree *tree)
       break;
 
     case AT_CTL_SWITCH:
-    case AT_CTL_CASE:
-    case AT_CTL_DEFAULT:
+      /* Switch. */
+      son = tree_node_get_son(tree);
+      res_a = region_eval(son);
+      CAST(res_a, SYMBOL_BASIC_INT);
 
-    case AT_CTL_BREAK:
-    case AT_CTL_CONTINUE:
+      /* Parcours des "case". */
+      for(son = tree_node_get_brother(son); tree_node_get_brother(son) != NULL; son = tree_node_get_brother(son))
+      {
+        res_b = region_eval(tree_node_get_son(son));
+        CAST(res_a, SYMBOL_BASIC_INT);
+
+        /* Si c'est le bon case. */
+        if(res_a.value.i == res_b.value.i)
+        {
+          son = tree_node_get_brother(tree_node_get_son(son));
+          EVAL_BROTHERS(son);
+          res_a.type = -1;
+          break;
+        }
+      }
+
+      /* default. */
+      if(res_a.type != -1)
+      {
+        son = tree_node_get_son(son);
+        EVAL_BROTHERS(son);
+      }
+
       break;
 
     case AT_CTL_TERNAIRE:
@@ -940,8 +965,15 @@ static Data region_eval(Syntax_tree *tree)
     case AT_CTL_FUN:
     case AT_ARRAY_INDEX:
     case AT_HKEY_INDEX:
+    case AT_CTL_BREAK:
+    case AT_CTL_CONTINUE:
+    case AT_CTL_CASE:
+    case AT_CTL_DEFAULT:
       break;
-  }
+
+    default:
+      break;
+  } /* Fin switch. */
 
   return result;
 }
@@ -955,6 +987,7 @@ void exec(Symbol_table *table)
   int i;
   Region *region;
   Syntax_tree *tree;
+  Data result;
 
   if((n_regions = regions_table_get_size()) == 0)
     return;

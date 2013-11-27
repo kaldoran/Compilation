@@ -7,15 +7,16 @@ end struct;
 
 type type_tableau : array[0 .. 3, 0 .. 4, 0 .. 2] of int;
 
-
-proc prem_proc(arg : type_tableau, arg_2 : type_normal) 
+proc prem_proc(arg : float, arg_2 : float) 
   var i : int;
   var k : type_tableau;
   
   start {
+    arg = 32;
     while (1 > 2) do {
       i += 1;
     }
+    return;
   };
 
 var tableau : type_tableau;

@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: regions_stack.c                                              */
-/* Author: REYNAUD Nicolas                                                */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-27 - 17:34:02                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -61,7 +61,7 @@ int regions_stack_pop(void)
   region = start->region;
   node = start;
   start = start->next;
-  
+
   free(node);
   regions_stack_size--;
 

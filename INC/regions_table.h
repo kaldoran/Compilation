@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: regions_table.h                                              */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-14 - 00:01:19                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -36,7 +36,7 @@ void regions_table_free(void);
 /* %param size : Taille de la zone de données. */
 /* %param level : Niveau d'imbrication statique. */
 /* %param tree : Arbre représentatif de la région. */
-/* %return : Le niveau de la région actuelle ou la constante BAD_REGION en cas d'erreur. 
+/* %return : Le niveau de la région actuelle ou la constante BAD_REGION en cas d'erreur.
    Celle-ci symbolise une erreur d'allocation ou un dépassement de pile. */
 int regions_table_add(size_t size, unsigned int level, Syntax_tree *tree);
 
@@ -62,7 +62,7 @@ void regions_table_print(void);
 /* %param filename : Nom du fichier de sauvegarde. */
 void regions_table_save(const char *filename);
 
-/** Charge la table des régions. 
+/** Charge la table des régions.
     Necessite l'initialisation des tables principales. */
 /* %param filename : Nom du fichier à charger. */
 void regions_table_load(Lexeme_table *table, const char *filename);

@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: symbol_table.h                                               */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-18 - 14:53:09                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -35,7 +35,7 @@ typedef void* Index_t;
 /** Structure d'un symbole. (champ de déclaration) */
 typedef struct Symbol
 {
-  char type;           /* Type/Nature de symbole. */ 
+  char type;           /* Type/Nature de symbole. */
   int region;          /* Région contenant la déclaration. */
   Index_t index;       /* Index sur table. (symboles ou description) */
   struct Symbol *next; /* Symbole suivant de même nom. */
@@ -75,9 +75,9 @@ void symbol_table_free(void *sym);
 /* %param index : Index sur table. */
 /* %param exec : Taille à l'execution. */
 /* %return : false en cas d'erreur mémoire ou true en cas de réussite. */
-bool symbol_table_add(Symbol_table *table, Hashkey key, Type type, 
+bool symbol_table_add(Symbol_table *table, Hashkey key, Type type,
                       int region, Index_t index, size_t exec);
- 
+
 /** Obtenir un champ de déclaration de la table. */
 /* Association de noms. */
 /* %param table : Table des déclarations. */
@@ -101,4 +101,3 @@ Index_t symbol_table_get_basic(int basic_num);
 void symbol_table_print(Symbol_table *table);
 
 #endif /* _SYMBOL_TABLE_ INCLUDED */
-

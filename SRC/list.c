@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: list.c                                                       */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-09 - 19:21:16                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -25,13 +25,13 @@ void list_free(List *l, void (*fun)(void *value))
   for(cur = l->start; cur != NULL; cur = next)
   {
     next = cur->next;
-    
+
     if(fun != NULL)
       fun(cur->value);
-    
+
     free(cur);
   }
-  
+
   free(l);
 
   return;
@@ -75,7 +75,7 @@ void *list_push_node(List *l, void *value)
 
   new_node->value = value;
   new_node->next = NULL;
-  
+
   if(l->end == NULL)
     l->start = new_node;
   else
@@ -109,7 +109,7 @@ void *list_pop_node(List *l)
 {
   List_node *node = l->end, *ns;
   void *value;
-  
+
   if(node == NULL)
     return NULL; /* Liste vide */
 
@@ -132,7 +132,7 @@ void *list_pop_node(List *l)
 void list_map(List *l, void (*fun)(void *value))
 {
   List_node *ln;
-  
+
   for(ln = l->start; ln != NULL; ln = ln->next)
     fun(ln->value);
 

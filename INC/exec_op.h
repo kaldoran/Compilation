@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: exec_op.h                                                    */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-11-20 - 14:26:32                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -19,19 +19,19 @@
 /* Comment ça marche ? Les constantes SYMBOL_BASIC sont ordonnées
    de la sorte que string > float > int > char > bool, du coup il
    suffit de comparer les valeurs des constantes entre elles
-   et de choisir la plus grande. 
+   et de choisir la plus grande.
 
    Exemple : 45 + "23.95", 45 est de type int, "23.95" est de type string,
-   le type string sera donc choisi, puisque la constante 
-   SYMBOL_BASIC_STRING > SYMBOL_BASIC_INT. 
-   
+   le type string sera donc choisi, puisque la constante
+   SYMBOL_BASIC_STRING > SYMBOL_BASIC_INT.
+
    Le résultat sera donc : "4523.95", soit la concaténation de deux chaines. */
 #define OP_SET_TYPE(RES_A, RES_B)             \
   if(1)                                       \
   {                                           \
     CAST(RES_A, MAX(RES_A.type, RES_B.type)); \
     CAST(RES_B, MAX(RES_A.type, RES_B.type)); \
-  } 
+  }
 
 /** Additionne 2 valeurs. */
 #define OP_ADD(RES, RES_A, RES_B)			  \

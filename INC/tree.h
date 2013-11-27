@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: tree.h                                                       */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-15 - 23:06:52                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -22,15 +22,15 @@ Tree *tree_node_new(void *value);
 /* %param t : L'arbre à libérer.
    Si t n'est pas la racine, la totalité de l'arbre est quand même supprimé
    en remontant jusqu'à cette dite racine. */
-/* %param fun : Agit sur la valeur contenue dans chaque noeud de l'arbre. 
+/* %param fun : Agit sur la valeur contenue dans chaque noeud de l'arbre.
    Pour un usage classique, utiliser "free" en paramètre.
    Note : Le paramètre peut être NULL. */
 void tree_free(Tree *t, void (*fun)(void *value));
 
 /** Parcourt un arbre en profondeur et applique une fonction sur chaque noeud. */
 /* %param t : Arbre à parcourir. */
-/* %param fun : Fonction à appliquer sur chaque noeud de l'arbre : 
-   depth correspond à la profondeur courante, 
+/* %param fun : Fonction à appliquer sur chaque noeud de l'arbre :
+   depth correspond à la profondeur courante,
    value correspond à la valeur retournée. */
 void tree_foreach_node(Tree *t, void (*fun)(Tree *node));
 
@@ -80,7 +80,7 @@ Tree *tree_node_get_son(Tree *node);
 
 /** Insère un noeud en dessous d'un noeud père. */
 /* %param parent : Noeud père. */
-/* %param pos : Position où doit se trouver le noeud. 
+/* %param pos : Position où doit se trouver le noeud.
    Si pos < 0, le noeud est ajouté à la fin des fils du noeud père. */
 /* %param node : Noeud à ajouter. */
 /* %return : NULL si parent == NULL ou le noeud père . */
@@ -100,7 +100,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node);
 
 /** Insére un nouveau noeud en dessous d'un noeud père. */
 /* %param PARENT : Noeud père. */
-/* %param POS : Position où doit se trouver le noeud. 
+/* %param POS : Position où doit se trouver le noeud.
    Si pos < 0, le noeud est ajouté à la fin des fils du noeud père. */
 /* %param VALUE : Valeur du noeud à ajouter. */
 /* %return : Le noeud père ou NULL en cas d'erreur d'allocation. */
@@ -113,7 +113,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node);
 /* %return : Le noeud père ou NULL en cas d'erreur d'allocation. */
 #define tree_node_append_value(PARENT, VALUE) \
   tree_node_insert(PARENT, -1, tree_node_new(VALUE))
- 
+
 /* Insère un nouveau noeud en première position de la liste des fils d'un père. */
 /* %param PARENT : Noeud père. */
 /* %param VALUE : Valeur du noeud à ajouter. */

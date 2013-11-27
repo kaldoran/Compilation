@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: description_table.c                                          */
-/* Author: BIGARD Florian                                                 */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-23 - 14:15:38                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -69,7 +69,7 @@ Array *array_new(unsigned int dimension_number, Index_t type)
 
   a->dimension_number = dimension_number;
   a->type = type;
-    
+
   return a;
 }
 
@@ -160,13 +160,13 @@ void procedure_free(Procedure *p)
   return;
 }
 
-void structure_print(Structure *structure) 
+void structure_print(Structure *structure)
 {
   unsigned int i;
 
   printf("\n\tStructure (%d)\n", structure->field_number);
 
-  for(i = 0; i < structure->field_number; i++) 
+  for(i = 0; i < structure->field_number; i++)
     printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, structure->field[i].type,
            structure->field[i].hkey, lexeme_table_get(NULL, structure->field[i].hkey));
 
@@ -175,48 +175,48 @@ void structure_print(Structure *structure)
   return;
 }
 
-void procedure_print(Procedure *procedure) 
+void procedure_print(Procedure *procedure)
 {
   unsigned int i;
-        
+
   printf("\n\tProcedure (%d)\n", procedure->param_number);
-        
-  for(i = 0; i < procedure->param_number; i++) 
-    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, procedure->params[i].type, 
+
+  for(i = 0; i < procedure->param_number; i++)
+    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, procedure->params[i].type,
            procedure->params[i].hkey, lexeme_table_get(NULL, procedure->params[i].hkey));
-                
+
   printf("\tEnd procedure\n    ");
-        
+
   return;
 }
 
-void function_print(Function *function) 
+void function_print(Function *function)
 {
   unsigned int i;
-        
+
   printf("\n\tFunction (%d) - Return (%p)\n", function->param_number, function->return_type);
-        
-  for(i = 0; i < function->param_number; i++) 
-    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, function->params[i].type, 
+
+  for(i = 0; i < function->param_number; i++)
+    printf("\t   [%d] Index : %p - Key : %p -> %s\n", i, function->params[i].type,
            function->params[i].hkey, lexeme_table_get(NULL, function->params[i].hkey));
-                
+
   printf("\tEnd function\n    ");
-        
+
   return;
 }
 
-void array_print(Array *array) 
+void array_print(Array *array)
 {
   unsigned int i;
-        
+
   printf("\n\tArray (%d) - Type (%p)\n", array->dimension_number,array->type);
-        
-  for (i = 0; i < array->dimension_number; i++) 
+
+  for (i = 0; i < array->dimension_number; i++)
     printf("\t   [%d] Start : %d - End : %d (%d)\n", i, array->dimension[i].bound_lower,
            array->dimension[i].bound_upper,
            array->dimension[i].bound_upper - array->dimension[i].bound_lower );
-                
+
   printf("\tEnd array\n    ");
-        
+
   return;
 }

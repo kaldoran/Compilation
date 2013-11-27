@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: hashtable.h                                                  */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-09 - 18:49:57                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -9,12 +9,12 @@
 #define _HASHTABLE_
 
 #include "ptypes.h"
-                    
-/** Taille d'une table de Hachage par defaut. */
-#define HASHTABLE_SIZE 4096 
 
-/* Note: 
-   - L'id demandé dans plusieurs fonctions est la chaine utilisée 
+/** Taille d'une table de Hachage par defaut. */
+#define HASHTABLE_SIZE 4096
+
+/* Note:
+   - L'id demandé dans plusieurs fonctions est la chaine utilisée
       pour stocker un élément. (Exemple: La chaine "bonjour")
    - La Hashkey correspond à la clef de hachage utilisée pour stocker un élément.
      (Exemple: La clef 0x123456789)
@@ -43,7 +43,7 @@ Hashtable *hashtable_new_with_size(size_t size);
 /* A OPTIMISER. */
 /** Libère complètement une table de Hachage. */
 /* %param h: La Hachtable à libérer. */
-/* %param fun : Agit sur la valeur contenue dans chaque case de la table. 
+/* %param fun : Agit sur la valeur contenue dans chaque case de la table.
    Pour un usage classique, utiliser "free" en paramètre.
    Note : Le paramètre peut être NULL. */
 void hashtable_free(Hashtable *h, void (*fun)(void *value));
@@ -52,7 +52,7 @@ void hashtable_free(Hashtable *h, void (*fun)(void *value));
 /** Redimensionne une table de Hachage. */
 /* %param h : La Hachtable à redimensionner. */
 /* %param size : La taille de la nouvelle table. */
-/* %return : La table de hachage donné en paramètre redimenssionée ou NULL en cas d'échec. */ 
+/* %return : La table de hachage donné en paramètre redimenssionée ou NULL en cas d'échec. */
 Hashtable *hashtable_resize(Hashtable *h, size_t size);
 
 /** Récupère le nombre d'éléments dans une table de Hachage. */
@@ -67,7 +67,7 @@ unsigned int hashtable_get_size_max(Hashtable *h);
 
 /** Récupère la chaine relative à une clef de Hachage. */
 /* %param h : La Hashtable contenant l'id recherché. */
-/* %param hkey : Clef de Hachage de l'id recherché. */ 
+/* %param hkey : Clef de Hachage de l'id recherché. */
 /* %return : NULL si la clef est invalide ou la chaine relative en cas de réussite. */
 const char *hashtable_get_id(Hashtable *h, Hashkey hkey);
 

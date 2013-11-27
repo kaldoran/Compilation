@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: list.h                                                       */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-09 - 19:05:28                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -19,7 +19,7 @@ List *list_new(void);
 
 /** Libère complètement une liste. */
 /* %param l : La liste à libérer. */
-/* %param fun : Agit sur la valeur contenue dans chaque noeud. 
+/* %param fun : Agit sur la valeur contenue dans chaque noeud.
    Pour un usage classique, utiliser "free" en paramètre.
    Note : Le paramètre peut être NULL. */
 void list_free(List *l, void (*fun)(void *value));

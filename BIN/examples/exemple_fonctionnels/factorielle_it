@@ -4,6 +4,8 @@
 function factorielle(n : int) return int
     var resultat, i : int;
     start{
+        resultat = 1;
+
         for(i=1; i <= n; i++) do{
             resultat *= i;
         }
@@ -15,7 +17,6 @@ function factorielle(n : int) return int
 var i : int;
 start{
     read(i);
-
     write("Résultat de la factorielle de %d : %d\n", i, factorielle(i));
 }
 

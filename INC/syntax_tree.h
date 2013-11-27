@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: syntax_tree.h                                                */
-/* Author: ABHAMON Ronan, REYNAUD Nicolas                                 */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-18 - 09:06:39                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -108,14 +108,14 @@ typedef union Syntax_node_value
 
 /** Structure du contenu d'un noeud d'un arbre. */
 typedef struct Syntax_node_content
-{ 
+{
   unsigned char type;      /* Type du noeud. */
   Syntax_node_value value; /* Valeur du noeud. */
 } Syntax_node_content;
 
 /** Crée un nouveau noeud d'un arbre abstrait. */
 /* %param type : Type du noeud à ajouter. */
-/* %return : Le nouveau noeud. 
+/* %return : Le nouveau noeud.
    Appelle fatal_error en cas d'erreur d'allocation. */
 Syntax_tree *syntax_tree_node_new(unsigned char type);
 

@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: ptypes.h                                                     */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-15 - 00:26:59                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -12,7 +12,7 @@
 #define PRINT_SIZE(NAME, TYPE) printf("Size of %s: %lu\n", NAME, sizeof(TYPE))
 
 /** Type bool. */
-typedef enum bool 
+typedef enum bool
 {
   true = 1,
   false = 0

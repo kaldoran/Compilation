@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: regions_table.c                                              */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-14 - 00:01:27                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -59,7 +59,7 @@ int regions_table_add(size_t size, unsigned int level, Syntax_tree *tree)
   region->level = level;
   region->tree = tree;
   r_table[depth] = region;
-  
+
   return depth++;
 }
 
@@ -94,7 +94,7 @@ void regions_table_print(void)
 
   for(i = 0; i < depth; i++)
   {
-    printf("%04d: (%lu, %u, %p)\n", i, (long unsigned int)r_table[i]->size, r_table[i]->level, 
+    printf("%04d: (%lu, %u, %p)\n", i, (long unsigned int)r_table[i]->size, r_table[i]->level,
            (void *)r_table[i]->tree);
     syntax_tree_print(r_table[i]->tree);
     printf("\n");
@@ -148,4 +148,3 @@ void regions_table_load(Lexeme_table *table, const char *filename)
 
   return;
 }
-

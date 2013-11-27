@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: private_hashtable.h                                          */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-30 - 13:10:27                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */

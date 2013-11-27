@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: tree.c                                                       */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-15 - 23:23:30                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -72,17 +72,17 @@ void tree_free(Tree *t, void (*fun)(void *value))
 
   if((stack = list_new()) == NULL || list_add_node(stack, t) == NULL)
     fatal_error("tree_free");
-  
+
   /* Tant qu'il reste un noeud */
   while((t = list_shift_node(stack)) != NULL)
     for(; t != NULL; t = tmp)
-    {   
+    {
       if(t->children != NULL && list_add_node(stack, t->children) == NULL)
         fatal_error("tree_free");
-      
+
        if(fun != NULL)
          fun(t->value);
- 
+
        tmp = t->next;
        free(t);
     }
@@ -100,16 +100,16 @@ void tree_foreach_node(Tree *t, void (*fun)(Tree *node))
 
   if((stack = list_new()) == NULL || list_add_node(stack, t) == NULL)
     fatal_error("tree_foreach_node");
-  
+
   while((t = list_shift_node(stack)) != NULL)
     for(; t != NULL; t = t->children)
-    {    
+    {
       t->depth = t->father == NULL ? 0 : t->father->depth + 1;
 
       if(t->next != NULL && list_add_node(stack, t->next) == NULL)
         fatal_error("tree_foreach_node");
 
-      if(fun != NULL) 
+      if(fun != NULL)
         fun(t);
     }
 
@@ -190,7 +190,7 @@ Tree *tree_node_insert(Tree *parent, int pos, Tree *node)
   else
   {
     for(;pos-- > 0 && children->next != NULL; children = children->next);
-  
+
     /* Début. */
     if(children->prev == NULL)
     {

@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: variables_buffer.c                                           */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-27 - 16:18:25                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -32,7 +32,7 @@ int variables_buffer_push(Hashkey hkey, Index_t type)
 
   buffer[buffer_size].hkey = hkey;
   buffer[buffer_size++].type = type;
-  
+
   return 0;
 }
 
@@ -50,7 +50,7 @@ void variables_buffer_set_offset(int offset)
 void variables_buffer_reset(void)
 {
   buffer_size = buffer_offset;
-  
+
   return;
 }
 

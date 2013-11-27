@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: syntax_tree.c                                                */
-/* Authors: ABHAMON Ronan, REYNAUD Nicolas                                */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-18 - 09:09:30                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -55,9 +55,9 @@ static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tre
     case AT_CST_BOOL:  fscanf(stream, "%c ", &content->value.c);        break;
     case AT_CST_CHAR:  fscanf(stream, "%d ", (int *)&content->value.c); break;
     case AT_CST_INT:   fscanf(stream, "%d ", &content->value.i);        break;
-    
+
     /* IDF. */
-    case AT_VAR:       
+    case AT_VAR:
     case AT_CTL_CALL:
       fscanf(stream, "%d %s ", &i, buffer);
       content->value.var.hkey = hashtable_get_key(table, buffer);
@@ -66,7 +66,7 @@ static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tre
 
     /* Numéro de champ de structure. */
     case AT_HKEY_INDEX: fscanf(stream, "%d ", &content->value.i); break;
-     
+
     default: break;
   }
 
@@ -143,7 +143,7 @@ Syntax_tree *syntax_tree_node_hkey_new(Hashkey value)
   Syntax_tree *tree = syntax_tree_node_new(AT_HKEY_INDEX);
 
   STVALUE(tree)->value.var.hkey = value;
-  STVALUE(tree)->value.var.type = NULL; 
+  STVALUE(tree)->value.var.type = NULL;
 
   return tree;
 }
@@ -152,7 +152,7 @@ void syntax_node_free(void *value)
 {
   Syntax_node_content *n = value;
 
-  if(n->type == AT_CST_STRING)            
+  if(n->type == AT_CST_STRING)
     free(n->value.s);
   free(n);
 
@@ -164,16 +164,16 @@ void syntax_tree_print_node(Syntax_tree *node)
   int i, depth = tree_node_get_depth(node);
   Syntax_node_content *snode;
 
-  static const char *node_name[] = {"unknown", "plus", "minus", "mult", "div", "mod", "plus equal", 
-                                    "minus equal", "mult equal", "div equal", "mod equal", "increment", 
-                                    "decrement", "pincrement", "pdecrement", "equal", "greater than", 
-                                    "greater or equal", "lower than", "lower or equal", "different", 
+  static const char *node_name[] = {"unknown", "plus", "minus", "mult", "div", "mod", "plus equal",
+                                    "minus equal", "mult equal", "div equal", "mod equal", "increment",
+                                    "decrement", "pincrement", "pdecrement", "equal", "greater than",
+                                    "greater or equal", "lower than", "lower or equal", "different",
                                     "and", "or", "not", "read", "write", "random", "if", "else", "while",
-                                    "do while", "for", "array", "structure", "procedure", "function", 
-                                    "return", "switch", "case", "default", "break", "continue", "ternaire", 
-                                    "call", "string", "real", "boolean", "char", "integer", "set", "variable", 
+                                    "do while", "for", "array", "structure", "procedure", "function",
+                                    "return", "switch", "case", "default", "break", "continue", "ternaire",
+                                    "call", "string", "real", "boolean", "char", "integer", "set", "variable",
                                     "array index", "hkey index", "empty node"};
-  
+
   static char arr_p[MAX_DEPTH] = {0};
 
   if(depth >= MAX_DEPTH)
@@ -187,12 +187,12 @@ void syntax_tree_print_node(Syntax_tree *node)
   for(i = 0; i < depth; i++)
   {
     if(node->prev == NULL && i == depth - 1)
-      arr_p[i] ? printf("├───") : printf("└───"); 
+      arr_p[i] ? printf("├───") : printf("└───");
     else if(arr_p[i])
       printf("│   ");
     else
       printf("    ");
-  }     
+  }
 
   if(node->prev == NULL)
   {
@@ -201,19 +201,19 @@ void syntax_tree_print_node(Syntax_tree *node)
     else if(node->next == NULL && node->children == NULL)
       printf("──");
   }
-  else 
+  else
     (node->children != NULL || node->next != NULL) ? printf("├─") : printf("└─");
 
   /* Contenu adresse */
   snode = tree_node_get_value(node);
-  
+
   if(snode->type < AT_SIZE)
   {
     printf("%s", node_name[snode->type]);
 
     switch(snode->type)
     {
-      case AT_VAR: 
+      case AT_VAR:
         printf(" (%s)", lexeme_table_get(NULL, snode->value.var.hkey));
         break;
       case AT_CST_STRING:
@@ -221,7 +221,7 @@ void syntax_tree_print_node(Syntax_tree *node)
         break;
       case AT_CST_FLOAT:
         printf(" (%f)", snode->value.f);
-        break; 
+        break;
       case AT_CST_BOOL:
         printf(snode->value.c ? " (true)" : " (false)");
         break;
@@ -261,14 +261,14 @@ void syntax_tree_save(FILE *stream, Syntax_tree *node)
   /* Ajout de la racine dans une file. */
   if((queue = list_new()) == NULL || list_push_node(queue, node) == NULL)
     fatal_error("syntax_tree_save");
-  
+
   /* Premier élément de la file. */
   while((node = list_shift_node(queue)) != NULL)
   {
     /* Si noeud existant. */
     if(node != (void *)-1)
     {
-      /* Ajout des fils/frere dans la file. */ 
+      /* Ajout des fils/frere dans la file. */
       if(list_push_node(queue, ((node->children == NULL) ? (void *)-1 : node->children)) == NULL ||
          list_push_node(queue, ((node->next == NULL)  ? (void *)-1 : node->next)) == NULL)
         fatal_error("syntax_tree_save");
@@ -286,9 +286,9 @@ void syntax_tree_save(FILE *stream, Syntax_tree *node)
         case AT_CST_CHAR:   fprintf(stream, "%d ", (int)content->value.c); break;
         case AT_CST_INT:    fprintf(stream, "%d ", content->value.i);      break;
 
-        /* IDF */ 
-        case AT_VAR:        
-        case AT_CTL_CALL: fprintf(stream, "%d %s ", index_array_get_id(content->value.var.type), 
+        /* IDF */
+        case AT_VAR:
+        case AT_CTL_CALL: fprintf(stream, "%d %s ", index_array_get_id(content->value.var.type),
                                   hashtable_get_id(NULL, content->value.var.hkey)); break;
 
         /* Numéro de champ de structure. */
@@ -296,7 +296,7 @@ void syntax_tree_save(FILE *stream, Syntax_tree *node)
 
         default: break;
       }
-    }        
+    }
     else
       fprintf(stream, "-1 ");
   }
@@ -341,10 +341,10 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
       if(list_push_node(queue, child) == NULL)
         fatal_error("syntax_tree_load");
     }
- 
+
     /* Frère. */
     fscanf(stream, "%d ", &type);
-    
+
     if(type != - 1)
     {
       brother = syntax_tree_node_new(type);
@@ -355,7 +355,7 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
         fatal_error("syntax_tree_load");
     }
   }
-  
+
   list_free(queue, NULL);
 
   return root;

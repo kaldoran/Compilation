@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: exec_cast.h                                                  */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-11-20 - 14:20:05                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -30,7 +30,7 @@
       break;                          \
     case SYMBOL_BASIC_STRING:         \
       break;                          \
-  } 
+  }
 
 /** Cast de float en un autre type. */
 #define CAST_FLOAT(RES, TYPE)                              \

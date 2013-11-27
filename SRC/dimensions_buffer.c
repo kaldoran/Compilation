@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: dimensions_buffer.c                                          */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-27 - 19:57:11                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -29,7 +29,7 @@ int dimensions_buffer_push(unsigned int bound_lower, unsigned int bound_upper)
 
   buffer[buffer_size].bound_lower = bound_lower;
   buffer[buffer_size++].bound_upper = bound_upper;
-  
+
   return 0;
 }
 

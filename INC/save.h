@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: save.h                                                       */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-30 - 10:52:39                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -21,7 +21,7 @@ void save(const char *filename, Hashtable *h);
 /* %return : Une table de Hachage contenant les données d'une compilation. */
 Hashtable *load(const char *filename);
 
-/** Crée un tableau contenant toutes les adresses mémoires des déclarations. 
+/** Crée un tableau contenant toutes les adresses mémoires des déclarations.
     Utile pour obtenir un indice correspondant à une adresse.
     Utilisé par les fonctions de sauvegarde du compilateur. */
 void index_array_new(Hashtable *h);

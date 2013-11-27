@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: dimensions_buffer.h                                          */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-27 - 19:57:16                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */

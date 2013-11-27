@@ -25,62 +25,77 @@ function test(m_var : int, m_var_2 : float) return int
     return(m_var_2 + m_var * test_0()); /* 190 */
   };
 
-start{
-        for(variable_int = 0; variable_int < 10; variable_int++) do {
-          variable_int = variable_int + 2;
-          variable_int = variable_int - 2;
-        }
+start
+{
+  for(variable_int = 0; variable_int < 10; variable_int++) do {
+    variable_int = variable_int + 2;
+    variable_int = variable_int - 2;
+  }
 
-      do {
-        variable_int = 41 + 36 - 45.0 / 3.0;
-        variable_int = 0;
-        variable_int = 1;
-      } while(variable_int < 1);
+  do {
+    variable_int = 41 + 36 - 45.0 / 3.0;
+    variable_int = 0;
+    variable_int = 1;
+  } while(variable_int < 1);
 
-      for(variable_int = 0; variable_int < 10; variable_int++) do {
-        x = -variable_int;
-      }
+  for(variable_int = 0; variable_int < 10; variable_int++) do {
+    x = -variable_int;
+  }
 
-      do {
-        variable_int++;
-      } while(variable_int < 10);
+  do {
+    variable_int++;
+  } while(variable_int < 10);
 
-      if((variable_int = 5)) then {
-        variable_int = 41 + 36 - 45.0 / 3.0;
-      }
-      else if(5 + 8 > 13) then {                      
-        variable_int = 0;
-      }
-      else {
+  if((variable_int = 5)) then {
+    variable_int = 41 + 36 - 45.0 / 3.0;
+  }
+  else if(5 + 8 > 13) then {                      
+    variable_int = 0;
+  }
+  else {
 
-      /* Notre langage gère les calculs entre tous les types possibles :
-         true est transformé en int (1) puis en float (1.0), 
-         96 en float (96.0)
-         30 en float (30.0)
-         variable_int en float (variable_int n'est pas initialisé, valeur = 0)
+    /* Notre langage gère les calculs entre tous les types possibles :
+       true est transformé en int (1) puis en float (1.0), 
+       96 en float (96.0)
+       30 en float (30.0)
+       variable_int en float (variable_int n'est pas initialisé, valeur = 0)
 
-         Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
- 
-        variable_int = 30 + 23.14 - 105.378 * 96 + true + test(30, 40); /* -9872 */
-      }
+       Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
+    
+    variable_int = 30 + 23.14 - 105.378 * 96 + true + test(30, 40); /* -9872 */
+  }
 
-      po.test_char += 10;
-      machin[5] = 'p';
+  po.test_char += 10;
+  machin[5] = 'p';
 
-      if 5 + 9 * 7 then {
-        variable_int = 12;
-      }
+  if 5 + 9 * 7 then {
+    variable_int = 12;
+  }
 
-      if 5 + 9 * 7 then {
-        variable_int = 12;
-      }
-      else if 4 + 9 + 8 then {
-        variable_int = 13;
-      }
-      else {
-        variable_int = 14;
-      }
+  if 5 + 9 * 7 then {
+    variable_int = 12;
+  }
+  else if 4 + 9 + 8 then {
+    variable_int = 13;
+  }
+  else {
+    variable_int = 14;
+  }
 
-      x = (0 == 1 - 1 ? true : false);
+  x = 0 == 1 - 1 ? true : false;
+
+  switch 5 + 9 * 4 
+  {
+    case 3 + 6:
+      x = 6;
+    case 82 / 2:
+    {
+      x = 1;
+      x = 2;
+      x = 3;
+    }
+    default:
+      x = 0;
+  }
 }
 

@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: symbol_table.c                                               */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-18 - 14:53:05                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -36,8 +36,8 @@ static void symbol_print(void *symbol);
 static void symbol_print(void *symbol)
 {
   Symbol *s = symbol;
-  
-  for(; s != NULL; s = s->next) 
+
+  for(; s != NULL; s = s->next)
   {
     printf("\n    (Type=");
 
@@ -52,10 +52,10 @@ static void symbol_print(void *symbol)
       default: printf("UNKNOWN"); break;
     }
 
-    printf(", Region=%d, Index=%p, Size=%lu, Adress=%p)", s->region, s->index, 
+    printf(", Region=%d, Index=%p, Size=%lu, Adress=%p)", s->region, s->index,
            (long unsigned int)s->exec, (void *)s);
   }
-  
+
   printf("\n");
 
   return;
@@ -69,13 +69,13 @@ Symbol *symbol_new(char type, int region, Index_t index, size_t exec)
 
   if(sym == NULL)
     return NULL; /* Bad alloc. */
-  
+
   sym->type = type;
   sym->region = region;
   sym->index = index;
   sym->next = NULL;
   sym->exec = exec;
-    
+
   return sym;
 }
 
@@ -84,7 +84,7 @@ void symbol_table_init(Symbol_table *table)
   Symbol *sym;
   const char *type[] = {"bool", "char", "int", "float", "string"};
   int i;
-  
+
   for(i = 0; i < SYMBOL_BASIC_MAX; i++)
   {
     if((sym = symbol_new(SYMBOL_TYPE_BASE, -1, NULL, 1)) == NULL)
@@ -96,7 +96,7 @@ void symbol_table_init(Symbol_table *table)
       fatal_error("lexeme_table_init");
   }
 
-  return;  
+  return;
 }
 
 void symbol_table_free(void *sym)
@@ -111,16 +111,16 @@ void symbol_table_free(void *sym)
     switch(s_base->type)
     {
       case SYMBOL_TYPE_STRUCT:
-        structure_free(s_base->index); 
+        structure_free(s_base->index);
         break;
       case SYMBOL_TYPE_ARRAY:
-        array_free(s_base->index); 
+        array_free(s_base->index);
         break;
       case SYMBOL_TYPE_PROCEDURE:
-        procedure_free(s_base->index); 
+        procedure_free(s_base->index);
         break;
       case SYMBOL_TYPE_FUNCTION:
-        function_free(s_base->index); 
+        function_free(s_base->index);
         break;
 
       default: break;
@@ -133,12 +133,12 @@ void symbol_table_free(void *sym)
   return;
 }
 
-bool symbol_table_add(Symbol_table *table, Hashkey hkey, Type type, 
+bool symbol_table_add(Symbol_table *table, Hashkey hkey, Type type,
                       int region, Index_t index, size_t exec)
 {
   Symbol *sym;
   Symbol *origin;
-  
+
   if((sym = symbol_new(type, region, index, exec)) == NULL)
     return false;
 
@@ -163,7 +163,7 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
   Symbol *start = hashtable_get_value_by_key(table, hkey), *origin;
   Region_node *node = regions_stack_get_node();
   extern int line_num;
- 
+
   /* Parcours de la pile des régions. */
   for(; node != NULL; node = node->next)
     /* Parcours des déclarations de même nom. */
@@ -175,10 +175,10 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
   for(origin = start; origin != NULL; origin = origin->next)
     if(origin->region == -1)
       return origin; /* Trouvé ! */
- 
+
   /* Non trouvé. */
   bad_compil = true;
-  fprintf(stderr, "Line %d - Unable to find the declaration of \"%s\"\n", line_num, 
+  fprintf(stderr, "Line %d - Unable to find the declaration of \"%s\"\n", line_num,
           hashtable_get_id(table, hkey));
 
   return NULL;

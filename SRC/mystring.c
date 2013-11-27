@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: mystring.c                                                   */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-22 - 20:14:16                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -15,6 +15,6 @@ char *mystrdup(const char *str)
 
   if(dup != NULL)
     strcpy(dup, str);
-  
+
   return dup;
 }

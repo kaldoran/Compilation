@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: private_list.h                                               */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-09-15 - 03:19:27                                            */
 /*                                                                        */
 /* Voir list.c et hashtable.c pour utilisation.                           */

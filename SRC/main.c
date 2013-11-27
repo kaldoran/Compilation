@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /* Filename: main.c                                                       */
-/* Author: ABHAMON Ronan                                                  */
+/* Author: ABHAMON Ronan, BIGARD Florian, REYNAUD Nicolas                 */
 /* Date: 2013-10-21 - 17:25:41                                            */
 /*                                                                        */
 /* ---------------------------------------------------------------------- */
@@ -17,7 +17,7 @@
 #define OUTPUT_FILENAME "myout"
 
 /** Options de compilation. */
-#define OPT_A 1 
+#define OPT_A 1
 #define OPT_E 2
 #define OPT_S 4
 #define OPT_C 8
@@ -62,7 +62,7 @@ void usage(const char *arg)
 }
 
 int main(int argc, char *argv[])
-{ 
+{
   int optch;
 
   extern FILE *yyin;           /* getopt */
@@ -77,9 +77,9 @@ int main(int argc, char *argv[])
   char output[BUFFER_SIZE_MAX] = OUTPUT_FILENAME;
 
   char format[] = "c:o:aes:h";
-  
+
   while((optch = getopt(argc, argv, format)) != -1)
-    switch(optch) 
+    switch(optch)
     {
       case 'a': options |= OPT_A;
         break;
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
       case 's': options |= OPT_S;
         strcpy(input, optarg);
         break;
-      case '?': 
+      case '?':
       case 'h': usage(*argv);
     }
 
@@ -108,10 +108,10 @@ int main(int argc, char *argv[])
     if((options & OPT_A) != 0)
       PRINT_LOG();
 
-    /* Execution 
+    /* Execution
        exec(hashtable); */
   }
-  
+
   /* Compilation. */
   else if((options & OPT_C) != 0 && (options & OPT_S) == 0)
   {
@@ -121,12 +121,12 @@ int main(int argc, char *argv[])
     symbol_table_init(hashtable);
     lexeme_table_init(hashtable);
 
-    if((yyin = fopen(input, "r+")) == NULL) 
+    if((yyin = fopen(input, "r+")) == NULL)
     {
       hashtable_free(hashtable, symbol_table_free);
       fatal_error("main");
     }
-    
+
     /* Sauvegarde. */
     if(!(ret = yyparse()))
     {
@@ -159,6 +159,6 @@ int main(int argc, char *argv[])
   yylex_destroy();
   hashtable_free(hashtable, symbol_table_free);
   regions_table_free();
- 
+
   exit(ret);
 }
