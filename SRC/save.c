@@ -272,7 +272,7 @@ Hashtable *load(const char *filename)
 
               for(k = 0; k < i; k++)
               {
-                fscanf(file, "%u %lu %s", &j, &structure->exec[k], lexeme);
+                fscanf(file, "%u %lu %s", &j, (unsigned long int *)&structure->exec[k], lexeme);
                 structure->field[k].type = index_array[j];
                 structure->field[k].hkey = hashtable_get_key(h, lexeme);
               }
