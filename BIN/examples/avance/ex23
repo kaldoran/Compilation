@@ -26,7 +26,7 @@ type ensemble :
 var valeurs : ensemble;
 
 # Remplir aléatoirement un type ensemble
-proc remplir(ensemble : Point)
+proc remplir(ensemble_x : int, ensemble_y : int)
   var i : int;
   var v : List;
   start
@@ -75,6 +75,9 @@ function search_point(x : int, y : int) return bool
     return false;
   };
 
+/* Chainage dynamique : 152 = 0 */
+/* Chainage statique : 153 = 0 */
+
 # Je cherche moi-même l'utilité de cette fonction...
 function machin_bidule(x : int) return int
   proc truc(y : int)
@@ -86,26 +89,58 @@ function machin_bidule(x : int) return int
         k = 0;
       };
 
-    proc get_k ()
+    proc get_k (j :int)
       var ooooo : char;
+
+     /* Taille des variables :
+        j = 1; (Paramètre)
+        ooooo = 1;
+
+       Taille chainage : 4 (3 statique, 1 dynamique)
+
+       Décalage : BC = 2 + 4 + 164(BC) = 170 */
+
       start
       {
+        mise_k();
+        mise_k();
         read(k);
       };
 
+    /* Taille des variables :
+       x = 1; (Paramètre)
+       k = 1;
+       y = 1; 
+       x = 1; (Surcharge du paramètre) 
+
+       Taille chainage : 3 (2 statique, 1 dynamique)
+
+       Décalage : BC = 4 + 3 + 157(BC) = 164 */
+
     start
     {
-      write("%d\n", y);
+      write("y = %%\n", y);
       
       if y then {
+        write("Je n'y vais pas !\n");
         mise_k(); 
       }
       else {
-        get_k(); 
+        write("J'y vais !\n");
+        get_k(6); 
       }
     };
   
   var p,x : int;
+
+  /* Taille des variables :
+     x = 1; (Paramètre)
+     p = 1;
+     x = 1; (Surcharge du paramètre) 
+
+     Taille chainage : 2
+
+     Décalage : BC = 3 + 2 + 152(BC) = 157 */
 
   start
   {
@@ -114,9 +149,17 @@ function machin_bidule(x : int) return int
     return x;
   };
 
+var resultat : int;
+ 
+/* Taille des variables :
+   valeurs : 50 * 3 + 1 = 151
+   resultat : 1
+   
+   Décalage : BC = 152 */
 
 # Programme
 start
 {
- ; # Pour la peine, on ne fait rien
+  write("Appel de machin_bidule\n");
+  resultat = machin_bidule(10);
 }

@@ -453,7 +453,7 @@ static Data push_position(Syntax_tree *tree)
                   data_stack[stack_position + i].value.i));
     }
 
-  DBG_PRINTF(("%d case(s) de données\n\n", n_region->size - n_region->level * 2));
+  DBG_PRINTF(("%d case(s) de données\n\n", n_region->size - n_region->level - 1));
 
   /* Nouvelle région. */
   current_region = n - 1;

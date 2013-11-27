@@ -33,11 +33,11 @@ start
   variable_int = test(5, 5.654);
 
   for(variable_int = 0; variable_int < 10; variable_int++) do {
-    variable_int = variable_int + 2;
-    variable_int = variable_int - 2;
+    write("Je suis dans un for: %%\n", variable_int);
   }
 
   do {
+    write("Je suis dans un do-while !\n");
     variable_int = 41 + 36 - 45.0 / 3.0;
     variable_int = 0;
     variable_int = 1;
@@ -45,6 +45,7 @@ start
 
   for(variable_int = 0; variable_int < 10; variable_int++) do {
     x = -variable_int;
+    write("Je suis dans un for, x = %% et variable_int = %%\n", x, variable_int);
   }
 
   do {
@@ -54,7 +55,8 @@ start
   if((variable_int = 5)) then {
     variable_int = 41 + 36 - 45.0 / 3.0;
   }
-  else if(5 + 8 > 13) then {                      
+  
+  if(5 + 8 > 13) then {                      
     variable_int = 0;
   }
   else {
@@ -66,8 +68,9 @@ start
        variable_int en float (variable_int n'est pas initialisé, valeur = 0)
 
        Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
-    
     variable_int = 30 + 23.14 - 105.378 * 96 + true + test(30, 40); /* -9872 */
+    write("Calcul de foufou.\n");
+    write("Resultat: %%\n", variable_int);
   }
 
   po.test_char += 10;
