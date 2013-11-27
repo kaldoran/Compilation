@@ -12,6 +12,9 @@
   /* Numéro de ligne. */
   int line_num = 1;
 
+  /* Bad Compil */  
+  extern int bad_compil;
+
   /* Table. */
   extern Hashtable *hashtable;
 %}
@@ -173,7 +176,7 @@ or  {return(OU);}
 int yyerror(const char *s)
 {                      
   static int line_cur = -1;
-
+  bad_compil = true;
   if(line_cur != line_num)
     fprintf(stderr, "Line %d - Error: %s\n", line_cur = line_num, s);
 

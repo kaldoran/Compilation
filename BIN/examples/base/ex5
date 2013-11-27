@@ -69,14 +69,14 @@ end struct;
 var com : s1;
 
 start{
-  com.c = 3;                       
-  com.c[2].b[4][5][6] = 18;
-  a.test_omg.abc = 18;              
+  //com.c[1].a = 3;  // ATTENTION SEG FAULT du a ses 2 lignes                
+  //com.c[2].b[4][5][6] = 18;
+  a.test_omg.abc = 18;           
   coucou = 3 + a.test_int + 18;
   c[0] = a.test_char + 3;
   coucou = 8;               
   prem_proc(4, prem_proc(5, 3));
-  prem_proc(5, 2);                
+  prem_proc(5, 2);      
   a.test_omg.k = 10;                
   a.lala[4] = 3;                    
   c[10] = 0;                        
@@ -84,7 +84,7 @@ start{
   coucou = d[10].zzzz + 10;          
   coucou = 5 * 9 + 6 + d[10].k * 9; 
   d[10].abc = 3;
-  coucou = 5;                 
+  coucou = 5;     
   coucou = d[10].bbb[5];            
   coucou = 5 / 4 + d[4].bbb[4] * 6;
 }

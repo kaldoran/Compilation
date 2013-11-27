@@ -630,6 +630,9 @@ static Data region_eval(Syntax_tree *tree)
   Data res_a, res_b;
   size_t size;
 
+  char *c;
+  bool pourcent, backslash;
+  
   /* Mise à 0 des variables. */
   VARIABLE_RESET(result);
   VARIABLE_RESET(res_a);
@@ -784,6 +787,45 @@ static Data region_eval(Syntax_tree *tree)
     case AT_FUN_READ:
       break;
     case AT_FUN_WRITE:
+      son = tree_node_get_son(tree);
+      res_a = region_eval(son);
+      c = res_a.value.s;
+
+      backslash = pourcent = false;
+
+      while(*c != '\0'){
+          if(*c == '%'){
+              if(pourcent){
+                  if(son == NULL) 
+                  {
+                      fprintf(stderr, "Error : write : there is not enought variables !\n");
+                      longjmp(jmp, 1);
+                  }
+
+                  son = tree_node_get_brother(son);
+
+                  res_b = region_eval(son);
+                  VARIABLE_PRINT(stdout, res_b)
+
+                  pourcent = false;
+              }
+              else{
+                  pourcent = true;
+              }
+          }
+          else if(*c == '\\'){
+              backslash = true;
+          } 
+          else if(backslash && *c == 'n'){
+              printf("\n");
+              backslash = false;
+          }
+          else{
+              printf("%c", *c);
+          }
+
+          c++;
+      }
       break;
     case AT_FUN_RAND:
       result.type = SYMBOL_BASIC_FLOAT;

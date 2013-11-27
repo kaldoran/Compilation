@@ -1,18 +1,18 @@
 % JEU DU C EST PLUS C EST MOINS %
 
-
 var random, guest, nb : int;
 
 start {
 	nb = 0;
-	random = rand();
+	random = rand() * 100;
 	for(;;) do {
 		read (guest);
+		guest = 59;
 		if(guest == random) then {
 			write("Vous êtes un dieu !\nVous avez trouver en %d coup(s)",nb);
 			write("Continuer ? [o]ui [N]on ?!?\n");
 			read (guest);
-			if(guest == "O" or guest == "o" ) then { random = rand(); }
+			if(guest == "O" or guest == "o" ) then { random = rand() * 100; }
 			else { return 1; }
 		}
 		else if(guest < random) then {
