@@ -22,9 +22,7 @@ function test(m_var : int, m_var_2 : float) return int
   var x: int;
   var y :int;
 
-  /* La proc z peut afficher z. */
-
-  proc z()
+  proc j()
     start
     {
       write("Valeur de x = %% et y = %% dans test\n", x, y);
@@ -33,11 +31,11 @@ function test(m_var : int, m_var_2 : float) return int
  
   start 
   {
-    z();
+    j();
     return(m_var_2 + m_var * test_0()); /* 190 */
 
     /* Instructions ignorées car return avant. */
-    z();
+    j();
     write("Je ne suis pas là! \n");
   };
 

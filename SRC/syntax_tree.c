@@ -62,8 +62,6 @@ static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tre
       fscanf(stream, "%d %s ", &i, buffer);
       content->value.var.hkey = hashtable_get_key(table, buffer);
       content->value.var.type = index_array[i];
-      printf("TYPE %p\n", content->value.var.type);
-      printf("LEX %s\n", hashtable_get_id(NULL, content->value.var.hkey));
 
       break;
 

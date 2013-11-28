@@ -477,7 +477,7 @@ static Data push_position(Syntax_tree *tree)
   {
     /* Déplacement necessaire en arrière pour évaluer les paramètres
        de régions avec un NIS plus bas. */
-    if(o_region->level > n_region->level)
+    if(o_region->level > n_region->level || o_region == n_region)
     {
       stack_position -= o_region->size;
       current_region = old_region;
@@ -485,7 +485,7 @@ static Data push_position(Syntax_tree *tree)
 
     result = region_eval(tree);
 
-    if(o_region->level > n_region->level)
+    if(o_region->level > n_region->level || o_region == n_region)
     {
       stack_position += o_region->size;
       current_region = n - 1;

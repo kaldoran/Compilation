@@ -3,19 +3,22 @@
 /* Fonction prenant un entier en paramètre et retournant la factorielle de celui-ci */
 function factorielle(n : int) return int
     start{
-        if(n == 1) then {
+        write("n = %%\n", n);
+        
+        if(n < 1) then {
             return 1;
         }
         else{
-            return n * factorielle(n-1);
+            return n * factorielle(n - 1);
         }
     };
 
 # Variable permettant de récupérer le chiffre qu'a saisi l'utilisateur
 var i : int;
+var j : int;
 start{
-    read(i);
-
-    write("Résultat de la factorielle de %d : %d\n", i, factorielle(i));
+    j = 5;
+    i = factorielle(j);
+    write("Résultat de la factorielle de %% : %%\n", j, i);
 }
 
