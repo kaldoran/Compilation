@@ -1,7 +1,10 @@
 %PROGRAM3%
 
+type tab : array[0 .. 11] of int;
+
 type aaaa : struct
   b : int;
+  a : tab;
 end struct;
 
 proc proc_1 (arg:int, arg2:char) 
@@ -33,10 +36,29 @@ function joujou (arg3:int, arg4:string[10]) return int
 var x : int;
 var chaine : string[10];
 var k : aaaa;
+var i : int;
 
 start{
- x += 3 + joujou(30, "ooooo");
- k.b = 223;
- joujou(x, chaine);
+  x += 3 + joujou(30, "ooooo");
+  k.b = 223;
+
+  write("Calcul de la table de 5 :\n");
+
+  for(i = 0; i < 11; i++) do {
+    k.a[i] = i * 5;
+  }
+
+  write("Affichage de la table :\n");
+  
+  for(i = 0; i < 11; i++) do {
+    if(i != 10) then {
+      write("0");
+    }
+
+    write("%% * %% = %%\n", i, 5, k.a[i]);
+  }
+
+  write("k.b = %%\n", k.b);
+  joujou(x, chaine);
 }
 

@@ -5,11 +5,12 @@ type type_normal : struct
   test_char : char;
 end struct;
 
-/* 3 variables (dont une de taille 2) : Prochaine region en data_stack[4] */
 var po : type_normal;
 var variable_int : int;
 var machin : string[20];
 var x : int;
+var y : int;
+var z : int;
 
 function test_0() return int
   start
@@ -20,16 +21,35 @@ function test_0() return int
 function test(m_var : int, m_var_2 : float) return int
   var x: int;
   var y :int;
+
+  /* La proc z peut afficher z. */
+
+  proc z()
+    start
+    {
+      write("Valeur de x = %% et y = %% dans test\n", x, y);
+      write("Valeur de z dans proc z: %%\n", z);
+    };
+ 
   start 
   {
+    z();
     return(m_var_2 + m_var * test_0()); /* 190 */
 
-    /* Instructions ignorées. */
-
+    /* Instructions ignorées car return avant. */
+    z();
+    write("Je ne suis pas là! \n");
   };
 
 start
 {
+  z = 25;
+  x = (y = 12);
+
+  write("Valeur de z dans main: %%\n", z);
+  write("Valeur de x = %% et y = %% dans main\n", x, y);
+
+  write("Appel de test\n");
   variable_int = test(5, 5.654);
 
   for(variable_int = 0; variable_int < 10; variable_int++) do {
@@ -39,7 +59,9 @@ start
   do {
     write("Je suis dans un do-while !\n");
     variable_int = 41 + 36 - 45.0 / 3.0;
+    write("variable_int = %%\n", variable_int);
     variable_int = 0;
+    write("variable_int = %%\n", variable_int);
     variable_int = 1;
   } while(variable_int < 1);
 
@@ -53,7 +75,10 @@ start
   } while(variable_int < 10);
 
   if((variable_int = 5)) then {
-    variable_int = 41 + 36 - 45.0 / 3.0;
+    variable_int = true + true + true;
+    
+    /* variable_int vaut 1, opérations sur des booléens. */  
+    write("variable_int = %%\n", variable_int);
   }
   
   if(5 + 8 > 13) then {                      

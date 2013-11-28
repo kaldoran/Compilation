@@ -1,19 +1,30 @@
 % PROGRAM %
 
+/* Verifications des surcharges de variables. */
+
+var test : float;
+
 # Func 1
 function func_1 () return int 
   var coucou : char;
   
-  function func_2 () return int 
-    var test : int;
+    function func_2 () return int 
+      var test : int;
     
-    start
-    { test = 5; };
+      start
+      { 
+        write("A l'appel de func_2, test = %%\n", test);
+        test = 5; 
+        write("Dans func_2, test = %%\n", test);
+        return test;
+      };
 
   start    
   {
-    func_2();
-    return 1;
+    write("A l'appel de func_1, test = %%\n", test);
+    test = 12; 
+    write("Dans func_1, test = %%\n", test);
+    return func_2() + test; /* 17 */
   };
 
 # Proc 1
@@ -24,6 +35,8 @@ proc proc_1 ()
 
   start
   {    
+    x = func_1();
+    write("Appel de func_1, resultat = %%\n", x);
     write("EVALUATION :\n");
 
     if(x == 6) then {

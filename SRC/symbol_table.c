@@ -23,6 +23,9 @@ static Symbol *symbol_basic[SYMBOL_BASIC_MAX];
 /** Mauvaise compilation liée aux données. */
 bool bad_compil = false;
 
+/** Listes des noms de types. */
+static const char *type[] = {"bool", "char", "int", "float", "string"};
+
 /* ---------------------------------------------------------------------- */
 /* Fonctions internes (privées)                                           */
 /* ---------------------------------------------------------------------- */
@@ -82,7 +85,6 @@ Symbol *symbol_new(char type, int region, Index_t index, size_t exec)
 void symbol_table_init(Symbol_table *table)
 {
   Symbol *sym;
-  const char *type[] = {"bool", "char", "int", "float", "string"};
   int i;
 
   for(i = 0; i < SYMBOL_BASIC_MAX; i++)
@@ -96,6 +98,15 @@ void symbol_table_init(Symbol_table *table)
       fatal_error("lexeme_table_init");
   }
 
+  return;
+}
+
+void symbol_table_init_by_load(Symbol_table *table)
+{
+  int i;
+
+  for(i = 0; i < SYMBOL_BASIC_MAX; i++)
+    symbol_basic[i] = hashtable_get_value_by_id(table, type[i]);
   return;
 }
 

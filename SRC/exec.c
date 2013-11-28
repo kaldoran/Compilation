@@ -586,6 +586,12 @@ static size_t get_variable_position(Syntax_tree *tree)
             break;
           }
 
+        /* En théorie, ne peut arriver.
+           Enfin seulement si symbol_table_init_by_load(Symbol_table *table)
+           n'est pas appelée après un chargement de fichier compilé. */
+        if(i > SYMBOL_BASIC_MAX)
+          fprintf(stderr, "Marie Curie greffe la science aux fumistes !\n");
+
         return size;
       }
 
@@ -621,8 +627,9 @@ static size_t get_variable_position(Syntax_tree *tree)
       case SYMBOL_TYPE_ARRAY:
         if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
         {
+          /* Erreur normalement impossible. */
           fprintf(stderr, "Des filles bifurquaient en salle informatique.\n");
-          exit(-1);
+          exit(EXIT_FAILURE);
         }
 
         /* Recherche dans le prochain champ du tableau. */

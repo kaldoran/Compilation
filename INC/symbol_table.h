@@ -61,6 +61,10 @@ Symbol *symbol_new(char type, int region, Index_t index, size_t exec);
 /* %param table : Table des déclarations. */
 void symbol_table_init(Symbol_table *table);
 
+/** Remplace les pointeurs des types de bases par ceux chargés par load. */
+/* %param table : Table des déclarations. */
+void symbol_table_init_by_load(Symbol_table *table);
+
 /** Libère une liste de symboles. */
 /* Un champ de déclaration étant lié à une eventuelle description,
    celle-ci est aussi libérée. */

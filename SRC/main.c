@@ -102,14 +102,15 @@ int main(int argc, char *argv[])
   if(options == OPT_S || options == (OPT_S | OPT_A))
   {
     hashtable = load(input);
+    symbol_table_init_by_load(hashtable);
     regions_table_load(hashtable, strcat(output, ".reg"));
     index_array_free(); /* array crée par load */
 
     if((options & OPT_A) != 0)
       PRINT_LOG();
 
-    /* Execution
-       exec(hashtable); */
+    /* Execution */
+       exec(hashtable);
   }
 
   /* Compilation. */

@@ -62,6 +62,9 @@ static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tre
       fscanf(stream, "%d %s ", &i, buffer);
       content->value.var.hkey = hashtable_get_key(table, buffer);
       content->value.var.type = index_array[i];
+      printf("TYPE %p\n", content->value.var.type);
+      printf("LEX %s\n", hashtable_get_id(NULL, content->value.var.hkey));
+
       break;
 
     /* Numéro de champ de structure. */
@@ -214,7 +217,8 @@ void syntax_tree_print_node(Syntax_tree *node)
     switch(snode->type)
     {
       case AT_VAR:
-        printf(" (%s)", lexeme_table_get(NULL, snode->value.var.hkey));
+        printf(" (%s, adress: %p)", lexeme_table_get(NULL, snode->value.var.hkey),
+               (void *)snode->value.var.type);
         break;
       case AT_CST_STRING:
         printf(" (%s)", snode->value.s);
