@@ -540,6 +540,8 @@ static size_t get_variable_position(Syntax_tree *tree)
   size_t size, size_base;
   Data result;
   bool prev = false;
+  Region *region_1;
+  Region *region_2;
 
   /* Récupération du contenu de l'arbre. */
   content = syntax_tree_node_get_content(tree);
@@ -548,10 +550,17 @@ static size_t get_variable_position(Syntax_tree *tree)
   sym = content->value.var.type;
 
   /* Champ de la variable. */
-  if((i = current_region - sym->region) != 0)
-    i = data_stack[i + 1].value.i;
+  region_1 = REGION_TABLE_GET(current_region + 1);
+  region_2 = REGION_TABLE_GET(sym->region + 1);
+
+  i = region_1->level - region_2->level;
+
+  if(i != 0)
+    i = data_stack[i + 1].value.i; /* Chainage statique. */
   else
+  {
     i = stack_position;
+  }
 
   size = i + sym->exec;
 
@@ -1106,10 +1115,15 @@ void exec(Symbol_table *table)
   srand(time(NULL));
   current_region = -1;
   region = REGION_TABLE_GET(0);
-  reset_stack();
 
-  if(!setjmp(jmp))
+  /* Si dépassement dès le début. */
+  if(region->size >= DATA_STACK_SIZE)
   {
+    fprintf(stderr, "Error : Stack overflow !\n");
+  }
+  else if(!setjmp(jmp))
+  {
+    reset_stack();
     tree = region->tree;
     EVAL_BROTHERS(tree);
   }

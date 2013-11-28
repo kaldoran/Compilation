@@ -82,8 +82,9 @@ proc affiche(pplayer : int)
 
 proc affichePos(pplayer :int) 
     start {
+         write("%%\n", pplayer);
         write("Appel de positionPlayerX et positionPlayerY\n");
-        write("Position actuelle : %% %%\n", positionPlayerX(pplayer, pplayer * 24), positionPlayerY(pplayer, pplayer + 24));
+        write("Position actuelle : %% %%\n", positionPlayerX(pplayer,  24), positionPlayerY(12,  24));
         return;
     };
 

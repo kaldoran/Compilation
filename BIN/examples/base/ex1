@@ -68,7 +68,7 @@ start
        variable_int en float (variable_int n'est pas initialisé, valeur = 0)
 
        Le résultat attendu étant un int, le flottant de fin est alors transformé en int. */
-    variable_int = 30 + 23.14 - 105.378 * 96 + true + test(30, 40); /* -9872 */
+    variable_int = 30 + 23.14 - 105.378 * 96 + true + (variable_int = test(30, 40)); /* -9872 */
     write("Calcul de foufou.\n");
     write("Resultat: %%\n", variable_int);
   }
