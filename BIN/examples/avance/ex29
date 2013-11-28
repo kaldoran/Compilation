@@ -11,13 +11,13 @@ type idee : array [ 0 .. 2 , 0 .. 100] of ideee;
 var idtodo : int;
 type todo : array [ 0 .. 100 ] of ideee;
 
-function estdefinie(id : idee) return bool
+function estdefinie(id : int) return bool
     start {
         return id;
     };
 
 
-function add_todo(id : int,uneidee : idee) return int 
+function add_todo(id : int, uneidee : int) return int 
     var add_todo : todo; 
     start {
 	    if( estdefinie(uneidee) and id > 0) then{
@@ -29,7 +29,7 @@ function add_todo(id : int,uneidee : idee) return int
 	    return 0;
     };
 
-function genere_idee(id : idee) return string[50]
+function genere_idee(id : int) return string[50]
 	var i, j, a : float;
 	var cpt, florian, ronan : int;
 	var tmp : string[50];
@@ -38,10 +38,7 @@ function genere_idee(id : idee) return string[50]
 	start {
 		for ( cpt = 0; cpt < 100 ; cpt++) do {
 		    tmp = "";
-		    id[1][cpt].uneidee = "ok";
-		    id[2][cpt].uneidee = tmp;
 		    write("Tu as plein d'idée maintenant");
-		    id[3*florian-ronan][id[5][10].uneidee] = 1;
 		}
 	};
 

@@ -7,7 +7,7 @@ var phrase : pile_struct;
 var c : char;
 var output : string[500];
 
-function toppile ( pile : pile_struct ) return int 
+function toppile ( pile : int ) return int 
 var i : int;
 start {
 	i = 0; 
