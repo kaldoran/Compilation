@@ -27,7 +27,7 @@ LDFLAGS = -ly -lfl
 ifeq ($(DEBUG), yes)
 	CXXFLAGS += -g -DDEBUG
 else
-	CXXFLAGS += -O2 -s
+	CXXFLAGS += -O2 -s -Wno-unused-result
 endif
 
 # Sources & Headers & Bin
