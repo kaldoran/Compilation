@@ -1,0 +1,67 @@
+% EX13 %
+
+type momo : 
+struct
+  a : int;
+  b : int;
+end struct;
+
+type all : array[0 .. 50] of momo; 
+
+var i : int;
+
+function je_suis_partout(a : float, b : float, je_suis_partout : float) return int
+  start
+  {
+    write("Vous m'avez oublié, je le sais... En tout cas je_suis_partout = %%\n", je_suis_partout);
+    return 666;
+  };
+
+function je_suis_partout(a : int, b : float) return int
+  proc je_suis_partout(je_suis_partout : int)
+    start
+    {
+      if(je_suis_partout == -1) then {
+        write("Ma récursivité prend fin ici et le i que j'utilise vaut : %% !\n", i);
+        return;
+      }
+
+      write("Pour la peine je suis récursif car je_suis_partout = %% !\n", je_suis_partout);
+      je_suis_partout(-1);
+      return;
+    };
+
+  start 
+  { 
+    write("Coucou je suis là et j'ai deux paramètres : %% et %%\n", a , b);     
+    write("J'invoque ma super procédure qui s'appelle... je_suis_partout !\n");
+    je_suis_partout(5);
+    return a - b;
+  };
+
+proc je_suis_partout(je_suis_partout : int)
+  start 
+  { 
+    write("Quand je vous disais que j'étais partout : %%\n", je_suis_partout);
+    return; 
+  }; 
+
+var je_suis_partout : all;
+var i, k : int;
+var j : float;
+
+start { 
+      je_suis_partout[4].a = 257; 
+
+      for(;i < 5; i++) do { 
+               je_suis_partout[i].b = je_suis_partout[4].a + i;
+               j = i * 3 + (je_suis_partout[4].a - i) / 3;
+               write("Dans le main, je_suis_partout[%%].b = %%\n", i, je_suis_partout[i].b);
+               write("Appel de je_suis_partout(%%, %%)\n", i, j);
+               je_suis_partout(i, j);
+               write("Appel de je_suis_partout(%%)\n", i);
+               je_suis_partout(i);
+      } 
+      k = 5 + 5 + 5 + 5 * 0 + 55 - 5 / 5;
+      je_suis_partout(j, k, i);
+; }
