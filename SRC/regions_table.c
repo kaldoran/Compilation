@@ -132,14 +132,14 @@ void regions_table_load(Lexeme_table *table, const char *filename)
   if((file = fopen(filename, "r")) == NULL)
     fatal_error("regions_table_load");
 
-  fscanf(file, "%d\n", &t_depth);
+  (void)fscanf(file, "%d\n", &t_depth);
 
   for(i = 0; i < t_depth; i++)
   {
     if(regions_table_add(0, 0, NULL) == BAD_REGION)
       fatal_error("regions_table_load");
 
-    fscanf(file, "%lu %u\n", (long unsigned int *)&r_table[i]->size, &r_table[i]->level);
+    (void)fscanf(file, "%lu %u\n", (long unsigned int *)&r_table[i]->size, &r_table[i]->level);
     r_table[i]->tree = syntax_tree_load(table, file);
   }
 
