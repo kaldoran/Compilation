@@ -1,0 +1,48 @@
+% TOUS LES MEMES %
+
+var lol : int;
+/*var allsame : char;
+var allsame : bool;
+var allsame : string[50];
+var allsame : float;
+*/
+type allsame : array[0 .. 50] of lol;
+/*
+type allsame : 
+	struct 
+		allsame1 : int;
+		allsame1 : char;
+		allsame1 : float;
+		allsame1 : bool;
+	end struct;
+*/
+function allsame(all : int) return int
+	function allsame(all : int) return int
+		function allsame(all : int) return int
+			function allsame(all : int) return int
+				function allsame(all : int) return int
+				start {
+					return all + allsame(all) * allsame(all);
+				};
+			start {
+				return allsame(all++);
+			};
+		start {
+			return allsame(all++);
+		};
+	start {
+		return allsame(all++);
+	};
+start {
+	return allsame(all++);
+};
+
+
+start {
+	lol = 0;
+
+	for(;lol < 50;allsame(lol)) do {
+		allsame[lol] = lol;
+	}
+	;
+}
