@@ -2,7 +2,7 @@
 
 var myint : int;
 
-type allsame : array[0 .. 50] of myint;
+type allsame : array[0 .. 50] of int;
 var all : allsame;
 
 function allsame(all : int) return int
@@ -33,5 +33,4 @@ start {
 	for(;myint < 50;myint = allsame(myint)) do {
 		all[myint] = myint;
 	}
-	;
 }

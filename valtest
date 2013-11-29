@@ -15,6 +15,11 @@ function sub() {
     echo $test | sed -e "s/.*\(total heap usage:.*allocated\).*\(ERROR SUMMARY:.*\).*/\1\n\2/g"
 }
 
+if [ ! -e "./BIN/prog" ]; then 
+	echo "Error : prog not found"
+	exit -1;
+fi
+
 valgrind --version >/dev/null 2>&1 || { echo "Warning : Need Valgrind"; exit -1; }
 
 for i in $(find "./BIN/examples" -type f ! -path "*/marche_pas/*"); do
