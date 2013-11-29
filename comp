@@ -31,6 +31,12 @@ echo -e "\tLes fichiers ne sont pas identiques ou Erreur lors de la compilation"
     fi
 }
 
+
+if [ ! -e "./BIN/prog" ]; then 
+	echo "Error : prog not found"
+	exit -1;
+fi
+
 for i in $(find "./BIN/examples" -type f ! -path "*/marche_pas/*"); do
 sub "$i"
     rm out

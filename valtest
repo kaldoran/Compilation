@@ -2,17 +2,25 @@
 # REYNAUD NICOLAS
 # vendredi 29 novembre 2013, 19:05:03 (UTC+0100)
 
-# Compile chaque programme du dossier BIN/examples puis sauvegarde le log de la compilation.
-# Le programme compilé est ensuite chargé en mémoire puis comparé à la sauvegarde du log.
-# Cela permet de savoir si la sauvegarde des tables + arbres est fonctionnelle.
-# Enfin, on peut aussi vérifier que l'ensemble des programmes compilent.
+
+# Dependance : VALGRIND
+# Compile chaque programme du dossier BIN/examples avec valgrind
+# Et affiche simplement les lignes retournée par valgrind qui indique le nombre de bytes allouées / free
+# Ainsi que le résumé des erreurs 
 
 function sub() {
     echo -e "\nValgrind results for $1:"
 
-    test=$(valgrind ./BIN/prog -c $1  2>&1) || { echo >&2 "You need valgrind to exec this programme.  Aborting."; exit 1; }
+    test=$(valgrind ./BIN/prog -c $1  2>&1)
     echo $test | sed -e "s/.*\(total heap usage:.*allocated\).*\(ERROR SUMMARY:.*\).*/\1\n\2/g"
 }
+
+if [ ! -e "./BIN/prog" ]; then 
+	echo "Error : prog not found"
+	exit -1;
+fi
+
+valgrind --version >/dev/null 2>&1 || { echo "Warning : Need Valgrind"; exit -1; }
 
 for i in $(find "./BIN/examples" -type f ! -path "*/marche_pas/*"); do
     sub "$i"

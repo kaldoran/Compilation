@@ -46,27 +46,27 @@ static void syntax_tree_read_value(Lexeme_table *table, FILE *stream, Syntax_tre
   switch(content->type)
   {
     /* Constantes. */
-    case AT_CST_STRING: fgets(buffer, STR_BUFFER_SIZE, stream);
+    case AT_CST_STRING: (void)fgets(buffer, STR_BUFFER_SIZE, stream);
       if((content->value.s = mystrdup(buffer + 1)) == NULL)
         fatal_error("syntax_tree_read_value");
       content->value.s[strlen(buffer + 1) - 1] = '\0';
       break;
-    case AT_CST_FLOAT: fscanf(stream, "%f ", &content->value.f);        break;
-    case AT_CST_BOOL:  fscanf(stream, "%c ", &content->value.c);        break;
-    case AT_CST_CHAR:  fscanf(stream, "%d ", (int *)&content->value.c); break;
-    case AT_CST_INT:   fscanf(stream, "%d ", &content->value.i);        break;
+    case AT_CST_FLOAT: (void)fscanf(stream, "%f ", &content->value.f);        break;
+    case AT_CST_BOOL:  (void)fscanf(stream, "%c ", &content->value.c);        break;
+    case AT_CST_CHAR:  (void)fscanf(stream, "%d ", (int *)&content->value.c); break;
+    case AT_CST_INT:   (void)fscanf(stream, "%d ", &content->value.i);        break;
 
     /* IDF. */
     case AT_VAR:
     case AT_CTL_CALL:
-      fscanf(stream, "%d %s ", &i, buffer);
+      (void)fscanf(stream, "%d %s ", &i, buffer);
       content->value.var.hkey = hashtable_get_key(table, buffer);
       content->value.var.type = index_array[i];
 
       break;
 
     /* Numéro de champ de structure. */
-    case AT_HKEY_INDEX: fscanf(stream, "%d ", &content->value.i); break;
+    case AT_HKEY_INDEX: (void)fscanf(stream, "%d ", &content->value.i); break;
 
     default: break;
   }
@@ -317,7 +317,7 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
   Syntax_tree *root, *node, *child, *brother;
 
   /* Type du noeud de la racine. */
-  fscanf(stream, "%d ", &type);
+  (void)fscanf(stream, "%d ", &type);
   root = node = syntax_tree_node_new(type);
   syntax_tree_read_value(table, stream, node);
 
@@ -328,7 +328,7 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
   while(1)
   {
     node = list_shift_node(queue);
-    fscanf(stream, "%d ", &type);
+    (void)fscanf(stream, "%d ", &type);
 
     /* Fin de l'arbre. */
     if(type == -2) break;
@@ -345,7 +345,7 @@ Syntax_tree *syntax_tree_load(Lexeme_table *table, FILE *stream)
     }
 
     /* Frère. */
-    fscanf(stream, "%d ", &type);
+    (void)fscanf(stream, "%d ", &type);
 
     if(type != - 1)
     {
