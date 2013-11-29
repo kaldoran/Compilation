@@ -1,22 +1,23 @@
 % MON PROGRAMME START %
 
-var choix : char;
+var choix : int;
                                         -- DEBUT DE MON PROGRAMME INUTILE --
-start {
-     do {
-               
+start {                                
+      choix = 2;
+      do {
           write("-------------------------------------BIENVENU DANS MON PROGRAMME INUTILE !\n-------------------------------------");
 	     write("[1] - CHOIX 1\n");
 	     write("[2] - CHOIX 2\n");
 	     write("[3] - CHOIX 3\n");
 
+
 	     switch choix {
 		     case 1 : write("Voici le choix 1");
-		     case 2 : { read(choix); write("%d choix");}
-		     case 3 : write("%f",rand()); 
+		     case 2 : {write("%% choix", 57);}
+		     case 3 : write("%%",rand()); 
 		     default : write("Choix invalide");
 	     }
-     } while ( choix != 'q');
+     } while ( ++choix != 3); /* Post-incrémentation fonctionne ! */
      
 	; /* instruction vide */
 	write("Au revoir ! ");

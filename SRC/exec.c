@@ -555,12 +555,17 @@ static size_t get_variable_position(Syntax_tree *tree)
 
   i = region_1->level - region_2->level;
 
-  if(i != 0)
-    i = data_stack[i + 1].value.i; /* Chainage statique. */
-  else
+  if(region_1 != region_2)
   {
-    i = stack_position;
+    /* NIS identique. */
+    if(i == 0)
+      i = data_stack[stack_position].value.i; /* Chainage dynamique. */
+    else
+      i = data_stack[i + 1].value.i;          /* Chainage statique. */
   }
+  /* Récursivité. */
+  else
+    i = stack_position;
 
   size = i + sym->exec;
 
@@ -627,7 +632,7 @@ static size_t get_variable_position(Syntax_tree *tree)
       case SYMBOL_TYPE_ARRAY:
         if((root && (current = tree_node_get_son(tree)) == NULL) || (!root && (current = tree_node_get_brother(tree)) == NULL))
         {
-          /* Erreur normalement impossible. */
+          /* Erreur : normalement impossible. */
           fprintf(stderr, "Des filles bifurquaient en salle informatique.\n");
           exit(EXIT_FAILURE);
         }

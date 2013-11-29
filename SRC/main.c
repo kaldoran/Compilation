@@ -109,6 +109,7 @@ int main(int argc, char *argv[])
     if((options & OPT_A) != 0)
       PRINT_LOG();
 
+    /* Désactivé ici. Fonctionne mais inutile tant que le script comp est utilisé. */
     /* Execution
        exec(hashtable); */
   }
@@ -122,7 +123,7 @@ int main(int argc, char *argv[])
     symbol_table_init(hashtable);
     lexeme_table_init(hashtable);
 
-    if((yyin = fopen(input, "r+")) == NULL)
+    if((yyin = fopen(input, "r")) == NULL)
     {
       hashtable_free(hashtable, symbol_table_free);
       fatal_error("main");

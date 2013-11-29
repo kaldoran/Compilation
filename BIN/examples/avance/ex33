@@ -4,7 +4,7 @@
 % TESTS_AFFECTATIONS_DECLARATIONS %
 
 var x, y : int;
-var buffer : string[255];
+var buffer : float;
 var _b : bool;
 
 start
@@ -13,12 +13,12 @@ start
   y = 3;
 
   if rand() % 20 + 5 > x then {
-    buffer = "Hello !";
+    buffer = 36;
   }
 
   # Tests variés : Ternaires, affectations, négation...
   x += 14 / 3 + y - 2;
-  y = buffer == "Hello !" ? 0 : 1;
+  y = buffer == 36 ? 0 : 1;
   x = ((y = 0) + 32 == x % 10) ? 100 : 50;
 
   x %= 10;
@@ -27,13 +27,17 @@ start
   _b = true;
   _b = !x + !!(x / 100);
 
+  write("x vaut %%\n", x);
+
   do {
     ++x;
     y = (x++) - 10;
     y += 8 + (x += 10) - 3 * x;
-    buffer += "!";  
+    buffer += 1;
+    _b = !(x > 100);  
   } while _b;
 
+return 0;
   for(x = 0; (++y); ++x) do {
     y -= 3 + x * 10 - (x += rand() * x) / (x + y + 99) + !x * 5;
   }

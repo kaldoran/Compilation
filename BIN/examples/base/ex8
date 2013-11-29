@@ -10,18 +10,22 @@ proc appel (arg : int)
     };
 
 start { 
+  continuer = true;
+
   while (continuer) do {
     coucoucoucou = 7;
         
-    for i=2; continuer; i++ do {
+    for i=2; i != 10; i++ do {
       write ("coucou");
       x= 2.0;
     }
 
     do {
+      write("------> i vaut %%\n", i);
       appel(100000);
-    } while(i > 6);
+    } while(i < 6);
     
+    continuer = false;
   }
 }
 

@@ -13,36 +13,53 @@ type todo : array [ 0 .. 100 ] of ideee;
 
 function estdefinie(id : int) return bool
     start {
+        write("Dans estdefinie, id = %%\n", id); 
         return id;
     };
 
-
+/* 103 cases de données dans add_todo */
 function add_todo(id : int, uneidee : int) return int 
     var add_todo : todo; 
+    var o : int;
     start {
-	    if( estdefinie(uneidee) and id > 0) then{
+            write("id= %% et uneidee = %%\n", id, uneidee);
+            o = estdefinie(uneidee);
+	    if( o and id > 0) then{
 		    
 		    add_todo[id].uneidee = uneidee;
 		    id++;
+                    write("\n#######################\nJe suis dans une boucle !\n#######################\n");
 		    return id;
 	    }
+            else {
+                 write("Pauvre boucle...\n");
+            }
 	    return 0;
     };
 
-function genere_idee(id : int) return string[50]
+function genere_idee(id : int) return float
 	var i, j, a : float;
 	var cpt, florian, ronan : int;
-	var tmp : string[50];
+	var tmp : bool;
 
-    
 	start {
-		for ( cpt = 0; cpt < 100 ; cpt++) do {
-		    tmp = "";
-		    write("Tu as plein d'idée maintenant");
-		}
+              i = id;
+              write("i vaut %%\n", i);
+
+              for ( cpt = 0; cpt < 2 ; cpt++) do {
+		    tmp = (5 - 6 + 3 == 2 and 1); /* Vaut true. */
+                    write("tmp vaut %%\n", tmp);
+		    write("Tu as plein d'idées maintenant\n");
+                    write("Appel de add_todo\n");
+                    add_todo(5, 10);
+                    write("Retour de add_todo\n");
+              }
+              return id * id;
 	};
 
+var k : float;
 
-start { 
-;
+start {       
+      k = genere_idee(20);
+      write("k vaut %% dans main\n", k); 
 }
