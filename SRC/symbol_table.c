@@ -169,7 +169,7 @@ bool symbol_table_add(Symbol_table *table, Hashkey hkey, Type type,
   return true;
 }
 
-Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
+Symbol *symbol_table_get(Hashtable *table, Hashkey hkey, char type)
 {
   Symbol *start = hashtable_get_value_by_key(table, hkey), *origin;
   Region_node *node = regions_stack_get_node();
@@ -180,12 +180,22 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey)
     /* Parcours des déclarations de même nom. */
     for(origin = start; origin != NULL; origin = origin->next)
       if(origin->region == node->region)
-        return origin; /* Trouvé ! */
+      {
+        if(type == SYMBOL_UNKNOWN)
+          return origin; /* Trouvé ! */
+        else if(origin->type == type || (type == SYMBOL_TYPE_FUNCTION && origin->type == SYMBOL_TYPE_PROCEDURE))
+          return origin; /* Trouvé ! */
+      }
 
   /* Si pas dans la pile, peut-être au niveau -1 (Soit le niveau 0 du programme). */
   for(origin = start; origin != NULL; origin = origin->next)
-    if(origin->region == -1)
-      return origin; /* Trouvé ! */
+   if(origin->region == -1)
+   {
+     if(type == SYMBOL_UNKNOWN)
+       return origin; /* Trouvé ! */
+     else if(origin->type == type || (type == SYMBOL_TYPE_FUNCTION && origin->type == SYMBOL_TYPE_PROCEDURE))
+       return origin; /* Trouvé ! */
+   }
 
   /* Non trouvé. */
   bad_compil = true;

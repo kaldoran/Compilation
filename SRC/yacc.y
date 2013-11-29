@@ -12,7 +12,7 @@
   void test_variable(Syntax_tree *tree);
 
   /* Retourne un champ de déclaration d'une Hashkey */
-  #define SYMBOL_OF(HKEY) symbol_table_get(hashtable, HKEY)
+#define SYMBOL_OF(HKEY) symbol_table_get(hashtable, HKEY, -1)
 
   /** Table principale. */
   Hashtable *hashtable;

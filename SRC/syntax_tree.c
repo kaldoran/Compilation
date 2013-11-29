@@ -127,7 +127,7 @@ Syntax_tree *syntax_tree_node_var_new(Hashkey value)
 {
   Syntax_tree *tree = syntax_tree_node_new(AT_VAR);
   STVALUE(tree)->value.var.hkey = value;
-  STVALUE(tree)->value.var.type = symbol_table_get(NULL, value);
+  STVALUE(tree)->value.var.type = symbol_table_get(NULL, value, SYMBOL_TYPE_VAR);
   return tree;
 }
 
@@ -135,7 +135,7 @@ Syntax_tree *syntax_tree_node_call_new(Hashkey value)
 {
   Syntax_tree *tree = syntax_tree_node_new(AT_CTL_CALL);
   STVALUE(tree)->value.var.hkey = value;
-  STVALUE(tree)->value.var.type = symbol_table_get(NULL, value);
+  STVALUE(tree)->value.var.type = symbol_table_get(NULL, value, SYMBOL_TYPE_FUNCTION);
   return tree;
 }
 

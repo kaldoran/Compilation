@@ -7,24 +7,34 @@ var test : float;
 # Func 1
 function func_1 () return int 
   var coucou : char;
-  
-    function func_2 () return int 
+  var func_2 : float;
+  var func_1 : int;
+
+    function func_2 () return int /* Même nom que la variable float. */
       var test : int;
-    
+      var func_2 : int; /* Possibilité de nommer une variable du même nom qu'une fonction. */
       start
       { 
         write("A l'appel de func_2, test = %%\n", test);
         test = 5; 
         write("Dans func_2, test = %%\n", test);
+        write("func_2 = %% dans func_2 de type int\n", func_2);
+        func_2 = 3600;
+        write("func_2 = %% dans func_2 de type int\n", func_2);
+
         return test;
       };
 
   start    
   {
+    func_2 = 45.333;
+    write("func_2 = %% dans func_1 de type float\n", func_2);
     write("A l'appel de func_1, test = %%\n", test);
     test = 12; 
     write("Dans func_1, test = %%\n", test);
-    return func_2() + test; /* 17 */
+    func_1 = func_2();
+    write("func_2 = %% dans func_1 de type float\n", func_2);
+    return func_1 + test; /* 17 */
   };
 
 # Proc 1
