@@ -8,6 +8,8 @@
 #ifndef _EXEC_OP_
 #define _EXEC_OP_
 
+#include "exec_cast.h"
+
 /** Obtenir le max entre 2 nombres. */
 #define MAX(I, J) ((I) > (J) ? (I) : (J))
 

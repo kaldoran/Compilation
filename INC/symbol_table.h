@@ -25,6 +25,7 @@
 #define SYMBOL_BASIC_INT    3
 #define SYMBOL_BASIC_FLOAT  4
 #define SYMBOL_BASIC_STRING 5
+#define SYMBOL_BASIC_STRING_UP 6 /* Chaine allouée à supprimer. */
 
 /** Nombre de types de bases. (int, float, bool, char, string) */
 #define SYMBOL_BASIC_MAX 5
