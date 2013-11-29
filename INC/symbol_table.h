@@ -87,6 +87,9 @@ bool symbol_table_add(Symbol_table *table, Hashkey key, Type type,
 /* Association de noms. */
 /* %param table : Table des déclarations. */
 /* %param hkey : Numéro lexicographique de la déclaration. */
+/* %param type : SYMBOL_UNKNOWN : Pour le premier résultat,
+                 SYMBOL_TYPE_FUNCTION : Pour une fonction/procédure,
+                 SYMBOL_TYPE_VAR : Pour une variable. */
 /* %return : Le champ de déclaration correspondant ou NULL si non trouvé. */
 Symbol *symbol_table_get(Symbol_table *table, Hashkey hkey, char type);
 

@@ -8,7 +8,7 @@ var test : float;
 function func_1 () return int 
   var coucou : char;
   var func_2 : float;
-  var func_1 : int;
+  var func_1 : int; /* Même nom que la fonction appelée. */
 
     function func_2 () return int /* Même nom que la variable float. */
       var test : int;
