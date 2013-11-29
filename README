@@ -1,57 +1,134 @@
 # ------------------------------------------------ #
 # Auteurs:                                         #
-# 						   #
-#   ABHAMON Ronan	                           #
-#   BIGARD Florian				   #		
-#   REYNAUD Nicolas				   #
+#                                                  #
+#   ABHAMON Ronan                                  #
+#   BIGARD Florian                                 #                
+#   REYNAUD Nicolas                                #
 # ------------------------------------------------ #
 
+NOTE
+----
+
+Ce qui est géré dans cette archive :
+- Récursivité des fonctions/procédures.
+
+- Gestion des erreurs de compilations, une liste des erreurs est visible en cas de mauvaise
+  compilation. (Avec numéro de ligne en prime)
+
+  Il est intéressant de tester : ./BIN/prog -c ./BIN/examples/marche_pas/mauvais_ex5
+  Les autres exemples du dossier marche_pas sont inutiles.
+
+- Possibilité d'instancier des Singleton de structures
+  (Il suffit de nommer une variable du même nom qu'une structure,
+   ainsi il ne peut plus qu'exister qu'une seule variable de ce type)
+
+- A contrario il peut exister des fonctions de même nom, de même pour les variables.
+  Dans ces cas, une surchage + un masquage est possible.
+
+- De même une fonction peut avoir le même nom qu'une variable et vice-versa
+
+- Les opérations ne sont autorisées qu'entre types de base MAIS...
+  Je dis bien MAIS. Il est possible d'effectuer des calculs entre des types de bases différents :
+  Il en résulte un cast automatique, c'est à dire que 5 + 3.12 + true est possible mais que les
+  opérandes seront castées automatiquement en float, soit 5.0 + 3.12 + 1.0.
+
+  Par ordre de priorité : bool < char < int < float < string.
+  Le cast est effectué à l'execution.
+
+- Point important : Les données internes sont gérés par une ribambelle d'allocations mémoires,
+  ce qui signifie, que les données stockées (arbres, tables...) sont limitées à la taille de la RAM
+  de la machine utilisée. C'est positif mais ceci necessite des contraintes importantes.
+
+  (Suffit de voir le code général, les pointeurs sont de partout...)
+
+- Autre information : La table de Hachage contient des listes de même clef de Hachage.
+  Dans ces listes sont stockés les lexèmes. La structure contenant le lexème stocké,
+  contient un pointeur sur les déclarations relatifs à ce léxème. 
+  (Du coup aucune zone de débordement utilisée)
+
+- Niveau instructions : La post-incrémentation, l'incrémentation, le do-while, le for, le while,
+  les raccourcis d'affectations sont gérés (+=, -=, /= ...), le switch, 
+  ainsi que beaucoup d'autres choses...
+
+- Enfin : La pile a l'execution est présente, elle ne gère pas encore les chaines, ni le read,
+  mais la majorité des exemples sont fonctionnels. Notament la récursivité avec l'exemple :
+  BIN/examples/exemple_fonctionnels/fibo_rec 
 
 --------------------------------------------------------
     INSTALLATION
 --------------------------------------------------------
 
 
-	Pour installer le programme commencer par décompresser	l'archive 
-	dans le dossier de votre choix.
-	
-	Ensuite a l'aide du terminal accéder au fichier nouvellement crée 
-	lors de la décompression.
-	
-	Une fois dans ce dossier taper la commence "make" ou "make all"
-     pour lancer la compilation.
+        Pour installer le programme commencer par décompresser l'archive 
+        dans le dossier de votre choix.
+        
+        Ensuite a l'aide du terminal accéder au fichier nouvellement crée 
+        lors de la décompression.
+        
+        Une fois dans ce dossier taper la commence "make" ou "make all"
+        pour lancer la compilation.
 
-	Un exécutable au nom de "prog" sera créé dans le dossier 
-	BIN.
-	
-	En cas de soucis essayer la commande "make rebuild" si le soucis 
-	persiste , merci de nous contacter (contactez Nico, moi j'ai rien
-    à voir la dedans).
+        Un exécutable au nom de "prog" sera créé dans le dossier 
+        BIN.
+        
+        En cas de soucis essayer la commande "make rebuild" si le soucis 
+        persiste , merci de nous contacter (contactez Nico, moi j'ai rien
+        à voir la dedans).
 
 --------------------------------------------------------
     DESINSTALLATION
 --------------------------------------------------------
 
-	Pour désinstaller le programme placer vous dans le dossier
-	où le fichier makefile est présent.
+        Pour désinstaller le programme placer vous dans le dossier
+        où le fichier makefile est présent.
 
-	Taper ensuite simplement la commande "make mrproper"
+        Taper ensuite simplement la commande "make mrproper"
 
-	Cette commande supprimera le contenu du fichier 
-	OBJ et l'exécutable "prog".
-	
-	
+        Cette commande supprimera le contenu du fichier 
+        OBJ et l'exécutable "prog".
+        
 --------------------------------------------------------
     UTILISATION
 --------------------------------------------------------
 
-	Uilisez simplement "./prog < <prog source>" pour executer un 
-	programme.
+Dans le répertoire BIN/ :
 
-Note : 
-	La commande "./prog < <prog source>" donne les détails du parsage.
-	Et affiche les lexemes; les symboles les regions avec l'arbre
-	correspondant.
+    ./prog -c filename [-oae]
+    ./prog -s filename [-a]
+    ./prog -h
+
+OPTIONS
+-------
+
+    -c <filename> : Compile le fichier "filename".
+
+    -o <output filename> : Renomme le fichier résultant de la compilation. (par défaut : "myout")
+
+    -a : Affiche le log de compilation. (Arbre abstrait + données.)
+
+    -e : Exécute le programme après compilation.
+         (Actif, mais attention aux programmes utilisant des fonctions comme "read" ou des opérations
+          sur les chaines, ce sont les derniers points de la pile à l'execution à gérer.
+
+    -s <filename> : Exécute un programme compilé (Inactif pour pouvoir utiliser le script "comp".)
+
+    -h : Affiche l'aide
+
+EXEMPLES
+--------
+
+./prog -a -c ./examples/base/ex1
+./prog -a -e -c ./examples/base/ex2
+
+Pour vous simplifier la vie à la lecture du log de compilation 
+(Les adresses sont ivrement chiantes à lire), il suffit de rediriger la sortie de la compilation :
+
+./prog -a -c ./examples/base/ex1 > resultat
+
+Et d'utiliser le script "lisible" dessus. Les adresses seront renommées par de simples entiers.
+
+Enfin : Le script "comp" permet de tester les exemples, ainsi que le chargement/sauvegarde de fichiers
+        compilés.
 
 --------------------------------------------------------
     LISTING FICHIER 
@@ -60,43 +137,31 @@ Note :
 +--- defound
 +--- Makefile
 +--- INC
-|   +--- regions_table.h
-|   +--- symbol_table.h
-|   +--- list.h
-|   +--- mystring.h
-|   +--- regions_stack.h
-|   +--- private_tree.h
-|   +--- error.h
-|   +--- kernel.h
-|   +--- y.tab.h
-|   +--- syntax_tree.h
-|   +--- dimensions_buffer.h
-|   +--- lexeme_table.h
-|   +--- variables_buffer.h
-|   +--- hashtable.h
-|   +--- tree.h
-|   +--- ptypes.h
-|   +--- private_list.h
-|   +--- description_table.h
+|   +--- exec.h              (Execution du code.)
+|   +--- exec_cast.h         (Macros de cast de variables.)
+|   +--- exec_op.h           (Gestion des calculs à l'execution.)
+|   +--- regions_table.h     (Implémente la table des régions.)
+|   +--- getopt.h            (Code source modifié de getopt, getopt n'étant pas ansi.)
+|   +--- symbol_table.h      (Implémente la table des déclarations.)
+|   +--- list.h              (Type list.)
+|   +--- mystring.h          (Fonctions de manipulations de chaines.)
+|   +--- regions_stack.h     (Implémente la pile des régions.)
+|   +--- private_tree.h      (Données privées du type Tree.)
+|   +--- error.h             (Implémente des macros/fonctions d'erreurs.)
+|   +--- kernel.h            (Headers utiles pour le yacc)
+|   +--- syntax_tree.h       (Implémente l'arbre abstrait.)
+|   +--- dimensions_buffer.h (Buffer de dimensions.)
+|   +--- lexeme_table.h      (Table des lexèmes, utilise la table de Hachage.)
+|   +--- variables_buffer.h  (Buffer de variables, utile pour les paramètres de fonctions/procédures.)
+|   +--- hashtable.h         (Table de Hachage, permettant la gestion des lexèmes, déclarations...)
+|   +--- private_hashtable.h (Données privées de la table de Hachage.)
+|   +--- tree.h              (Implémente le type Tree.)
+|   +--- ptypes.h            (Applications sur les types, implémente le bool.)
+|   +--- private_list.h      (Données privées du type list.)
+|   +--- description_table.h (Implémente les descriptions des structures/tableaux/fonctions/procédures...)
+|   +--- save.h              (Gestion de la sauvegarde des données.)
 +--- README.md
 +--- BIN
 +--- TODO
 +--- SRC
-|   +--- list.c
-|   +--- hashtable.c
-|   +--- dimensions_buffer.c
-|   +--- main.c
-|   +--- variables_buffer.c
-|   +--- symbol_table.c
-|   +--- syntax_tree.c
-|   +--- y.tab.y
-|   +--- regions_table.c
-|   +--- tree.c
-|   +--- regions_stack.c
-|   +--- lex.yy.c
-|   +--- lex.yy.l
-|   +--- error.c
-|   +--- lexeme_table.c
-|   +--- y.tab.c
-|   +--- mystring.c
-|   +--- description_table.c
+|  +--- Voir .h
