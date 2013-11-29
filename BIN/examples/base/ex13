@@ -18,6 +18,8 @@ function je_suis_partout(a : float, b : float, je_suis_partout : float) return i
   };
 
 function je_suis_partout(a : int, b : float) return int
+  var je_suis_partout : bool;
+
   proc je_suis_partout(je_suis_partout : int)
     start
     {
