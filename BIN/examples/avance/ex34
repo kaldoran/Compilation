@@ -33,8 +33,9 @@ type carnet : array [0..100, 0 .. 100] of contact;
 
 var moncarnet : carnet;
 var datetime : date;
+var adr : adresse;
 
-proc init_adresse (adr : adresse)
+proc init_adresse ()
     start {
         adr.numero = 0;
         adr.estrue = 0;
@@ -45,35 +46,35 @@ proc init_adresse (adr : adresse)
         adr.codePostal = 0;
     };
 
-proc init_date(datetime : date) 
+proc init_date() 
 start {
 	datetime.jour = 0;
 	datetime.mois = 0;
 	datetime.annee = 0;
 };
 
-proc init(moncarnet : carnet)
+proc init()
     var i : int;
     start {
         for ( i=0 ; i == 100 ; i++) do {
             moncarnet[i][0].nom = "";
             moncarnet[i][0].prenom = "";
-            init_date(moncarnet[i][0].date_naissance.jour);
+            init_date();
             moncarnet[i][0].marier = 0;
-            init_date(moncarnet[i][0].dateajout);
+            init_date();
             moncarnet[i][0].email = "";
-            init_adresse(moncarnet[i][0].adresse_contact);
+            init_adresse();
         }
     };
 
 
-function existe(prenom : string[30],nom : string[50],moncarnet : carnet) return bool
+function existe(prenom : string[30], nom : string[50]) return bool
 var i : int;
 var existe : bool;
 start {
 	existe = false;
 	while ( i <= 100) do {
-		if ( moncarnet[i][0].prenom == prenom and moncarnet[i][0].dateajout  and moncarnet[i][0].nom == nom ) then {
+		if ( moncarnet[i][0].prenom == prenom and moncarnet[i][0].dateajout.jour  and moncarnet[i][0].nom == nom ) then {
 			existe = !existe;
 			return existe;
 		}
@@ -82,11 +83,11 @@ start {
 	return existe;
 };
 
-function addcarnet(moncarnet : carnet,prenom : string[30],nom : string[50] , date_naissance : date) return bool
+function addcarnet(prenom : string[30], nom : string[50]) return bool
 var i : int;
 start {
 	while( i <= 100) do {
-		if(prenom == "" or nom == "" or init_date(moncarnet[i][0].date_naissance) ) then {
+		if(prenom == "" or nom == "" or init_date() ) then {
 			write("Erreur !");
 			return 0;
 		}
@@ -101,29 +102,31 @@ start {
 	return 0;
 };
 
-proc mariage(moncarnet : carnet, homme : contact , femme : contact ) 
+var homme, femme : contact;
+
+proc mariage() 
 var i : int;
 
 start {
-	if ( i = existe ( homme.prenom , homme.nom , moncarnet ) != 0 ) then {
-		moncarnet[1][i] = femme;
+	if ( i = existe ( homme.prenom , homme.nom) != 0 ) then {
+		moncarnet[1][i].nom = femme.nom;
 	}
 	else {
-		i = addcarnet(moncarnet, homme.prenom,homme.nom,homme.date_naissance); // ajout pour avoir un emplacement vide
-		moncarnet[0][i] = homme; # homme associé pour recuperer entierement les info
-		moncarnet[1][i] = femme; // mariage en cours
+		i = addcarnet(homme.prenom, homme.nom); // ajout pour avoir un emplacement vide
+		moncarnet[0][i].nom = homme.nom; # homme associé pour recuperer entierement les info
+		moncarnet[1][i].nom = femme.nom; // mariage en cours
 	}
 
 };
 
 
 start { 
-	init(moncarnet); 
-	init(datetime);
-	addcarnet(moncarnet , "Jean", "Bonnot" , datetime);
-	write("%d",existe("Jean","Bonnot",moncarnet));
-	write("%d",!!!!!existe("Janne","Bonnot",moncarnet));
-	write("%d",existe(moncarnet , "rien" , 0)); 
+	init(); 
+	init();
+	addcarnet("Jean", "Bonnot");
+	write("%d",existe("Jean","Bonnot"));
+	write("%d",!!!!!existe("Janne","Bonnot"));
+	write("%d",existe("rien" , 0)); 
 
 	write("Au revoir !");
 	
