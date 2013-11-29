@@ -8,16 +8,16 @@ function factorielle(n : int) return int
         if(n < 1) then {
             return 1;
         }
-        else{
+        else {
             return n * factorielle(n - 1);
         }
     };
 
-# Variable permettant de récupérer le chiffre qu'a saisi l'utilisateur
 var i : int;
 var j : int;
+
 start{
-    j = 5;
+    j = 10;
     i = factorielle(j);
     write("Résultat de la factorielle de %% : %%\n", j, i);
 }

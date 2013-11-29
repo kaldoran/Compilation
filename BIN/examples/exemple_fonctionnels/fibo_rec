@@ -2,13 +2,42 @@
 
 function fibo (n : int) return int
     start{
-        return ((n < 2) ? n : (fibo(n-1) + fibo(n-2)));
+        return ((n < 2) ? n : (fibo(n - 1) + fibo(n - 2)));
     };
 
-var i : int;
-start{
-    read(i);
+var i, j : int;
 
-    write ("Résultat de fibo(%d) : %d\n", i, fibo(i));
+start{
+    i = 25;
+    j = fibo(i);
+    write ("Résultat de fibo(%%) : %%\n", i, j);
 }
 
+/* N-ièmes termes de la suite:
+F00 : 0
+F01 : 1
+F02 : 1
+F03 : 2
+F04 : 3
+F05 : 5
+F06 : 8
+F07 : 13
+F08 : 21
+F09 : 34
+F10 : 55
+F11 : 89
+F12 : 144
+F13 : 233
+F14 : 377
+F15 : 610
+F16 : 987
+F17 : 1597
+F18 : 2584
+F19 : 4181
+F20 : 6765
+F21 : 10946
+F22 : 17711
+F23 : 28657
+F24 : 46368
+F25 : 75025
+*/
