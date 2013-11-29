@@ -852,6 +852,18 @@ static Data region_eval(Syntax_tree *tree)
       /* ------------------------------------------ */
 
     case AT_FUN_READ:
+      son = tree_node_get_son(tree);
+      do{
+          scanf("%s", str_buf);
+          res_a.type = SYMBOL_BASIC_STRING;
+          res_a.value.s = str_buf;
+          
+          size = get_variable_position(son);
+          CAST(res_a, data_stack[size].type);
+          
+          data_stack[size] = res_a;
+      } while((son = tree_node_get_brother(son)) != NULL);
+      
       break;
     case AT_FUN_WRITE:
       fun_write(tree);
