@@ -70,8 +70,13 @@ Tree *tree_node_get_father(Tree *t);
 
 /** Obtenir le premier frère d'un noeud. */
 /* %param node : Noeud. */
-/* %return : NULL si le noeud frère n'existe pas où le frère sinon. */
+/* %return : NULL si le noeud frère n'existe pas ou le frère sinon. */
 Tree *tree_node_get_brother(Tree *node);
+
+/** Obtenir le premier frère d'un noeud. */
+/* %param node : Noeud. */
+/* %return : NULL si le noeud frère n'existe pas ou le frère sinon. */
+Tree *tree_node_get_first_brother(Tree *node);
 
 /** Obtenir le premier fils d'un noeud. */
 /* %param node : Noeud. */

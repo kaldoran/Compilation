@@ -154,6 +154,12 @@ Tree *tree_node_get_brother(Tree *node)
   return node->next;
 }
 
+Tree *tree_node_get_first_brother(Tree *node)
+{
+  FIRST_BROTHER(node);
+  return node;
+}
+
 Tree *tree_node_get_son(Tree *node)
 {
   return node->children;

@@ -180,22 +180,55 @@ Symbol *symbol_table_get(Hashtable *table, Hashkey hkey, char type)
     /* Parcours des déclarations de même nom. */
     for(origin = start; origin != NULL; origin = origin->next)
       if(origin->region == node->region)
-      {
-        if(type == SYMBOL_UNKNOWN)
+        if(type == SYMBOL_UNKNOWN || origin->type == type)
           return origin; /* Trouvé ! */
-        else if(origin->type == type || (type == SYMBOL_TYPE_FUNCTION && origin->type == SYMBOL_TYPE_PROCEDURE))
-          return origin; /* Trouvé ! */
-      }
 
   /* Si pas dans la pile, peut-être au niveau -1 (Soit le niveau 0 du programme). */
   for(origin = start; origin != NULL; origin = origin->next)
-   if(origin->region == -1)
-   {
-     if(type == SYMBOL_UNKNOWN)
-       return origin; /* Trouvé ! */
-     else if(origin->type == type || (type == SYMBOL_TYPE_FUNCTION && origin->type == SYMBOL_TYPE_PROCEDURE))
-       return origin; /* Trouvé ! */
-   }
+    if(origin->region == -1)
+      if(type == SYMBOL_UNKNOWN || origin->type == type)
+        return origin; /* Trouvé ! */
+
+  /* Non trouvé. */
+  bad_compil = true;
+  fprintf(stderr, "Line %d - Unable to find the declaration of \"%s\"\n", line_num,
+          hashtable_get_id(table, hkey));
+
+  return NULL;
+}
+
+Symbol *symbol_table_get_by_call(Symbol_table *table, Hashkey hkey, unsigned int n)
+{
+  Symbol *start = hashtable_get_value_by_key(table, hkey), *origin;
+  Region_node *node = regions_stack_get_node();
+  unsigned int i;
+  extern int line_num;
+
+  /* Parcours de la pile des régions. */
+  for(; node != NULL; node = node->next)
+    /* Parcours des déclarations de même nom. */
+    for(origin = start; origin != NULL; origin = origin->next)
+      if(origin->region == node->region)
+        if(origin->type == SYMBOL_TYPE_FUNCTION || origin->type == SYMBOL_TYPE_PROCEDURE)
+        {
+          i = origin->type == SYMBOL_TYPE_PROCEDURE ? ((Procedure *)origin->index)->param_number :
+                                                      ((Function *)origin->index)->param_number;
+
+          if(i == n)
+            return origin; /* Trouvé ! */
+        }
+
+  /* Si pas dans la pile, peut-être au niveau -1 (Soit le niveau 0 du programme). */
+  for(origin = start; origin != NULL; origin = origin->next)
+    if(origin->region == -1)
+      if(origin->type == SYMBOL_TYPE_FUNCTION || origin->type == SYMBOL_TYPE_PROCEDURE)
+      {
+        i = origin->type == SYMBOL_TYPE_PROCEDURE ? ((Procedure *)origin->index)->param_number :
+                                                    ((Function *)origin->index)->param_number;
+
+        if(i == n)
+          return origin; /* Trouvé ! */
+      }
 
   /* Non trouvé. */
   bad_compil = true;

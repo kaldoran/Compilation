@@ -129,8 +129,10 @@ Syntax_tree *syntax_tree_node_char_new(char value);
 Syntax_tree *syntax_tree_node_bool_new(bool value);
 Syntax_tree *syntax_tree_node_string_new(const char *value);
 Syntax_tree *syntax_tree_node_var_new(Hashkey value);
-Syntax_tree *syntax_tree_node_call_new(Hashkey value);
 Syntax_tree *syntax_tree_node_hkey_new(Hashkey value);
+
+/* %param n : Nombre de fils. */
+Syntax_tree *syntax_tree_node_call_new(Hashkey value, unsigned int n);
 
 /** Libération de la valeur d'un noeud d'un arbre abstrait. */
 /* %param : Valeur du noeud à supprimer. */

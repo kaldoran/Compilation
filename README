@@ -16,7 +16,7 @@ Ce qui est géré dans cette archive :
   compilation. (Avec numéro de ligne en prime)
 
   Il est intéressant de tester : ./BIN/prog -c ./BIN/examples/marche_pas/mauvais_ex5
-  Les autres exemples du dossier marche_pas sont inutiles.
+  Les autres exemples du dossier marche_pas sont inutiles. (Conservés pour raisons historiques...)
 
 - Possibilité d'instancier des Singleton de structures
   (Il suffit de nommer une variable du même nom qu'une structure,
@@ -24,6 +24,12 @@ Ce qui est géré dans cette archive :
 
 - A contrario il peut exister des fonctions de même nom, de même pour les variables.
   Dans ces cas, une surchage + un masquage est possible.
+
+- Le masquage s'effectue sur toute variable déclarée après une autre que ce soit dans un bloc imbriqué ou non.
+
+- La surcharge des fonctions/procedures tient compte essentiellement du nombre de paramètres.
+  Dans le cas où le nombre de paramètres est bon, un cast est effectué au passage des paramètres.
+  (Dur à implémenter mais fonctionnel !)
 
 - De même une fonction peut avoir le même nom qu'une variable et vice-versa
 

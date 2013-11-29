@@ -88,10 +88,19 @@ bool symbol_table_add(Symbol_table *table, Hashkey key, Type type,
 /* %param table : Table des déclarations. */
 /* %param hkey : Numéro lexicographique de la déclaration. */
 /* %param type : SYMBOL_UNKNOWN : Pour le premier résultat,
-                 SYMBOL_TYPE_FUNCTION : Pour une fonction/procédure,
+                 SYMBOL_TYPE_PROCEDURE : Pour une procedure.
+                 SYMBOL_TYPE_FUNCTION : Pour une fonction.
+                 (2 cas précédents : Obsolète. Utilisez symbol_table_get_by_call.
+                 Conservé pour raisons historiques.)
                  SYMBOL_TYPE_VAR : Pour une variable. */
 /* %return : Le champ de déclaration correspondant ou NULL si non trouvé. */
 Symbol *symbol_table_get(Symbol_table *table, Hashkey hkey, char type);
+
+/** Obtenir un champ de déclaration de la table relatif par call.
+    C'est à dire que la première fonction/procedure contenant exactement le bon nombre de
+    paramètres est utilisée. */
+/* Association de noms. */
+Symbol *symbol_table_get_by_call(Symbol_table *table, Hashkey hkey, unsigned int n);
 
 /** Retourne l'index d'un type de Base dans la table. */
 /* %param : Numéro du Type de base à récupérer. */

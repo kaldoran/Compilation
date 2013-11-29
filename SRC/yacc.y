@@ -546,43 +546,15 @@ default: DEFAULT DEUX_POINTS liste_instructions {$$ = syntax_tree_add_son(syntax
 /* -----------------------------------------------------*/
 
 appel: IDF liste_arguments {
-                            unsigned int i, j;
-                            Syntax_node_content *content;
-                            Symbol *sym;
-                            Syntax_tree *tree;
+                            unsigned int i;
+                            Syntax_tree *tree = NULL;
 
-                            $$ = tree = syntax_tree_add_son(syntax_tree_node_call_new($1), $2);
-                            content = syntax_tree_node_get_content($$);
+                            /* Comptage des arguments. */
+                            if($2 != NULL)
+                              tree = tree_node_get_first_brother($2);
 
-                            /* VERIFICATION DE LA FIABILITE DE LA FONCTION : Son existence + Son nombre de paramètres. */
-
-                            /* Si la déclaration existe... */
-                            if((sym = content->value.var.type) != NULL)
-                            {
-                              if(sym->type == SYMBOL_TYPE_PROCEDURE || sym->type == SYMBOL_TYPE_FUNCTION)
-                              {
-                                j = sym->type == SYMBOL_TYPE_PROCEDURE ? ((Procedure *)sym->index)->param_number :
-                                                                         ((Function *)sym->index)->param_number;
-                                tree = tree_node_get_son(tree);
-
-                                /* Comptage des noeuds. */
-                                for(i = 0; tree != NULL; i++, tree = tree_node_get_brother(tree));
-
-                                /* Comparaison... */
-                                if(j != i)
-                                {
-                                  bad_compil = true;
-                                  fprintf(stderr, "Line %d - Function/Procedure \"%s\" has %u arguments. (No %u...)\n",
-                                          line_num, hashtable_get_id(NULL, content->value.var.hkey), i, j);
-                                }
-                              }
-                              else
-                              {
-                                bad_compil = true;
-                                fprintf(stderr, "Line %d - \"%s\" is not a procedure or function.\n",
-                                        line_num, hashtable_get_id(NULL, content->value.var.hkey));
-                              }
-                            }
+                            for(i = 0; tree != NULL; i++, tree = tree_node_get_brother(tree));
+                            $$ = syntax_tree_add_son(syntax_tree_node_call_new($1, i), $2);
                            }
      ;
 

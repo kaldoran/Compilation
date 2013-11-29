@@ -131,14 +131,6 @@ Syntax_tree *syntax_tree_node_var_new(Hashkey value)
   return tree;
 }
 
-Syntax_tree *syntax_tree_node_call_new(Hashkey value)
-{
-  Syntax_tree *tree = syntax_tree_node_new(AT_CTL_CALL);
-  STVALUE(tree)->value.var.hkey = value;
-  STVALUE(tree)->value.var.type = symbol_table_get(NULL, value, SYMBOL_TYPE_FUNCTION);
-  return tree;
-}
-
 Syntax_tree *syntax_tree_node_hkey_new(Hashkey value)
 {
   Syntax_tree *tree = syntax_tree_node_new(AT_HKEY_INDEX);
@@ -146,6 +138,14 @@ Syntax_tree *syntax_tree_node_hkey_new(Hashkey value)
   STVALUE(tree)->value.var.hkey = value;
   STVALUE(tree)->value.var.type = NULL;
 
+  return tree;
+}
+
+Syntax_tree *syntax_tree_node_call_new(Hashkey value, unsigned int n)
+{
+  Syntax_tree *tree = syntax_tree_node_new(AT_CTL_CALL);
+  STVALUE(tree)->value.var.hkey = value;
+  STVALUE(tree)->value.var.type = symbol_table_get_by_call(NULL, value, n);
   return tree;
 }
 
