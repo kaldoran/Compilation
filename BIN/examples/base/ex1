@@ -97,7 +97,7 @@ start
   }
 
   po.test_char += 10;
-  machin[5] = 'p';
+  // machin[5] = 'p';
 
   if 5 + 9 * 7 then {
     variable_int = 12;
