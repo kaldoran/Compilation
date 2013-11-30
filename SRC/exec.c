@@ -116,31 +116,38 @@
 
 /** Applique une comparaison. */
 /* Utilisée par chaque case AT_CMP_... */
-#define SET_CMP(CMP)                                        \
-    do {                                                    \
-      son = tree_node_get_son(tree);                        \
-      res_a = region_eval(son);                             \
-      res_b = region_eval(tree_node_get_brother(son));      \
-      OP_SET_TYPE(res_a, res_b);                            \
-      result.type = SYMBOL_BASIC_BOOL;                      \
-                                                            \
-      switch(res_a.type)                                    \
-      {                                                     \
-        case SYMBOL_BASIC_INT:                              \
-          result.value.c = res_a.value.i CMP res_b.value.i; \
-          break;                                            \
-        case SYMBOL_BASIC_FLOAT:                            \
-          result.value.c = res_a.value.f CMP res_b.value.f; \
-          break;                                            \
-        case SYMBOL_BASIC_BOOL:                             \
-          result.value.c = res_a.value.c CMP res_b.value.c; \
-          break;                                            \
-        case SYMBOL_BASIC_CHAR:                             \
-          result.value.c = res_a.value.c CMP res_b.value.c; \
-          break;                                            \
-        case SYMBOL_BASIC_STRING:                           \
-          break;                                            \
-      }                                                     \
+#define SET_CMP(CMP)                                                   \
+    do {                                                               \
+      son = tree_node_get_son(tree);                                   \
+      res_a = region_eval(son);                                        \
+      res_b = region_eval(tree_node_get_brother(son));                 \
+      OP_SET_TYPE(res_a, res_b);                                       \
+      result.type = SYMBOL_BASIC_BOOL;                                 \
+                                                                       \
+      switch(res_a.type)                                               \
+      {                                                                \
+        case SYMBOL_BASIC_INT:                                         \
+          result.value.c = res_a.value.i CMP res_b.value.i;            \
+          break;                                                       \
+        case SYMBOL_BASIC_FLOAT:                                       \
+          result.value.c = res_a.value.f CMP res_b.value.f;            \
+          break;                                                       \
+        case SYMBOL_BASIC_BOOL:                                        \
+          result.value.c = res_a.value.c CMP res_b.value.c;            \
+          break;                                                       \
+        case SYMBOL_BASIC_CHAR:                                        \
+          result.value.c = res_a.value.c CMP res_b.value.c;            \
+          break;                                                       \
+        case SYMBOL_BASIC_STRING:                                      \
+        case SYMBOL_BASIC_STRING_UP:                                   \
+          result.value.c = 0 CMP strcmp(res_a.value.s, res_b.value.s); \
+                                                                       \
+          if(res_a.type == SYMBOL_BASIC_STRING_UP)                     \
+            free(res_a.value.s);                                       \
+          if(res_b.type == SYMBOL_BASIC_STRING_UP)                     \
+            free(res_b.value.s);                                       \
+          break;                                                       \
+      }                                                                \
     } while(0)
 
 /** Evalue à la suite les instructions d'un arbre. */
@@ -157,6 +164,26 @@
       break;                                  \
     }                                         \
   }
+
+/** Copie correctement un résultat dans la pile. */
+#define COPY_RESULT(SIZE, RES)                          \
+  do {                                                  \
+    if(RES.type == SYMBOL_BASIC_STRING)                 \
+    {                                                   \
+      free(data_stack[SIZE].value.s);                   \
+                                                        \
+      /* Copie d'une référence de chaine existente. */  \
+      data_stack[SIZE].value.s = mystrdup(RES.value.s); \
+    }                                                   \
+    else if(RES.type == SYMBOL_BASIC_STRING_UP)         \
+    {                                                   \
+      /* Nouvelle chaine. */                            \
+      RES.type = SYMBOL_BASIC_STRING;                   \
+      data_stack[SIZE].value.s = RES.value.s;           \
+    }                                                   \
+    else                                                \
+      data_stack[SIZE] = RES;                           \
+  } while(0)
 
 /** Debug d'une affectation. */
 #ifdef DEBUG
@@ -396,6 +423,24 @@ static void reset_stack(void)
   return;
 }
 
+static void clean_string(void)
+{
+  Region *region = REGION_TABLE_GET(current_region + 1);
+  int i, num;
+
+  i = !(region->level == 0);
+
+  for(i += region->level; i < region->size; i++)
+  {
+    num = i + stack_position;
+
+    if(data_stack[num].type == SYMBOL_BASIC_STRING)
+      free(data_stack[num].value.s);
+  }
+
+  return;
+}
+
 static Data push_position(Syntax_tree *tree)
 {
   Syntax_node_content *content = syntax_tree_node_get_content(tree); /* Contenu du noeud. */
@@ -503,7 +548,7 @@ static Data push_position(Syntax_tree *tree)
     sym_p = hashtable_get_value_by_key(hashtable, params[i].hkey);
 
     for(; sym_p->region != current_region; sym_p = sym_p->next);
-    data_stack[stack_position + sym_p->exec] = result;
+    COPY_RESULT(stack_position + sym_p->exec, result);
 
     /* Paramètre suivant. */
     tree = tree_node_get_brother(tree);
@@ -519,8 +564,9 @@ static Data push_position(Syntax_tree *tree)
   else
     CAST(result, ((Symbol *)((Function *)sym->index)->return_type)->type);
 
-  /* Reset de la région. */
+  /* Reset de la région et nettoyage des chaines. */
   DBG_PRINTF(("Depilement de la région %d.\nRégion courante = %d\n", current_region, old_region));
+  clean_string();
   current_region = old_region;
   return_state = false;
   stack_position -= o_region->size;
@@ -602,7 +648,10 @@ static size_t get_variable_position(Syntax_tree *tree)
            Enfin seulement si symbol_table_init_by_load(Symbol_table *table)
            n'est pas appelée après un chargement de fichier compilé. */
         if(i > SYMBOL_BASIC_MAX)
+        {
           fprintf(stderr, "Marie Curie greffe la science aux fumistes !\n");
+          exit(EXIT_FAILURE);
+        }
 
         return size;
       }
@@ -749,9 +798,7 @@ static Data region_eval(Syntax_tree *tree)
       size = get_variable_position(son);                /* Déplacement. */
       result = region_eval(tree_node_get_brother(son)); /* Valeur d'affectation. */
       CAST(result, data_stack[size].type);
-
-      /* Affectation. */
-      data_stack[size] = result;
+      COPY_RESULT(size, result);
       DBG_SET(son, size);
       break;
 
@@ -1149,20 +1196,16 @@ void exec(Symbol_table *table)
 
   /* Si dépassement dès le début. */
   if(region->size >= DATA_STACK_SIZE)
-  {
     fprintf(stderr, "Error : Stack overflow !\n");
-  }
   else if(!setjmp(jmp))
   {
     reset_stack();
     tree = region->tree;
     EVAL_BROTHERS(tree);
+    clean_string();
   }
   /* Dépassement de pile. */
-  else
-  {
-
-  }
+  else{}
 
   /* Libération. */
   for(i = 0; i < n_regions; i++)

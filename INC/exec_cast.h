@@ -119,7 +119,7 @@ static char *st_str;
       else                                          \
         sprintf(str_buf, "false");                  \
                                                     \
-     if((RES.value.s = mystrdup(str_buf)) == NULL ) \
+     if((RES.value.s = mystrdup(str_buf)) == NULL)  \
        fatal_error("Bad alloc in cast bool");       \
       break;                                        \
   }
