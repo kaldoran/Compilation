@@ -1,2 +1,18 @@
-#Programme de taille minimum
-%% start{;}
+% PROG %
+var a : int;
+var b : int;
+var c : float;
+
+proc fun(d : int)
+  start {
+     write("d = %%\n", d);
+     write("c = %%\n", c);
+  };
+
+ start{
+   a = 5;
+   b = 3;
+   a = a + b;
+   c = 444555.11481;
+   fun(20);
+}

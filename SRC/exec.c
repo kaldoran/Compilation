@@ -53,7 +53,13 @@
       fprintf(STREAM, "'%c'", STACK_VAR.value.c); \
       break;                                      \
     case SYMBOL_BASIC_STRING:                     \
-      fprintf(STREAM, "%s", STACK_VAR.value.s);   \
+      if(STACK_VAR.value.s != NULL)               \
+        fprintf(STREAM, "%s", STACK_VAR.value.s); \
+      break;                                      \
+    case SYMBOL_BASIC_STRING_UP:                  \
+      if(STACK_VAR.value.s != NULL)               \
+        fprintf(STREAM, "%s", STACK_VAR.value.s); \
+      free(STACK_VAR.value.s);                    \
       break;                                      \
   }
 
@@ -405,7 +411,7 @@ static Data push_position(Syntax_tree *tree)
 
   /* Autres données. */
   int old_region = current_region;
-  unsigned int i;
+  unsigned int i, j;
 
   /* Mise à 0 de la valeur de retour. */
   VARIABLE_RESET(result);
@@ -475,28 +481,23 @@ static Data push_position(Syntax_tree *tree)
   for(i = 0; tree != NULL; i++)
   {
     /* Déplacement necessaire en arrière pour évaluer les paramètres
-       de régions avec un NIS plus bas. */
-    if(o_region->level > n_region->level || o_region == n_region)
-    {
-      stack_position -= o_region->size;
-      current_region = old_region;
-    }
+       de régions. */
+
+    stack_position -= o_region->size;
+    current_region = old_region;
 
     result = region_eval(tree);
 
-    if(o_region->level > n_region->level || o_region == n_region)
-    {
-      stack_position += o_region->size;
-      current_region = n - 1;
-    }
+    stack_position += o_region->size;
+    current_region = n - 1;
 
     /* Type du paramètre. */
-    for(n = 1; n <= SYMBOL_BASIC_MAX; n++)
-      if(symbol_table_get_basic(n) == params[i].type)
+    for(j = 1; j <= SYMBOL_BASIC_MAX; j++)
+      if(symbol_table_get_basic(j) == params[i].type)
         break;
 
     /* Valeur du paramètre. */
-    CAST(result, n);
+    CAST(result, j);
 
     /* Affectation. */
     sym_p = hashtable_get_value_by_key(hashtable, params[i].hkey);
@@ -554,17 +555,24 @@ static size_t get_variable_position(Syntax_tree *tree)
 
   i = region_1->level - region_2->level;
 
-  if(region_1 != region_2)
-  {
-    /* NIS identique. */
-    if(i == 0)
-      i = data_stack[stack_position].value.i; /* Chainage dynamique. */
-    else
-      i = data_stack[i + 1].value.i;          /* Chainage statique. */
-  }
-  /* Récursivité. */
-  else
+  /* Niveau -1 et récursivité. */
+  if(region_1->level == 0 || region_1 == region_2)
     i = stack_position;
+  /* Chainage statique. */
+  else if(i > 0)
+    i = data_stack[stack_position + i].value.i;
+
+  /* Cas théoriquement impossibles. */
+  else if(i == 0)
+  {
+    fprintf(stderr, "Les alcooliques chevaucheront des brosses à dents.\n");
+    exit(EXIT_FAILURE);
+  }
+  else if(i < 0)
+  {
+    fprintf(stderr, "Un ingénieur informaticien effraiera ces commères.\n");
+    exit(EXIT_FAILURE);
+  }
 
   size = i + sym->exec;
 
@@ -857,13 +865,13 @@ static Data region_eval(Syntax_tree *tree)
           scanf("%s", str_buf);
           res_a.type = SYMBOL_BASIC_STRING;
           res_a.value.s = str_buf;
-          
+
           size = get_variable_position(son);
           CAST(res_a, data_stack[size].type);
-          
+
           data_stack[size] = res_a;
       } while((son = tree_node_get_brother(son)) != NULL);
-      
+
       break;
     case AT_FUN_WRITE:
       fun_write(tree);

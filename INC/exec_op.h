@@ -36,23 +36,31 @@
   }
 
 /** Additionne 2 valeurs. */
-#define OP_ADD(RES, RES_A, RES_B)			  \
-  switch(RES.type = RES_A.type)			      	  \
-  {							  \
-    case SYMBOL_BASIC_INT:				  \
-      RES.value.i = RES_A.value.i + RES_B.value.i;	  \
-      break;						  \
-    case SYMBOL_BASIC_FLOAT:				  \
-      RES.value.f = RES_A.value.f + RES_B.value.f;	  \
-      break;						  \
-    case SYMBOL_BASIC_BOOL:				  \
-      RES.value.c = !!(RES_A.value.c + RES_B.value.c);	  \
-      break;						  \
-    case SYMBOL_BASIC_CHAR:				  \
-      RES.value.c = RES_A.value.c + RES_B.value.c;	  \
-      break;						  \
-    case SYMBOL_BASIC_STRING:				  \
-      break;						  \
+#define OP_ADD(RES, RES_A, RES_B)                                                  \
+  switch(RES.type = RES_A.type)                                                    \
+  {                                                                                \
+    case SYMBOL_BASIC_INT:                                                         \
+      RES.value.i = RES_A.value.i + RES_B.value.i;                                 \
+      break;                                                                       \
+    case SYMBOL_BASIC_FLOAT:                                                       \
+      RES.value.f = RES_A.value.f + RES_B.value.f;                                 \
+      break;                                                                       \
+    case SYMBOL_BASIC_BOOL:                                                        \
+      RES.value.c = !!(RES_A.value.c + RES_B.value.c);                             \
+      break;                                                                       \
+    case SYMBOL_BASIC_CHAR:                                                        \
+      RES.value.c = RES_A.value.c + RES_B.value.c;                                 \
+      break;                                                                       \
+    case SYMBOL_BASIC_STRING:                                                      \
+    case SYMBOL_BASIC_STRING_UP:                                                   \
+      if((RES.value.s = malloc((strlen(RES_A.value.s) + strlen(RES_A.value.s) + 1) \
+                                * sizeof(char))) == NULL)                          \
+        fatal_error("Concat error !");                                             \
+                                                                                   \
+      strcpy(RES.value.s, RES_A.value.s);                                          \
+      strcpy(RES.value.s + strlen(RES_A.value.s), RES_B.value.s);                  \
+      RES.type = SYMBOL_BASIC_STRING_UP;                                           \
+      break;                                                                       \
   }
 
 /** Soustrait 2 valeurs. */
@@ -72,6 +80,7 @@
       RES.value.c = RES_A.value.c - RES_B.value.c;        \
       break;						  \
     case SYMBOL_BASIC_STRING:				  \
+      RES.value.s = NULL;                                 \
       break;						  \
   }
 
@@ -92,6 +101,7 @@
       RES.value.c = RES_A.value.c * RES_B.value.c;        \
       break;						  \
     case SYMBOL_BASIC_STRING:				  \
+      RES.value.s = NULL;                                 \
       break;						  \
  }
 
@@ -112,6 +122,7 @@
       RES.value.c = RES_A.value.c / RES_B.value.c;        \
       break;						  \
     case SYMBOL_BASIC_STRING:				  \
+      RES.value.s = NULL;                                 \
       break;						  \
  }
 
@@ -132,6 +143,7 @@
       RES.value.c = RES_A.value.c + RES_B.value.c;           \
       break;						     \
     case SYMBOL_BASIC_STRING:				     \
+      RES.value.s = NULL;                                    \
       break;						     \
  }
 

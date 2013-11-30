@@ -128,7 +128,12 @@ static char *st_str;
 #define CAST_STRING(RES, TYPE)                  \
   do {                                          \
     st_type = RES.type;                         \
-    st_str = RES.value.s;                       \
+                                                \
+    if((st_str = RES.value.s) == NULL)          \
+    {                                           \
+      RES.type = TYPE;                          \
+      break;                                    \
+    }                                           \
                                                 \
     switch(TYPE)                                \
     {                                           \
@@ -175,7 +180,6 @@ static char *st_str;
       CAST_CHAR(RES, TYPE);      \
       break;                     \
     case SYMBOL_BASIC_STRING:    \
-    case SYMBOL_BASIC_STRING_UP: \
       CAST_STRING(RES, TYPE);    \
       break;                     \
   }

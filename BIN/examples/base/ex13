@@ -37,7 +37,7 @@ function je_suis_partout(a : int, b : float) return int
   { 
     write("Coucou je suis là et j'ai deux paramètres : %% et %%\n", a , b);     
     write("J'invoque ma super procédure qui s'appelle... je_suis_partout !\n");
-    je_suis_partout(5);
+    je_suis_partout(a);
     return a - b;
   };
 
