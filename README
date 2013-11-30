@@ -12,6 +12,8 @@ NOTE
 Ce qui est géré dans cette archive :
 - Récursivité des fonctions/procédures.
 
+  Un exemple de factorielle est présent dans : ./BIN/examples/exemple_fonctionnels/factorielle_rec 
+
 - Gestion des erreurs de compilations, une liste des erreurs est visible en cas de mauvaise
   compilation. (Avec numéro de ligne en prime)
 
@@ -32,6 +34,8 @@ Ce qui est géré dans cette archive :
   (Dur à implémenter mais fonctionnel !)
 
 - De même une fonction peut avoir le même nom qu'une variable et vice-versa
+
+  Voir : ./BIN/prog -c ./BIN/examples/base/ex13 -a
 
 - Les opérations ne sont autorisées qu'entre types de base MAIS...
   Je dis bien MAIS. Il est possible d'effectuer des calculs entre des types de bases différents :
@@ -134,13 +138,12 @@ Pour vous simplifier la vie à la lecture du log de compilation
 Et d'utiliser le script "lisible" dessus. Les adresses seront renommées par de simples entiers.
 
 Enfin : Le script "comp" permet de tester les exemples, ainsi que le chargement/sauvegarde de fichiers
-        compilés.
+        compilés, le script "valtest" teste les erreurs mémoires.
 
 --------------------------------------------------------
     LISTING FICHIER 
 --------------------------------------------------------
 .
-+--- defound
 +--- Makefile
 +--- INC
 |   +--- exec.h              (Execution du code.)
@@ -166,8 +169,6 @@ Enfin : Le script "comp" permet de tester les exemples, ainsi que le chargement/
 |   +--- private_list.h      (Données privées du type list.)
 |   +--- description_table.h (Implémente les descriptions des structures/tableaux/fonctions/procédures...)
 |   +--- save.h              (Gestion de la sauvegarde des données.)
-+--- README.md
 +--- BIN
-+--- TODO
 +--- SRC
 |  +--- Voir .h
