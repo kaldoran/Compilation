@@ -76,91 +76,91 @@
   }
 
 /** Soustrait 2 valeurs. */
-#define OP_SUB(RES, RES_A, RES_B)      			  \
-  switch(RES.type = RES_A.type)				  \
-  {							  \
-    case SYMBOL_BASIC_INT:				  \
-      RES.value.i = RES_A.value.i - RES_B.value.i;        \
-      break;						  \
-    case SYMBOL_BASIC_FLOAT:				  \
-      RES.value.f = RES_A.value.f - RES_B.value.f;        \
-      break;						  \
-    case SYMBOL_BASIC_BOOL:				  \
-      RES.value.c = !RES_A.value.c && RES_B.value.c;      \
-      break;						  \
-    case SYMBOL_BASIC_CHAR:				  \
-      RES.value.c = RES_A.value.c - RES_B.value.c;        \
-      break;						  \
-    case SYMBOL_BASIC_STRING:                             \
-    case SYMBOL_BASIC_STRING_UP:                          \
-      fatal_error("Exception in sub with string");        \
-      break;						  \
+#define OP_SUB(RES, RES_A, RES_B)                    \
+  switch(RES.type = RES_A.type)                      \
+  {                                                  \
+    case SYMBOL_BASIC_INT:                           \
+      RES.value.i = RES_A.value.i - RES_B.value.i;   \
+      break;                                         \
+    case SYMBOL_BASIC_FLOAT:                         \
+      RES.value.f = RES_A.value.f - RES_B.value.f;   \
+      break;                                         \
+    case SYMBOL_BASIC_BOOL:                          \
+      RES.value.c = !RES_A.value.c && RES_B.value.c; \
+      break;                                         \
+    case SYMBOL_BASIC_CHAR:                          \
+      RES.value.c = RES_A.value.c - RES_B.value.c;   \
+      break;                                         \
+    case SYMBOL_BASIC_STRING:                        \
+    case SYMBOL_BASIC_STRING_UP:                     \
+      fatal_error("Exception in sub with string");   \
+      break;                                         \
   }
 
 /** Multiplie 2 valeurs. */
-#define OP_MUL(RES, RES_A, RES_B)      			  \
-  switch(RES.type = RES_A.type)				  \
-  {							  \
-    case SYMBOL_BASIC_INT:				  \
-      RES.value.i = RES_A.value.i * RES_B.value.i;        \
-      break;						  \
-    case SYMBOL_BASIC_FLOAT:				  \
-      RES.value.f = RES_A.value.f * RES_B.value.f;        \
-      break;						  \
-    case SYMBOL_BASIC_BOOL:				  \
-      RES.value.c = RES_A.value.c && RES_B.value.c;       \
-      break;						  \
-    case SYMBOL_BASIC_CHAR:				  \
-      RES.value.c = RES_A.value.c * RES_B.value.c;        \
-      break;						  \
-    case SYMBOL_BASIC_STRING:				  \
-    case SYMBOL_BASIC_STRING_UP:                          \
-      fatal_error("Exception in mul with string");        \
-      break;						  \
+#define OP_MUL(RES, RES_A, RES_B)                   \
+  switch(RES.type = RES_A.type)                     \
+  {                                                 \
+    case SYMBOL_BASIC_INT:                          \
+      RES.value.i = RES_A.value.i * RES_B.value.i;  \
+      break;                                        \
+    case SYMBOL_BASIC_FLOAT:                        \
+      RES.value.f = RES_A.value.f * RES_B.value.f;  \
+      break;                                        \
+    case SYMBOL_BASIC_BOOL:                         \
+      RES.value.c = RES_A.value.c && RES_B.value.c; \
+      break;                                        \
+    case SYMBOL_BASIC_CHAR:                         \
+      RES.value.c = RES_A.value.c * RES_B.value.c;  \
+      break;                                        \
+    case SYMBOL_BASIC_STRING:                       \
+    case SYMBOL_BASIC_STRING_UP:                    \
+      fatal_error("Exception in mul with string");  \
+      break;                                        \
  }
 
 /** Divise 2 valeurs. */
-#define OP_DIV(RES, RES_A, RES_B)			  \
-  switch(RES.type = RES_A.type)				  \
-  {							  \
-    case SYMBOL_BASIC_INT:				  \
-      RES.value.i = RES_A.value.i / RES_B.value.i;        \
-      break;						  \
-    case SYMBOL_BASIC_FLOAT:				  \
-      RES.value.f = RES_A.value.f / RES_B.value.f;        \
-      break;						  \
-    case SYMBOL_BASIC_BOOL:				  \
-      RES.value.c = 0;					  \
-      break;						  \
-    case SYMBOL_BASIC_CHAR:				  \
-      RES.value.c = RES_A.value.c / RES_B.value.c;        \
-      break;						  \
-    case SYMBOL_BASIC_STRING:				  \
-    case SYMBOL_BASIC_STRING_UP:                          \
-      fatal_error("Exception in div with string");        \
-      break;						  \
+#define OP_DIV(RES, RES_A, RES_B)                  \
+  switch(RES.type = RES_A.type)                    \
+  {                                                \
+    case SYMBOL_BASIC_INT:                         \
+      RES.value.i = RES_A.value.i / RES_B.value.i; \
+      break;                                       \
+    case SYMBOL_BASIC_FLOAT:                       \
+      RES.value.f = RES_A.value.f / RES_B.value.f; \
+      break;                                       \
+    case SYMBOL_BASIC_BOOL:                        \
+      RES.value.c = 0;                             \
+      break;                                       \
+    case SYMBOL_BASIC_CHAR:                        \
+      RES.value.c = RES_A.value.c / RES_B.value.c; \
+      break;                                       \
+    case SYMBOL_BASIC_STRING:                      \
+    case SYMBOL_BASIC_STRING_UP:                   \
+      fatal_error("Exception in div with string"); \
+      break;                                       \
  }
 
 /** Modulo de 2 valeurs. */
-#define OP_MOD(RES, RES_A, RES_B)			     \
-  switch(RES.type = RES_A.type)	       	    		     \
-  {							     \
-    case SYMBOL_BASIC_INT:				     \
+#define OP_MOD(RES, RES_A, RES_B)                            \
+  switch(RES.type = RES_A.type)                              \
+  {                                                          \
+    case SYMBOL_BASIC_INT:                                   \
       RES.value.i = RES_A.value.i % RES_B.value.i;           \
-      break;						     \
-    case SYMBOL_BASIC_FLOAT:				     \
+      break;                                                 \
+    case SYMBOL_BASIC_FLOAT:                                 \
       RES.value.f = (int)RES_A.value.f % (int)RES_B.value.f; \
-      break;						     \
-    case SYMBOL_BASIC_BOOL:				     \
+      break;                                                 \
+    case SYMBOL_BASIC_BOOL:                                  \
       RES.value.c = RES_A.value.c && !RES_B.value.c;         \
-      break;						     \
-    case SYMBOL_BASIC_CHAR:				     \
+      break;                                                 \
+    case SYMBOL_BASIC_CHAR:                                  \
       RES.value.c = RES_A.value.c + RES_B.value.c;           \
-      break;						     \
-    case SYMBOL_BASIC_STRING:				     \
+      break;                                                 \
+    case SYMBOL_BASIC_STRING:                                \
     case SYMBOL_BASIC_STRING_UP:                             \
       fatal_error("Exception in mod with string");           \
-      break;						     \
+      break;                                                 \
  }
 
 #endif /* _EXEC_OP_ INCLUDED */

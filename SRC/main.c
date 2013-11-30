@@ -142,9 +142,9 @@ int main(int argc, char *argv[])
         if((options & OPT_A) != 0)
           PRINT_LOG();
 
-	/* Execution */
-	if((options & OPT_E) != 0)
-	  exec(hashtable);
+        /* Execution */
+        if((options & OPT_E) != 0)
+          exec(hashtable);
       }
       else
         fprintf(stderr, "ATTENTION : Compilation aborted.\n");

@@ -235,7 +235,7 @@ void syntax_tree_print_node(Syntax_tree *node)
         break;
       case AT_CTL_CALL:
         printf(" (%s)", lexeme_table_get(NULL, snode->value.var.hkey));
-	break;
+        break;
       case AT_HKEY_INDEX:
         printf(" (Field: %d)", snode->value.i);
         break;
