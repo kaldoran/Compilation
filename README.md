@@ -16,7 +16,7 @@ En cas de soucis essayer la commande :
 
     make rebuild
 
-Si le soucis persiste, merci de contacter Reynaud Nicolas au 06 79 00...
+Si le soucis persiste, merci nous contacter.
 
 NETTOYAGE
 ---------
