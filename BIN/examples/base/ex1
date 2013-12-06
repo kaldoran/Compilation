@@ -7,7 +7,7 @@ end struct;
 
 var po : type_normal;
 var variable_int : int;
-var machin : string[20];
+var machin : string;
 var x : int;
 var y : int;
 var z : int;

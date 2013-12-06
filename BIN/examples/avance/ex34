@@ -14,18 +14,18 @@ type adresse :
 		estchemin : bool;
 		estboulevard : bool;
 		estautre : bool;
-		adresse : string[500];
+		adresse : string;
 		codePostal : int;
 	end struct;
 
 type contact : 
 	struct
-		nom : string[50];
-		prenom : string[30];
+		nom : string;
+		prenom : string;
 		date_naissance : date;
 		marier : bool;
 		dateajout : date;
-		email : string[100];
+		email : string;
 		adresse_contact : adresse;
 	end struct;
 
@@ -68,7 +68,7 @@ proc init()
     };
 
 
-function existe(prenom : string[30], nom : string[50]) return bool
+function existe(prenom : string, nom : string) return bool
 var i : int;
 var existe : bool;
 start {
@@ -83,7 +83,7 @@ start {
 	return existe;
 };
 
-function addcarnet(prenom : string[30], nom : string[50]) return bool
+function addcarnet(prenom : string, nom : string) return bool
 var i : int;
 start {
 	while( i <= 100) do {

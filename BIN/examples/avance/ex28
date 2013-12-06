@@ -21,7 +21,7 @@ type mun :
 		
 type Player : 
 	struct 
-		nom : string[200];
+		nom : string;
 		score : int;
 		position : coordonnee;
 		munition : mun;

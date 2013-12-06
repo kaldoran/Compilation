@@ -120,25 +120,35 @@
  }
 
 /** Divise 2 valeurs. */
-#define OP_DIV(RES, RES_A, RES_B)                  \
-  switch(RES.type = RES_A.type)                    \
-  {                                                \
-    case SYMBOL_BASIC_INT:                         \
-      RES.value.i = RES_A.value.i / RES_B.value.i; \
-      break;                                       \
-    case SYMBOL_BASIC_FLOAT:                       \
-      RES.value.f = RES_A.value.f / RES_B.value.f; \
-      break;                                       \
-    case SYMBOL_BASIC_BOOL:                        \
-      RES.value.c = 0;                             \
-      break;                                       \
-    case SYMBOL_BASIC_CHAR:                        \
-      RES.value.c = RES_A.value.c / RES_B.value.c; \
-      break;                                       \
-    case SYMBOL_BASIC_STRING:                      \
-    case SYMBOL_BASIC_STRING_UP:                   \
-      fatal_error("Exception in div with string"); \
-      break;                                       \
+#define OP_DIV(RES, RES_A, RES_B)                                                     \
+  switch(RES.type = RES_A.type)                                                       \
+  {                                                                                   \
+    case SYMBOL_BASIC_INT:                                                            \
+      if(RES_B.value.i == 0)                                                          \
+      {                                                                               \
+        fprintf(stderr, "Division by 0 ! (%d / %d)\n", RES_A.value.i, RES_B.value.i); \
+        longjmp(jmp, 1);                                                              \
+      }                                                                               \
+      RES.value.i = RES_A.value.i / RES_B.value.i;                                    \
+      break;                                                                          \
+    case SYMBOL_BASIC_FLOAT:                                                          \
+      RES.value.f = RES_A.value.f / RES_B.value.f;                                    \
+      break;                                                                          \
+    case SYMBOL_BASIC_BOOL:                                                           \
+      RES.value.c = 0;                                                                \
+      break;                                                                          \
+    case SYMBOL_BASIC_CHAR:                                                           \
+      if(RES_B.value.c == 0)                                                          \
+      {                                                                               \
+        fprintf(stderr, "Division by 0 ! (%d / %d)\n", RES_A.value.c, RES_B.value.c); \
+        longjmp(jmp, 1);                                                              \
+      }                                                                               \
+      RES.value.c = RES_A.value.c / RES_B.value.c;                                    \
+      break;                                                                          \
+    case SYMBOL_BASIC_STRING:                                                         \
+    case SYMBOL_BASIC_STRING_UP:                                                      \
+      fatal_error("Exception in div with string");                                    \
+      break;                                                                          \
  }
 
 /** Modulo de 2 valeurs. */

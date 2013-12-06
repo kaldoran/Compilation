@@ -6,10 +6,10 @@ var continuer : bool;
 type personne : struct
   test_int : int;
   test_char : char;
-  test_string : string[10];
+  test_string : string;
 end struct;
 
-function appel(x:int, y:int, z:char, a:string[10]) return string[12]
+function appel(x:int, y:int, z:char, a:string) return string
   var i:int;
     
   start {
@@ -17,17 +17,18 @@ function appel(x:int, y:int, z:char, a:string[10]) return string[12]
       write ("coucou %d %s", x, y);
       x= 2.0;
     }
+    
+    return "coucou";
   };
 
 
 start { 
-  while (!continuer) do {
+  while(continuer) do {
     coucoucoucou = 7;
         
     do{
       appel(4, 4, 'c', "coucou");
     } while(i > 6);
-    
   }
 
   x = (1 > !x) ? !true : !false;

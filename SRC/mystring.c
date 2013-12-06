@@ -10,10 +10,12 @@
 
 char *mystrdup(const char *str)
 {
-  size_t n = strlen(str) + 1;
+  size_t n = (str == NULL) ? 1 : strlen(str) + 1;
   char *dup = malloc(n * sizeof *dup);
 
-  if(dup != NULL)
+  if(str == NULL)
+    *dup = '\0';
+  else if(dup != NULL)
     strcpy(dup, str);
 
   return dup;

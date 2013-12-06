@@ -7,12 +7,12 @@ var coucoucoucou: int;
 type personne : struct
   test_int : int;
   test_char : char;
-  test_string : string[10];
+  test_string : string;
 end struct;
 
 var p : personne;
 
-function appel(x:int, y:int, z:char, a:string[10]) return string[36]
+function appel(x:int, y:int, z:char, a:string) return string
   var i:int;
     
   start {
@@ -32,9 +32,4 @@ start {
     } while(i > 6);  
   }
 }
-
-
-
-
-
 

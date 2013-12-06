@@ -383,11 +383,11 @@ nom_type: type_simple {$$ = $1;}
         | IDF         {$$ = $1;}
         ;
 
-type_simple: ENTIER                                              {$$ = LBASIC_INT;}
-           | REEL                                                {$$ = LBASIC_FLOAT;}
-           | BOOLEEN                                             {$$ = LBASIC_BOOL;}
-           | CARACTERE                                           {$$ = LBASIC_CHAR;}
-           | CHAINE CROCHET_OUVRANT CSTE_ENTIERE CROCHET_FERMANT {$$ = LBASIC_STRING;}
+type_simple: ENTIER    {$$ = LBASIC_INT;}
+           | REEL      {$$ = LBASIC_FLOAT;}
+           | BOOLEEN   {$$ = LBASIC_BOOL;}
+           | CARACTERE {$$ = LBASIC_CHAR;}
+           | CHAINE    {$$ = LBASIC_STRING;}
            ;
 
 /* -----------------------------------------------------*/

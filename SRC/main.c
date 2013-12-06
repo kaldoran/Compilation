@@ -109,9 +109,8 @@ int main(int argc, char *argv[])
     if((options & OPT_A) != 0)
       PRINT_LOG();
 
-    /* Désactivé ici. Fonctionne mais inutile tant que le script comp est utilisé. */
-    /* Execution
-       exec(hashtable); */
+    /* Execution */
+       exec(hashtable);
   }
 
   /* Compilation. */

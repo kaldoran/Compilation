@@ -48,7 +48,7 @@ proc randommix(smoothie : int)
 
 
 var banane : bool;
-var mangue : string[60]; 
+var mangue : string; 
 
 start {
 	banane = "banane" + "orange" > "noix de coco";

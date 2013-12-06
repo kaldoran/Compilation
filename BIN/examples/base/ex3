@@ -24,7 +24,7 @@ proc proc_1 (arg:int, arg2:char)
     }
   };
 
-function joujou (arg3:int, arg4:string[10]) return int 
+function joujou(arg3 : int, arg4 : string) return int 
   var coucou : char;
   var x : int;
 
@@ -34,7 +34,7 @@ function joujou (arg3:int, arg4:string[10]) return int
   };
 
 var x : int;
-var chaine : string[10];
+var chaine : string;
 var k : aaaa;
 var i : int;
 
