@@ -14,9 +14,12 @@ fi
 
 valgrind --version >/dev/null 2>&1 || { echo "Warning : Need Valgrind"; exit -1; }
 
-for i in $(find "./SRC/" -type f ! -path "*/marche_pas/*"); do
+for i in $(find "./SRC/" -type f); do
     echo -e "Dans $i :\t"
+    
     grep -o -E "fprintf\([ ]*stderr[ ]*,[ ]*\".*\"" $i | sed -e "s/fprintf([ ]*stderr[ ]*,[ ]*//g" -e "s/\"//" -e "s/\"$//g" -e "s/\n/\n/g"
+    grep -o -E "/\*[ ]*Erreur[ ]*:[ ]*.*\*/" $i
+    grep -o -E "BAD_COMPIL(.*)" $i
     echo -e "\n"
     sleep 1
 done 
