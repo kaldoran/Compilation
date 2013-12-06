@@ -1,0 +1,39 @@
+Gestion des erreurs a l'appel du programme :
+	ex : 
+		./BIN/prog -m [ -m existe pas ]
+		./BIN/prog -s [ -s a besoin d'un argument ]
+		./BIN/prog [ Aucun argument, on affiche l'usage ]
+
+Gestion des erreurs sur arbre : 
+	- Profondeur de l'arbre trop grande (Relatif à l'affichage de l'arbre, techniquement la profondeur est illimitée pour les autres fonctions)
+	- Le noeud a déjà un père et on essaye de lui en ajouter un autre
+
+Gestion d'erreur buffer :
+	- Buffer qui atteind sa limite (Buffer de variables, dimensions, techniquement impossible, à moins de programmer des fonctions de milliers de paramètres...)
+
+Gestion erreur dans le Lex : 
+	- Ligne et Erreur associée
+
+Gestion erreur dans le Yacc :
+	- Dimension du tableau non conforme + Numéro de ligne
+	ex : 	
+		Type <nom> : array[ <dim1> .. <dim2>  [ , <dim1> .. <dim2> ]* ] of <type> 	[ dim1 > dim2 ou dim1 < 0 ou dim2 < 0 ]
+		
+Gestion erreur déclaration :
+	- Utilisation d'une déclaration qui existe pas [ procedure, function, variable ... ]
+
+Gestion en rapport avec la pile :
+	- Dépassement de la pile
+
+Gestion erreur du write ( printf [ affichage ] ) :
+	- Manque d'argument
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Erreurs qui n'en sont pas 
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+ Gestion de l'auto conversion
