@@ -20,7 +20,7 @@ start {
 	while( i < NB_MAX_COUP ) do{
 		
 		if(val_min == val_max - 1) then {
-			write("Arretez donc de jouer votre nombre est %%", ((val_max < VAL_MAX ) ? val_min : val_max) ) ;
+			write("Arretez donc de jouer votre nombre est %%\n", ((val_max < VAL_MAX ) ? val_min : val_max) ) ;
 			return 1;
 		}
 

@@ -1,0 +1,24 @@
+% PROGRAMME MULTIPLICATION %
+
+var val, i : int;
+var continu : char;
+
+start {
+	do {
+		i = 0;
+		write("Entrez un nombre :\n");
+		read(val);
+
+		while( i <= val ) do {
+			write("%% * %% = %%\n", i, val, i * val);
+			i++;
+		}
+		write("\nContinuer [O]ui - [N]on ? ");
+		read (continu); 
+		if(continu != "o") then {
+			return;
+		}
+	} while(continu != "n");
+		
+
+}
