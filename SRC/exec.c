@@ -187,12 +187,12 @@
 
 /** Debug d'une affectation. */
 #ifdef DEBUG
-  #define DBG_SET(TREE, SIZE)                                 \
-    do {                                                      \
-      DBG_PRINTF(("Region %d : %s=", VARIABLE_REGION((TREE)), \
-                VARIABLE_LEXEME((TREE))));                    \
-      VARIABLE_PRINT(stderr, result);                         \
-      fprintf(stderr, " (stack[%lu])\n", SIZE);               \
+  #define DBG_SET(TREE, SIZE)                                      \
+    do {                                                           \
+      DBG_PRINTF(("Region %d : %s=", VARIABLE_REGION((TREE)),      \
+                  VARIABLE_LEXEME((TREE))));                       \
+      VARIABLE_PRINT(stderr, result);                              \
+      fprintf(stderr, " (stack[%lu])\n", (unsigned long int)SIZE); \
     } while(0)
 #else
   #define DBG_SET(TREE, SIZE)
