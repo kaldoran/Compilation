@@ -209,7 +209,7 @@ typedef union
 {
   int i;   /* Un entier. */
   float f; /* Un flottant. */
-  char c;  /* Un caractère. */
+  char c;  /* Un caractère ou booléen. */
   char *s; /* Une chaine. */
 } Value;
 
