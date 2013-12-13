@@ -934,14 +934,23 @@ static Data region_eval(Syntax_tree *tree)
       res_b = region_eval(tree_node_get_brother(son));
       CAST(res_b, SYMBOL_BASIC_INT);
       size = strlen(res_a.value.s);
-
       result.type = SYMBOL_BASIC_CHAR;
-      if(res_b.value.i <= (size * (-1)) || res_b.value.i >= size)
-        result.value.c = -1;
-      else
-        result.value.c = res_a.value.s[res_b.value.i];
 
-      printf("cpyrr : %c\n", result.value.c);
+      /* Si indice négatif, on calcule sa position en indice positif. */
+      if(res_b.value.i < 0)
+        res_b.value.i += size;
+
+      /* Vérification qu'on ne sorte pas de la chaine. */
+      if(res_b.value.i < 0 || res_b.value.i >= size)
+      {
+        result.value.c = -1;
+        break;
+      }
+
+      /* Récupération de la lettre. */
+      result.value.c = res_a.value.s[res_b.value.i];
+
+      printf("cpyrr : %c\n", (char)result.value.c);
       printf("c : %c\n", res_a.value.s[res_b.value.i]);
       break;
     case AT_STR_SET:
