@@ -43,6 +43,10 @@ Gestion des verifications de variables / tableaux / structures :
 			-> acces : tab[1][2] -> Erreur mauvais nombre de de champs
 	- Mauvaise déclaration
 
+Gestion des fonctions strget et strset :
+    - Vérification qu'on ne dépasse pas l'indiçage de la chaine (exemple : impossible de faire strget("hello", 7)
+      Ce n'est pas vraiment une erreur dans le sens ou la fonction renvoie -1 en cas de problème pour strget et false si problème pour strset. N'arrête donc pas le programme en cas de problème avec ces deux fonctions
+
 -----------------------------------------------------------------------------------------------------------------------------
 
 Erreurs qui n'en sont pas [ Chose gerée ]
