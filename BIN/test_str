@@ -1,0 +1,12 @@
+% PROGAMME %
+
+var coucou:int;
+var autre : string;
+
+start{
+    autre = "coucou";
+    strget(autre, 2);
+    write("%%\n", strget(autre, 2));
+}
+
+

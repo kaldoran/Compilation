@@ -424,10 +424,10 @@ instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE
            {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), $3);}
 
          | STRSET PARENTHESE_OUVRANTE str_gs PARENTHESE_FERMANTE
-           {$$ = syntax_tree_add_brother(syntax_tree_node_new(AT_STR_SET), $3);}
+           {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_STR_SET), $3);}
 
          | STRGET PARENTHESE_OUVRANTE str_gs PARENTHESE_FERMANTE
-           {$$ = syntax_tree_add_brother(syntax_tree_node_new(AT_STR_GET), $3);}
+           {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_STR_GET), $3);}
          ;
 
 str_gs: expression VIRGULE expression {$$ = syntax_tree_add_brother($1, $3);}
