@@ -1191,6 +1191,11 @@ void fun_write(Syntax_tree *tree)
       printf("\n");
       backslash = false;
     }
+    else if(backslash && *c == 't')
+    {
+        printf("\t");
+        backslash = false;
+    }
     else
       printf("%c", *c);
 
