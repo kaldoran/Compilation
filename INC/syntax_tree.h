@@ -90,8 +90,12 @@
 #define AT_ARRAY_INDEX 51 /* array index */
 #define AT_HKEY_INDEX  52 /* hkey index */
 
+/* strget et strset. */
+#define AT_STR_GET 53
+#define AT_STR_SET 54
+
 /** Vide. */
-#define AT_EMPTY 53 /* empty node */
+#define AT_EMPTY 55 /* empty node */
 
 /** Structure d'un arbre abstrait. */
 typedef Tree Syntax_tree;
