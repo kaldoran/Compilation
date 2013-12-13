@@ -12,7 +12,7 @@ char *mystrdup(const char *str)
 {
   size_t n = (str == NULL) ? 1 : strlen(str) + 1;
   char *dup = malloc(n * sizeof *dup);
-
+  printf("COUCOU TF1\n");
   if(str == NULL)
     *dup = '\0';
   else if(dup != NULL)

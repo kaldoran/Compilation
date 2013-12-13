@@ -172,7 +172,7 @@
     {                                                   \
       free(data_stack[SIZE].value.s);                   \
                                                         \
-      /* Copie d'une référence de chaine existente. */  \
+      /* Copie d'une référence de chaine existante. */  \
       data_stack[SIZE].value.s = mystrdup(RES.value.s); \
     }                                                   \
     else if(RES.type == SYMBOL_BASIC_STRING_UP)         \
@@ -977,6 +977,8 @@ static Data region_eval(Syntax_tree *tree)
 
         son = tree_node_get_brother(son);
         EVAL_BROTHERS(son);
+
+        if(return_state) break;
       }
       break;
 
@@ -992,6 +994,8 @@ static Data region_eval(Syntax_tree *tree)
         /* Si condition fausse, on quitte. */
         if(!res_a.value.c)
           break;
+
+        if(return_state) break;
       }
       break;
 
@@ -1017,6 +1021,8 @@ static Data region_eval(Syntax_tree *tree)
         /* Incrémentation. */
         son = tree_node_get_brother(tree_node_get_brother(tree_node_get_son(tree)));
         region_eval(son);
+
+        if(return_state) break;
       }
       break;
 
