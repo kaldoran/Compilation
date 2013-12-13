@@ -930,8 +930,11 @@ static Data region_eval(Syntax_tree *tree)
     case AT_FUN_STRGET:
       son = tree_node_get_son(tree);
       res_a = region_eval(son);
+      CAST(res_a, SYMBOL_BASIC_STRING);
       res_b = region_eval(tree_node_get_brother(son));
+      CAST(res_b, SYMBOL_BASIC_INT);
       size = strlen(res_a.value.s);
+
       result.type = SYMBOL_BASIC_CHAR;
       if(res_b.value.i <= (size * (-1)) || res_b.value.i >= size)
         result.value.c = -1;
@@ -941,15 +944,20 @@ static Data region_eval(Syntax_tree *tree)
     case AT_FUN_STRSET:
       son = tree_node_get_son(tree);
       res_a = region_eval(son);
+      CAST(res_a, SYMBOL_BASIC_STRING);
       son = tree_node_get_brother(son);
       res_b = region_eval(son);
+      CAST(res_b, SYMBOL_BASIC_INT);
       size = strlen(res_a.value.s);
+
       result.type = SYMBOL_BASIC_BOOL;
       if(res_b.value.i <= (size * (-1)) || res_b.value.i >= size)
         result.value.b = false;
       else {
         size = res_b.value.i;
         res_b = region_eval(tree_node_get_brother(son));
+        CAST(res_b, SYMBOL_BASIC_INT);
+
         result.value.b = true;
         res_a.value.s[size] = res_b.value.c;
       }
