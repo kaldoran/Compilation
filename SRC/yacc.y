@@ -40,7 +40,7 @@
 %token VIDE
 
 /* Fonctions prédefinies */
-%token RAND ECRIRE LIRE
+%token RAND ECRIRE LIRE STRGET STRSET
 
 /* Ponctuation */
 %token CROCHET_OUVRANT CROCHET_FERMANT
@@ -415,11 +415,15 @@ instruction: POINT_VIRGULE                            {$$ = syntax_tree_node_new
            ;
 
 instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE                         {$$ = syntax_tree_node_new(AT_FUN_RAND);}
-         | ECRIRE PARENTHESE_OUVRANTE format suite_ecriture PARENTHESE_FERMANTE {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE),
-                                                                                                          syntax_tree_add_brother($3, $4));}
-         | LIRE PARENTHESE_OUVRANTE liste_variables PARENTHESE_FERMANTE         {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ),
-                                                                                                          $3);}
+         | ECRIRE PARENTHESE_OUVRANTE format suite_ecriture PARENTHESE_FERMANTE
+           {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE), syntax_tree_add_brother($3, $4));}
+         | LIRE PARENTHESE_OUVRANTE liste_variables PARENTHESE_FERMANTE
+           {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), $3);}
+         | STRSET PARENTHESE_OUVRANTE str_gs PARENTHESE_FERMANTE
+         | STRGET PARENTHESE_OUVRANTE str_gs PARENTHESE_FERMANTE
          ;
+
+str_gs: expression VIRGULE expression;
 
 /* -----------------------------------------------------*/
 /* Affectation                                          */
