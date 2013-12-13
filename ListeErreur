@@ -1,3 +1,5 @@
+								/** A RE-ORGANISER **/
+
 Gestion des erreurs a l'appel du programme :
 	ex : 
 		./BIN/prog -m [ -m existe pas ]
@@ -28,12 +30,25 @@ Gestion en rapport avec la pile :
 Gestion erreur du write ( printf [ affichage ] ) :
 	- Manque d'argument
 
-
+Gestion des verifications de variables / tableaux / structures :
+	- Passage d'une fonction/procedure/type au lieu d'une variable
+	- Type inconnu
+	- Passage de variable simple mais où on essaye d'imposer le type structure ou tableau
+	- On tente d'obtenir la valeur d'un type qui n'est pas un type de base mais une structure ou un tableau
+	- Si on essaye d'utiliser un champ de structure comme un tableau
+	- Champ non trouvé. Utilisation d'un champ inexistant
+	- Si on essaye d'utiliser une structure comme un tableau. 
+        - Mauvais nombre de champs.
+		Ex : type tab : array [ 1 .. 10 ] of points
+			-> acces : tab[1][2] -> Erreur mauvais nombre de de champs
+	- Mauvaise déclaration
 
 -----------------------------------------------------------------------------------------------------------------------------
 
-Erreurs qui n'en sont pas 
+Erreurs qui n'en sont pas [ Chose gerée ]
 
 -----------------------------------------------------------------------------------------------------------------------------
 
- Gestion de l'auto conversion
+Gestion de l'auto conversion
+
+A completer 
