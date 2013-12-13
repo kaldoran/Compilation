@@ -936,6 +936,7 @@ static Data region_eval(Syntax_tree *tree)
       size = strlen(res_a.value.s);
 
       result.type = SYMBOL_BASIC_CHAR;
+      printf("%d\n%d", size, res_b.value.i);
       if(res_b.value.i <= (size * (-1)) || res_b.value.i >= size)
         result.value.c = -1;
       else
