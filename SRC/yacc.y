@@ -131,7 +131,7 @@
 %type <node> incr_bin affectation affectation_base affectation_base_d ternaire
 
 /* Fonctions préféfinies. */
-%type <node> instr_pre format suite_ecriture liste_variables str_gs
+%type <node> instr_pre format suite_ecriture liste_variables str_g str_s
 
 /* Appel. */
 %type <node> appel liste_arguments liste_args un_arg
@@ -423,14 +423,16 @@ instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE
          | LIRE PARENTHESE_OUVRANTE liste_variables PARENTHESE_FERMANTE
            {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), $3);}
 
-         | STRSET PARENTHESE_OUVRANTE str_gs PARENTHESE_FERMANTE
+         | STRSET PARENTHESE_OUVRANTE str_s PARENTHESE_FERMANTE
            {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_STR_SET), $3);}
 
-         | STRGET PARENTHESE_OUVRANTE str_gs PARENTHESE_FERMANTE
+         | STRGET PARENTHESE_OUVRANTE str_g PARENTHESE_FERMANTE
            {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_STR_GET), $3);}
          ;
 
-str_gs: expression VIRGULE expression {$$ = syntax_tree_add_brother($1, $3);}
+str_g: expression VIRGULE expression {$$ = syntax_tree_add_brother($1, $3);}
+
+str_s: expression VIRGULE expression VIRGULE expression {$$ = syntax_tree_add_brother($1, syntax_tree_add_brother($3, $5));}
 
 /* -----------------------------------------------------*/
 /* Affectation                                          */

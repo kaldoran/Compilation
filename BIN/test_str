@@ -5,8 +5,26 @@ var autre : string;
 
 start{
     autre = "coucou";
+    strget(autre, 0);
+    strget(autre, 1);
     strget(autre, 2);
-    write("%%\n", strget(autre, 2));
+    strget(autre, 3);
+    strget(autre, 4);
+    strget(autre, 5);
+
+    write("\n-- Symétrie !\n\n");
+
+    # Comme en python !
+    strget(autre, -1);
+    strget(autre, -2);
+    strget(autre, -3);
+    strget(autre, -4);
+    strget(autre, -5);
+    strget(autre, -6);
+
+    strset(autre, -20, 'p');
+    write("%%\n", autre);
+    # write("%%\n", strget(autre, 2));
 }
 
 

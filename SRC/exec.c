@@ -934,37 +934,49 @@ static Data region_eval(Syntax_tree *tree)
       res_b = region_eval(tree_node_get_brother(son));
       CAST(res_b, SYMBOL_BASIC_INT);
       size = strlen(res_a.value.s);
-
       result.type = SYMBOL_BASIC_CHAR;
-      printf("%d\n%d", size, res_b.value.i);
-      if(res_b.value.i <= (size * (-1)) || res_b.value.i >= size)
-        result.value.c = -1;
-      else
-        result.value.c = res_a.value.s[res_b.value.i];
 
-      printf("cpyrr : %c\n", result.value.c);
-      printf("c : %c\n", res_a.value.s[res_b.value.i]);
+      /* Si indice négatif, on calcule sa position en indice positif. */
+      if(res_b.value.i < 0)
+        res_b.value.i += size;
+
+      /* Vérification qu'on ne sorte pas de la chaine. */
+      if(res_b.value.i < 0 || res_b.value.i >= size)
+      {
+        result.value.c = -1;
+        break;
+      }
+
+      /* Récupération de la lettre. */
+      result.value.c = res_a.value.s[res_b.value.i];
       break;
     case AT_STR_SET:
       son = tree_node_get_son(tree);
-      res_a = region_eval(son);
+      res_a = region_eval(son); /* chaine */
       CAST(res_a, SYMBOL_BASIC_STRING);
       son = tree_node_get_brother(son);
-      res_b = region_eval(son);
+      res_b = region_eval(son); /* indice */
       CAST(res_b, SYMBOL_BASIC_INT);
       size = strlen(res_a.value.s);
-
       result.type = SYMBOL_BASIC_BOOL;
-      if(res_b.value.i <= (size * (-1)) || res_b.value.i >= size)
-        result.value.c = false;
-      else {
-        size = res_b.value.i;
-        res_b = region_eval(tree_node_get_brother(son));
-        CAST(res_b, SYMBOL_BASIC_INT);
+           
+      /* Si indice négatif, on calcule sa position en indice positif. */
+      if(res_b.value.i < 0)
+        res_b.value.i += size;
 
-        result.value.c = true;
-        res_a.value.s[size] = res_b.value.c;
+      /* Vérification qu'on ne sorte pas de la chaine. */
+      if(res_b.value.i < 0 || res_b.value.i >= size)
+      {
+        result.value.c = false;
+        break;
       }
+
+      size = res_b.value.i; /* on stocke l'indice */
+      res_b = region_eval(tree_node_get_brother(son)); /* on récupère le caractère */
+      CAST(res_b, SYMBOL_BASIC_CHAR);
+
+      result.value.c = true;
+      res_a.value.s[size] = res_b.value.c;
       break;
 
       /* ------------------------------------------ */
