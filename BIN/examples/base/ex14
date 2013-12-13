@@ -1,0 +1,74 @@
+% TESTS_SUR_CHAINES %
+
+
+var ma_chaine : string;
+var mon_autre_chaine : string;
+var ma_chaine_2 : string;
+var resultat : string;
+var i : int;
+var f : float;
+
+function test_fun(a : string) return int
+  var bbb : string;
+  start
+  {
+     write("a égal %%\n", a);
+     write("f égal %%\n", f);
+     write("Je vaux : %%\n", resultat);
+
+     bbb = "aff";
+     resultat = "scssc";
+  };
+
+start 
+{
+  ma_chaine = "Bonjour";
+  write("%% est dit !\n", ma_chaine);
+  i = mon_autre_chaine; /* i = 0, chaine vide. */
+
+  mon_autre_chaine = "Jean";
+  ma_chaine_2 = "Ahaha";
+  ma_chaine_2 = "Bonnot";
+
+  f = 5646446226.55626148;
+  f = "a" + "b" + "c" + "d";
+
+  write("Concaténation: %% + %% + %% = ", ma_chaine, mon_autre_chaine, ma_chaine_2);
+
+  resultat = ma_chaine + " " + mon_autre_chaine + " " + ma_chaine_2;
+  write("%%\n", resultat);
+  mon_autre_chaine = "123";
+  test_fun(mon_autre_chaine + 456); /* Concaténation d'une chaine avec un entier. */
+
+  /* ------------------------------------------------- */
+  /* Comparaisons de chaines.                          */
+  /* ------------------------------------------------- */
+
+  write("TEST DES COMPARAISONS SUR LES CHAINES\n");
+  
+  if("bonjour" == "bonjour") then {
+    write("bonjour est égal à bonjour\n");
+  }
+
+  if("maison" != "maman") then {
+    write("Je ne suis pas égal\n");
+  }
+
+  if("coucou" > "cuir") then {
+    write("coucou est avant cuir\n");
+  }
+
+  if("zebre" < "zaza") then {
+    write("zebre est avant zaza\n");
+  }
+
+  if("popopopopo" <= "popopopopo" and "popopopopo" >= "popopopopo") then {
+    write("popopopopo est égal à popopopopo\n");
+  }
+
+  if("a" + "b" > "a" + "e") then {
+    write("Ca marche même avec des concaténations !\n");
+  }
+
+  return 0;
+}

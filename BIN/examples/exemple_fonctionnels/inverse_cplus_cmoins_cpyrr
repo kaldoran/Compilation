@@ -1,0 +1,57 @@
+% PROGRAMME CPLUS CMOINS INV %
+
+var i, val_min, val_max, tmp: int;
+var carac : char;
+var NB_MAX_COUP, VAL_MAX, VAL_MIN : int;
+
+function dycho(val_min : int, val_max : int) return int 
+start {
+	return (val_max - val_min) / 2;
+};
+
+start {
+	NB_MAX_COUP = 50;
+	VAL_MAX = 100;
+	VAL_MIN = 0;
+	val_min = VAL_MIN;
+	val_max = VAL_MAX;
+	i = 0;
+	write("Pensez a un nombre entre 0 et %%\n",VAL_MAX);
+	while( i < NB_MAX_COUP ) do{
+		
+		if(val_min == val_max - 1) then {
+			write("Arretez donc de jouer votre nombre est %%", ((val_max < VAL_MAX ) ? val_min : val_max) ) ;
+			return 1;
+		}
+
+		write("Min : %%, Max : %%\n", val_min, val_max);
+		tmp = dycho(val_min, val_max);
+		tmp = tmp + val_min;
+		write("Le nombre est il plus grand [+] plus petit [-] ou égal a %%\n", tmp);
+		read(carac);
+		if(carac == '-') then {
+			write("C'est donc moins ..");
+			val_max = tmp;
+			i++;
+		}
+		else if (carac == '+' ) then{
+			write("C'est donc plus ..");
+			val_min = tmp;
+			i++;
+		}
+		else if(carac == '=' ) then { 
+			write("j'ai trouvé en %% coups\n", i);
+			write("Rejouer [O]ui - [N]on ? ");
+			read(carac);
+			if(carac == 'o') then {
+				write("Pensez a un nombre entre 0 et %%\n",VAL_MAX);
+				val_min = VAL_MIN;
+				val_max = VAL_MAX;
+				i = 0;
+			} else { return 1; }
+		}
+		else {
+			write("Caractere inconnu\n");
+		}
+	}
+}
