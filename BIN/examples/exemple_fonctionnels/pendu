@@ -1,5 +1,10 @@
 % PROGRAMME DU PENDU %
 
+var mot_secret, mot_utilisateur : string;
+var longueur_mot, i, nb_chances, nb_lettre_trouvees : int;
+var lettre : char;
+var continuer, lettre_trouvee, lettre_deja_demandee : bool;
+
 # Retourne la longueur du mot 
 function strlen(mot : string) return int 
     var i : int;
@@ -12,11 +17,6 @@ function strlen(mot : string) return int
         return i;
     };
 
-
-var mot_secret, mot_utilisateur : string;
-var longueur_mot, i, nb_chances, nb_lettre_trouvees : int;
-var lettre : char;
-var continuer, lettre_trouvee, lettre_deja_demandee : bool;
 
 start {
     continuer = true;
