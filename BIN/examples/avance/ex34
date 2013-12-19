@@ -124,9 +124,9 @@ start {
 	init(); 
 	init();
 	addcarnet("Jean", "Bonnot");
-	write("%d",existe("Jean","Bonnot"));
-	write("%d",!!!!!existe("Janne","Bonnot"));
-	write("%d",existe("rien" , 0)); 
+	write("%%",existe("Jean","Bonnot"));
+	write("%%",!!!!!existe("Janne","Bonnot"));
+	write("%%",existe("rien" , 0)); 
 
 	write("Au revoir !");
 	

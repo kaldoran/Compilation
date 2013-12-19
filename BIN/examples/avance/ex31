@@ -7,6 +7,7 @@
 var x, y, a, b : int;
 var t : float;
 var was_it_true : bool;
+var was_it : string;
 
 function fun () return int
     start{
@@ -36,7 +37,7 @@ start
   }
 
   # Tests d'écriture
-  write("X: %d, Y: %d", x, y);
+  write("X: %%, Y: %%", x, y);
   write("Au revoir !");
 
   # Tests booleens
@@ -93,11 +94,11 @@ start
   }
 
   # Test d'affichage de champs de structures
-  write("%d", a);
+  write("%%", a);
 
   # Ternaire
   b = a ? (x=10) : 5;
-  was_it_true = ((was_it_true == false) ? "Menteur" : "Meuteur quand même"); 
+  was_it = ((was_it_true == false) ? "Menteur" : "Meuteur quand même"); 
 
   # On retourne 30 !
   return(30);

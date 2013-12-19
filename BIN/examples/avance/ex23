@@ -25,6 +25,25 @@ type ensemble :
 # Données
 var valeurs : ensemble;
 
+# Affichage de l'ensemble
+proc afficher()
+  var i : int;
+  var v : List;
+  start
+  { 
+    write("Size: %%\n", v[i].size);
+
+    for(i = 0; i < 50;) do {
+      write("(%%, %%)", valeurs.content[i].x, valeurs.content[i].y); 
+
+      if (i++) == 49 then { write("\n"); }
+      else { write(" - "); }
+      
+    }
+
+    return;
+  };
+
 # Remplir aléatoirement un type ensemble
 proc remplir(ensemble_x : int, ensemble_y : int)
   var i : int;
@@ -34,29 +53,11 @@ proc remplir(ensemble_x : int, ensemble_y : int)
     v[0].size = 0;
 
     for(i = 0; i < 50; i++) do {
-      v[i].x = rand() * 101;
-      v[i].y = rand() * 101;
-      v[0].size += v[i].x * v[i].x + v[i].y * v[i].y;
+      valeurs.content[i].x = rand() * 101;
+      valeurs.content[i].y = rand() * 101;
+      valeurs.size += v[i].x * v[i].x + v[i].y * v[i].y;
     }
- 
-    return;
-  };
-
-# Affichage de l'ensemble
-proc afficher()
-  var i : int;
-  var v : List;
-  start
-  { 
-    write("Size: %d\n", v[i].size);
-
-    for(i = 0; i < 50;) do {
-      write("(%d, %d)", v[i].x, v[i].y); 
-
-      if (i++) == 49 then { write("\n"); }
-      else { write(","); }
-    }
-
+ 	afficher();
     return;
   };
 
@@ -160,6 +161,9 @@ var resultat : int;
 # Programme
 start
 {
+
   write("Appel de machin_bidule\n");
   resultat = machin_bidule(10);
+  remplir(1,1);
+  write("Hum %%\n", resultat);
 }

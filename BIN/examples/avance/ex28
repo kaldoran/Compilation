@@ -145,7 +145,6 @@ start {
     read(was_it_true);
     write("%%\n",((was_it_true == false) ? "Menteur" : "Menteur quand même"));
 
-
     move(newplayer.score, newplayer.position.x, newplayer.position.y);
   }
   ; // ca sert a rien mais c'est cool

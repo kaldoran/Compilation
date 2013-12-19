@@ -17,7 +17,7 @@ function appel(x:int, y:int, z:char, a:string) return string
     
   start {
     for i=2; continuer; i=2+(i++) do {
-      write ("coucou %d %s", x, y);
+      write ("coucou %% %%", x, y);
       x= 2.0;
     }
   };
