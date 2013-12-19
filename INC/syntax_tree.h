@@ -91,8 +91,8 @@
 #define AT_HKEY_INDEX  52 /* hkey index */
 
 /* strget et strset. */
-#define AT_STR_GET 53
-#define AT_STR_SET 54
+#define AT_STR_GET 53 /* strget */
+#define AT_STR_SET 54 /* strset */
 
 /** Vide. */
 #define AT_EMPTY 55 /* empty node */
