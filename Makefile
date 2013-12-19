@@ -1,6 +1,6 @@
 # Release/Debug
 
-DEBUG=no
+DEBUG=yes
 
 # Directories
 
