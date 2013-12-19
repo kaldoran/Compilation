@@ -727,7 +727,7 @@ void test_variable(Syntax_tree *tree)
           /* Erreur  : Passage de variable simple mais où on tente d'imposer le type structure ou tableau. */
           if(content->type == AT_HKEY_INDEX)
             BAD_COMPIL(lexeme, "It's not a structure !");
-          if(content->type == AT_ARRAY_INDEX && sym != SBASIC_STRING)
+          if(content->type == AT_ARRAY_INDEX)
             BAD_COMPIL(lexeme, "It's not an array !");
         }
         return; /* Type de base, plus rien à vérifier. */

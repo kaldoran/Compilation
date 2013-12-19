@@ -1,0 +1,80 @@
+% PROGRAMME DU PENDU %
+
+# Retourne la longueur du mot 
+function strlen(mot : string) return int 
+    var i : int;
+    start{
+        i = 0;
+        while(strget(mot, i) != -1) do {
+            i++;
+        }
+
+        return i;
+    };
+
+
+var mot_secret, mot_utilisateur : string;
+var longueur_mot, i, nb_chances, nb_lettre_trouvees : int;
+var lettre : char;
+var continuer, lettre_trouvee, lettre_deja_demandee : bool;
+
+start {
+    continuer = true;
+    nb_chances = 5;
+    nb_lettre_trouvees = 0;
+    mot_secret = "coucou";
+    mot_utilisateur = mot_secret;
+    longueur_mot = strlen(mot_secret);
+
+    for(i=0; i<longueur_mot; i++) do{
+        strset(mot_utilisateur, i, '*');
+    }
+
+    do{ 
+        lettre_trouvee = false;
+        lettre_deja_demandee = false;
+        write("Mot secret : %%\nDonnez une lettre ? ", mot_utilisateur);
+        read(lettre);
+
+        for(i=0; i<longueur_mot; i++) do {
+            if(strget(mot_secret, i) == lettre) then {
+                if(strget(mot_utilisateur, i) != '*') then {
+                    lettre_deja_demandee = true;
+                    lettre_trouvee = true;
+                    i = longueur_mot;
+                }
+                else{
+                    strset(mot_utilisateur, i, lettre);
+                    lettre_trouvee = true;
+                    nb_lettre_trouvees++;
+                }
+            }
+        }
+
+        write("\n\n");
+
+        if(lettre_deja_demandee) then {
+            write("Vous avez déja demandé cette lettre ! \n");
+        }
+        else if(lettre_trouvee) then {
+            write("Bravo ! vous avez trouvé une lettre ! \n");
+        }
+        else {
+            nb_chances--;
+            write("Nul ! Il vous reste %% chances ... \n", nb_chances);
+        }
+
+        
+        if(nb_lettre_trouvees == longueur_mot) then {
+            write("Bravo vous avez gagné !!! \n\n");
+            continuer = false;
+        }
+        else if(nb_chances == 0) then {
+            write("Bouh ! Vous avez perdu !\n\n");
+            continuer = false;
+        }
+
+    } while(continuer);
+}
+
+    
