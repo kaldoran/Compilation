@@ -116,38 +116,41 @@
 
 /** Applique une comparaison. */
 /* Utilisée par chaque case AT_CMP_... */
-#define SET_CMP(CMP)                                                   \
-    do {                                                               \
-      son = tree_node_get_son(tree);                                   \
-      res_a = region_eval(son);                                        \
-      res_b = region_eval(tree_node_get_brother(son));                 \
-      OP_SET_TYPE(res_a, res_b);                                       \
-      result.type = SYMBOL_BASIC_BOOL;                                 \
-                                                                       \
-      switch(res_a.type)                                               \
-      {                                                                \
-        case SYMBOL_BASIC_INT:                                         \
-          result.value.c = res_a.value.i CMP res_b.value.i;            \
-          break;                                                       \
-        case SYMBOL_BASIC_FLOAT:                                       \
-          result.value.c = res_a.value.f CMP res_b.value.f;            \
-          break;                                                       \
-        case SYMBOL_BASIC_BOOL:                                        \
-          result.value.c = res_a.value.c CMP res_b.value.c;            \
-          break;                                                       \
-        case SYMBOL_BASIC_CHAR:                                        \
-          result.value.c = res_a.value.c CMP res_b.value.c;            \
-          break;                                                       \
-        case SYMBOL_BASIC_STRING:                                      \
-        case SYMBOL_BASIC_STRING_UP:                                   \
-          result.value.c = 0 CMP strcmp(res_a.value.s, res_b.value.s); \
-                                                                       \
-          if(res_a.type == SYMBOL_BASIC_STRING_UP)                     \
-            free(res_a.value.s);                                       \
-          if(res_b.type == SYMBOL_BASIC_STRING_UP)                     \
-            free(res_b.value.s);                                       \
-          break;                                                       \
-      }                                                                \
+#define SET_CMP(CMP)                                                     \
+    do {                                                                 \
+      son = tree_node_get_son(tree);                                     \
+      res_a = region_eval(son);                                          \
+      res_b = region_eval(tree_node_get_brother(son));                   \
+      OP_SET_TYPE(res_a, res_b);                                         \
+      result.type = SYMBOL_BASIC_BOOL;                                   \
+                                                                         \
+      switch(res_a.type)                                                 \
+      {                                                                  \
+        case SYMBOL_BASIC_INT:                                           \
+          result.value.c = res_a.value.i CMP res_b.value.i;              \
+          break;                                                         \
+        case SYMBOL_BASIC_FLOAT:                                         \
+          result.value.c = res_a.value.f CMP res_b.value.f;              \
+          break;                                                         \
+        case SYMBOL_BASIC_BOOL:                                          \
+          result.value.c = res_a.value.c CMP res_b.value.c;              \
+          break;                                                         \
+        case SYMBOL_BASIC_CHAR:                                          \
+          result.value.c = res_a.value.c CMP res_b.value.c;              \
+          break;                                                         \
+        case SYMBOL_BASIC_STRING:                                        \
+        case SYMBOL_BASIC_STRING_UP:                                     \
+          if(res_a.value.s == NULL) result.value.c = -1;                 \
+          else if(res_b.value.s == NULL) result.value.c = 1;             \
+          else                                                           \
+            result.value.c = 0 CMP strcmp(res_a.value.s, res_b.value.s); \
+                                                                         \
+          if(res_a.type == SYMBOL_BASIC_STRING_UP)                       \
+            free(res_a.value.s);                                         \
+          if(res_b.type == SYMBOL_BASIC_STRING_UP)                       \
+            free(res_b.value.s);                                         \
+          break;                                                         \
+      }                                                                  \
     } while(0)
 
 /** Evalue à la suite les instructions d'un arbre. */
@@ -959,7 +962,7 @@ static Data region_eval(Syntax_tree *tree)
       CAST(res_b, SYMBOL_BASIC_INT);
       size = strlen(res_a.value.s);
       result.type = SYMBOL_BASIC_BOOL;
-           
+
       /* Si indice négatif, on calcule sa position en indice positif. */
       if(res_b.value.i < 0)
         res_b.value.i += size;
