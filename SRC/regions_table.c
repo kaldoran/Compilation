@@ -132,7 +132,7 @@ void regions_table_load(Lexeme_table *table, const char *filename)
   if((file = fopen(filename, "r")) == NULL)
     fatal_error("regions_table_load");
 
-  (void)fscanf(file, "%d\n", &t_depth);
+  if(fscanf(file, "%d\n", &t_depth));
 
   for(i = 0; i < t_depth; i++)
   {
