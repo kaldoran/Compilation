@@ -170,10 +170,10 @@ void syntax_tree_print_node(Syntax_tree *node)
                                     "decrement", "pincrement", "pdecrement", "equal", "greater than",
                                     "greater or equal", "lower than", "lower or equal", "different",
                                     "and", "or", "not", "read", "write", "random", "if", "else", "while",
-                                    "do while", "for", "array", "structure", "procedure", "function",
-                                    "return", "switch", "case", "default", "break", "continue", "ternaire",
-                                    "call", "string", "real", "boolean", "char", "integer", "set", "variable",
-                                    "array index", "hkey index", "empty node"};
+                                    "do while", "for", "array", "structure", "procedure", "function", "return",
+                                    "switch", "case", "default", "break", "continue", "ternaire", "call",
+                                    "string", "real", "boolean", "char", "integer", "set", "variable",
+                                    "array index", "hkey index", "strget", "strset", "empty node"};
 
   static char arr_p[MAX_DEPTH] = {0};
 
