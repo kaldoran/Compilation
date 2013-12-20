@@ -40,7 +40,7 @@
 %token VIDE
 
 /* Fonctions prédefinies */
-%token RAND ECRIRE LIRE
+%token RAND ECRIRE LIRE STRGET STRSET
 
 /* Ponctuation */
 %token CROCHET_OUVRANT CROCHET_FERMANT
@@ -131,7 +131,7 @@
 %type <node> incr_bin affectation affectation_base affectation_base_d ternaire
 
 /* Fonctions préféfinies. */
-%type <node> instr_pre format suite_ecriture liste_variables
+%type <node> instr_pre format suite_ecriture liste_variables str_g str_s
 
 /* Appel. */
 %type <node> appel liste_arguments liste_args un_arg
@@ -414,12 +414,25 @@ instruction: POINT_VIRGULE                            {$$ = syntax_tree_node_new
            | instr_pre POINT_VIRGULE                  {$$ = $1;}
            ;
 
-instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE                         {$$ = syntax_tree_node_new(AT_FUN_RAND);}
-         | ECRIRE PARENTHESE_OUVRANTE format suite_ecriture PARENTHESE_FERMANTE {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE),
-                                                                                                          syntax_tree_add_brother($3, $4));}
-         | LIRE PARENTHESE_OUVRANTE liste_variables PARENTHESE_FERMANTE         {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ),
-                                                                                                          $3);}
+instr_pre: RAND PARENTHESE_OUVRANTE PARENTHESE_FERMANTE
+           {$$ = syntax_tree_node_new(AT_FUN_RAND);}
+
+         | ECRIRE PARENTHESE_OUVRANTE format suite_ecriture PARENTHESE_FERMANTE
+           {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_WRITE), syntax_tree_add_brother($3, $4));}
+
+         | LIRE PARENTHESE_OUVRANTE liste_variables PARENTHESE_FERMANTE
+           {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_FUN_READ), $3);}
+
+         | STRSET PARENTHESE_OUVRANTE str_s PARENTHESE_FERMANTE
+           {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_STR_SET), $3);}
+
+         | STRGET PARENTHESE_OUVRANTE str_g PARENTHESE_FERMANTE
+           {$$ = syntax_tree_add_son(syntax_tree_node_new(AT_STR_GET), $3);}
          ;
+
+str_g: expression VIRGULE expression {$$ = syntax_tree_add_brother($1, $3);}
+
+str_s: expression VIRGULE expression VIRGULE expression {$$ = syntax_tree_add_brother($1, syntax_tree_add_brother($3, $5));}
 
 /* -----------------------------------------------------*/
 /* Affectation                                          */
@@ -714,7 +727,7 @@ void test_variable(Syntax_tree *tree)
           /* Erreur  : Passage de variable simple mais où on tente d'imposer le type structure ou tableau. */
           if(content->type == AT_HKEY_INDEX)
             BAD_COMPIL(lexeme, "It's not a structure !");
-          if(content->type == AT_ARRAY_INDEX && sym != SBASIC_STRING)
+          if(content->type == AT_ARRAY_INDEX)
             BAD_COMPIL(lexeme, "It's not an array !");
         }
         return; /* Type de base, plus rien à vérifier. */

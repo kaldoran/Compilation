@@ -98,9 +98,11 @@
                 return(CSTE_BOOLEENNE);
                }
 
-rand  {return(RAND);}
-write {return(ECRIRE);}
-read  {return(LIRE);} 
+rand   {return(RAND);}
+write  {return(ECRIRE);}
+read   {return(LIRE);} 
+strget {return(STRGET);}
+strset {return(STRSET);}
 
 %[A-Z _0-9]*% {return(PROG);}
 

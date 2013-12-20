@@ -82,7 +82,7 @@ proc affiche(pplayer : int)
 
 proc affichePos(pplayer :int) 
     start {
-         write("%%\n", pplayer);
+         write("Val pplayer : %%\n", pplayer);
         write("Appel de positionPlayerX et positionPlayerY\n");
         write("Position actuelle : %% %%\n", positionPlayerX(pplayer,  24), positionPlayerY(12,  24));
         return;
@@ -106,7 +106,7 @@ function move(pplayer : int,  x : float , y : float) return int
 start {
 	pplayer = x;
 	pplayer = y + 122;
-        write("Appel de affichePos\n");
+     write("Appel de affichePos\n");
 	affichePos(pplayer);
 	return 1;
 };
@@ -116,6 +116,7 @@ var jump : int;
 var was_it_true : bool;
 var var_map : map;
 var i : int;
+var hum : string;
 
 start { 
   /* Définition des constantes. */
@@ -140,10 +141,9 @@ start {
     newplayer.score = -1;
     newplayer.nom = "Cheateur\n";
     
-    write("Cheat detected !\n");
+    write("Cheat detected !\nVrai ou faux ? [ true or false ] ? ");
     read(was_it_true);
-    was_it_true = (was_it_true == false) ? "Menteur" : "Menteur quand même";
-    write("%s\n",was_it_true);
+    write("%%\n",((was_it_true == false) ? "Menteur" : "Menteur quand même"));
 
     move(newplayer.score, newplayer.position.x, newplayer.position.y);
   }

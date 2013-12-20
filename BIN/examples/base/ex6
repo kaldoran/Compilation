@@ -46,6 +46,6 @@ start {
   coucou = p.test_char.test_int;
   prem_fun(5, fun(5));
   read(annee, heu);
-  write("J'ai %d ans et toutes mes %s !\n", annee, heu);
+  write("J'ai %% ans et toutes mes %% !\n", annee, heu);
 }
 

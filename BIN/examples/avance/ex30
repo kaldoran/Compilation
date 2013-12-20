@@ -34,15 +34,15 @@ proc randommix(smoothie : int)
 
         do {
             ensemblef[25] = 1;
-            ensemblef[12] = (rand1 = rand() + smoothie);
-            ensemblef[36] += (rand2 = rand() + smoothie);
+            ensemblef[12] = (rand1 = rand() * 5 + smoothie);
+            ensemblef[36] += (rand2 = rand() * 5 + smoothie);
             mix(ensemblef[3]);
 
-            write("%d fraises mixée , %d banane mixée",rand1,rand2);
-            write("Pour quitter trouver le bon nombre");
+            write("%% fraises mixée , %% banane mixée",rand1,rand2);
+            write("\nPour quitter trouver le bon nombre");
             read (continu);
         } 
-        while ( continu == rand () );
+        while ( continu != rand () * 10);
 
     };
 
@@ -52,8 +52,8 @@ var mangue : string;
 
 start {
 	banane = "banane" + "orange" > "noix de coco";
-        randommix(banane);
+        randommix(10);
 	return "salade de fruit";
-	write("on peut ajouter une %s ",mangue);
+	write("on peut ajouter une %% ",mangue);
 }
 
